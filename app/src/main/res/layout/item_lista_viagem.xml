@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/geral_5dp"
+    android:layout_marginEnd="@dimen/geral_5dp"
+    android:layout_marginStart="@dimen/geral_16dp"
+    android:layout_marginTop="@dimen/geral_16dp"
+    android:orientation="horizontal"
+    android:padding="@dimen/geral_5dp">
+
+    <TextView
+        android:id="@+id/id_viagem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/geral_5dp"
+        android:textSize="16sp"
+        tools:text="1" />
+
+    <TextView
+        android:id="@+id/destino_viagem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/geral_5dp"
+        android:textSize="16sp"
+        tools:text="Belo Horizonte" />
+
+</LinearLayout>
