@@ -60,11 +60,11 @@ public final class Contract {
         public final static String COLUMN_DATA_PARTIDA = "data_saida";
 
         /**
-         * Possible values for the gender of the pet.
+         * valores para razao da viagem
          */
         public static final int RAZAO_DESCONHECIDA= 0;
-        public static final int RAZAO_TRABALHO = 1;
-        public static final int RAZAO_LAZER = 0;
+        public static final int RAZAO_TRABALHO = 2;
+        public static final int RAZAO_LAZER = 1;
 
         public static boolean getRazaoDaViagem(int razao) {
             if (razao == RAZAO_DESCONHECIDA ||razao == RAZAO_TRABALHO || razao == RAZAO_LAZER) {
