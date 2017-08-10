@@ -1,32 +1,48 @@
 package com.aprendizagem.manu.estudobancodedados.gasto;
 
+import android.app.LoaderManager;
+import android.content.ContentValues;
+import android.content.CursorLoader;
+import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-public class NovoGastoActivity extends AppCompatActivity implements LoaderManager
-        .LoaderCallbacks<Cursor> {
+import com.aprendizagem.manu.estudobancodedados.R;
+import com.aprendizagem.manu.estudobancodedados.database.Contract;
+import com.aprendizagem.manu.estudobancodedados.database.Contract.GastoEntry;
+import com.aprendizagem.manu.estudobancodedados.viagem.ListaViagemActivity;
+import com.aprendizagem.manu.estudobancodedados.viagem.NovaViagemActivity;
 
-    private static final int EXISTING_VIAGEM_LOADER = 0;
+public class NovoGastoActivity extends AppCompatActivity implements
+        LoaderManager.LoaderCallbacks<Cursor> {
 
-    private Uri mCurrentViagemUri;
+    private static final int EXISTING_GASTO_LOADER = 0;
 
-    private EditText textDestino;
-    private EditText textLocalHospedagem;
+    private Uri mCurrentGastoUri;
 
-    private Button salvarViagem;
+    private EditText textDescricaoGasto;
+    private EditText textValorGasto;
+    private EditText textMetodoPagamento;
+    private EditText textDataGasto;
 
-    private boolean mViagemModificada = false;
+    private Button salvarGasto;
+
+    private boolean mGastomodificado = false;
 
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            mViagemModificada = true;
+            mGastomodificado = true;
             return false;
         }
     };
@@ -34,71 +50,63 @@ public class NovoGastoActivity extends AppCompatActivity implements LoaderManage
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.nova_viagem);
+        setContentView(R.layout.novo_gasto);
 
         Intent intent = getIntent();
-        mCurrentViagemUri = intent.getData();
+        mCurrentGastoUri = intent.getData();
 
-        if (mCurrentViagemUri == null) {
-            setTitle(getString(R.string.nova_viagem));
+        if (mCurrentGastoUri == null) {
+            setTitle(getString(R.string.novo_gasto));
 
             invalidateOptionsMenu();
         } else {
-            setTitle(getString(R.string.editando_viagem));
+            setTitle(getString(R.string.editando_gasto));
 
-            getLoaderManager().initLoader(EXISTING_VIAGEM_LOADER, null, this);
+            getLoaderManager().initLoader(EXISTING_GASTO_LOADER, null, this);
         }
 
         // Find all relevant views that we will need to read user input from
-        textDestino = (EditText) findViewById(R.id.edit_text_destino);
-        textLocalHospedagem = (EditText) findViewById(R.id.input_local_hospedagem);
+        textDescricaoGasto = (EditText) findViewById(R.id.edit_text_descricao_gasto);
+        textValorGasto = (EditText) findViewById(R.id.edit_text_valor_gasto);
+        textMetodoPagamento = (EditText) findViewById(R.id.edit_text_metodo_pagamento);
+        textDataGasto = (EditText) findViewById(R.id.edit_text_data_gasto);
 
-        salvarViagem = (Button) findViewById(R.id.button_salvar_viagem);
-        salvarViagem.setOnClickListener(new View.OnClickListener() {
+        salvarGasto = (Button) findViewById(R.id.button_salvar_gasto);
+        salvarGasto.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                salvarViagem();
+                salvarGasto();
             }
         });
 
-        textDestino.setOnTouchListener(mTouchListener);
-        textLocalHospedagem.setOnTouchListener(mTouchListener);
+        textDescricaoGasto.setOnTouchListener(mTouchListener);
+        textValorGasto.setOnTouchListener(mTouchListener);
+        textMetodoPagamento.setOnTouchListener(mTouchListener);
+        textDataGasto.setOnTouchListener(mTouchListener);
 
     }
 
-    public void onRadioButtonClicked(View view) {
-        // Is the button now checked?
-        boolean checked = ((RadioButton) view).isChecked();
-
-        // Check which radio button was clicked
-        switch (view.getId()) {
-            case R.id.radio_lazer:
-                if (checked)
-                    mRazao = 1;
-                break;
-            case R.id.radio_negocios:
-                if (checked)
-                    mRazao = 2;
-                break;
-        }
-    }
-
-    private void salvarViagem() {
-        String destino = textDestino.getText().toString().trim();
-        String localHospedagem = textLocalHospedagem.getText().toString().trim();
-        int razaoViagem = mRazao;
-        if (mCurrentViagemUri == null && TextUtils.isEmpty(localHospedagem) && TextUtils.isEmpty(destino)
-                && mRazao == ViagemEntry.RAZAO_DESCONHECIDA) {
+    private void salvarGasto() {
+        Intent intent = getIntent();
+        Bundle idViagem = intent.getExtras();
+        String getIdViagem = (String) idViagem.get("id_viagem");
+        String descricaoGasto = textDescricaoGasto.getText().toString().trim();
+        String valorGasto = textValorGasto.getText().toString().trim();
+        String metodoPagamento = textMetodoPagamento.getText().toString().trim();
+        String dataGasto = textDataGasto.getText().toString().trim();
+        if ( mCurrentGastoUri== null && TextUtils.isEmpty(descricaoGasto) && TextUtils.isEmpty(valorGasto)) {
             return;
         }
 
         ContentValues values = new ContentValues();
-        values.put(ViagemEntry.COLUMN_DESTINO, destino);
-        values.put(ViagemEntry.COLUMN_LOCAL_ACOMODACAO, localHospedagem);
-        values.put(ViagemEntry.COLUMN_RAZAO, razaoViagem);
+        values.put(GastoEntry.COLUMN_VIAGEM_ID, getIdViagem);
+        values.put(GastoEntry.COLUMN_DESCRICAO_GASTO, descricaoGasto);
+        values.put(GastoEntry.COLUMN_VALOR_GASTO, valorGasto);
+        values.put(GastoEntry.COLUMN_DATA_GASTO, dataGasto);
+        values.put(GastoEntry.COLUMN_METODO_PAGAMENTO, metodoPagamento);
 
-        if (mCurrentViagemUri == null) {
+        if (mCurrentGastoUri == null) {
 
-            Uri newUri = getContentResolver().insert(ViagemEntry.CONTENT_URI, values);
+            Uri newUri = getContentResolver().insert(GastoEntry.CONTENT_URI, values);
 
             if (newUri == null) {
                 Toast.makeText(this, getString(R.string.falha_insercao),
@@ -106,10 +114,13 @@ public class NovoGastoActivity extends AppCompatActivity implements LoaderManage
             } else {
                 Toast.makeText(this, getString(R.string.sucesso_insercao),
                         Toast.LENGTH_SHORT).show();
+
+                intent = new Intent(NovoGastoActivity.this, ListaViagemActivity.class);
+                startActivity(intent);
             }
         } else {
 
-            int rowsAffected = getContentResolver().update(mCurrentViagemUri, values, null, null);
+            int rowsAffected = getContentResolver().update(mCurrentGastoUri, values, null, null);
 
             if (rowsAffected == 0) {
                 Toast.makeText(this, getString(R.string.falha_update),
@@ -126,14 +137,17 @@ public class NovoGastoActivity extends AppCompatActivity implements LoaderManage
         // Since the editor shows all pet attributes, define a projection that contains
         // all columns from the pet table
         String[] projection = {
-                ViagemEntry._ID,
-                ViagemEntry.COLUMN_DESTINO,
-                ViagemEntry.COLUMN_LOCAL_ACOMODACAO,
-                ViagemEntry.COLUMN_RAZAO};
+                GastoEntry._ID,
+                GastoEntry.COLUMN_DESCRICAO_GASTO,
+                GastoEntry.COLUMN_VALOR_GASTO,
+                GastoEntry.COLUMN_METODO_PAGAMENTO,
+                GastoEntry.COLUMN_DATA_GASTO,
+                GastoEntry.COLUMN_VIAGEM_ID
+        };
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,   // Parent activity context
-                mCurrentViagemUri,         // Query the content URI for the current pet
+                mCurrentGastoUri,         // Query the content URI for the current pet
                 projection,             // Columns to include in the resulting Cursor
                 null,                   // No selection clause
                 null,                   // No selection arguments
@@ -142,49 +156,37 @@ public class NovoGastoActivity extends AppCompatActivity implements LoaderManage
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        // Bail early if the cursor is null or there is less than 1 row in the cursor
         if (cursor == null || cursor.getCount() < 1) {
             return;
         }
 
-        // Proceed with moving to the first row of the cursor and reading data from it
-        // (This should be the only row in the cursor)
         if (cursor.moveToFirst()) {
-            // Find the columns of pet attributes that we're interested in
-            int destinoColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DESTINO);
-            int localHospedagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_LOCAL_ACOMODACAO);
-            int razaoColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_RAZAO);
+            // Find the columns of viagem attributes that we're interested in
+            int descricaoGastoColumnIndex = cursor.getColumnIndex(GastoEntry.COLUMN_DESCRICAO_GASTO);
+            int valorGastoColumnIndex = cursor.getColumnIndex(GastoEntry.COLUMN_VALOR_GASTO);
+            int metodoPagamentoColumnIndex = cursor.getColumnIndex(GastoEntry.COLUMN_METODO_PAGAMENTO);
+            int dataGastoColumnIndex = cursor.getColumnIndex(GastoEntry.COLUMN_DATA_GASTO);
 
             // Extract out the value from the Cursor for the given column index
-            String destino = cursor.getString(destinoColumnIndex);
-            String localHospedagem = cursor.getString(localHospedagemColumnIndex);
-            int razao = cursor.getInt(razaoColumnIndex);
+            String descricaoGasto = cursor.getString(descricaoGastoColumnIndex);
+            String valorGasto = cursor.getString(valorGastoColumnIndex);
+            String metodoPagemento = cursor.getString(metodoPagamentoColumnIndex);
+            String dataPagamento = cursor.getString(dataGastoColumnIndex);
 
             // Update the views on the screen with the values from the database
-            textDestino.setText(destino);
-            textLocalHospedagem.setText(localHospedagem);
+            textDescricaoGasto.setText(descricaoGasto);
+            textValorGasto.setText(valorGasto);
+            textMetodoPagamento.setText(metodoPagemento);
+            textDataGasto.setText(dataPagamento);
 
-            // Gender is a dropdown spinner, so map the constant value from the database
-            // into one of the dropdown options (0 is Unknown, 1 is Male, 2 is Female).
-            // Then call setSelection() so that option is displayed on screen as the current selection.
-            switch (razao) {
-                case ViagemEntry.RAZAO_LAZER:
-                    mRazao = 1;
-                    break;
-                case ViagemEntry.RAZAO_TRABALHO:
-                    mRazao = 2;
-                    break;
-                default:
-                    mRazao = 0;
-                    break;
-            }
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        textDestino.setText("");
-        textLocalHospedagem.setText("");
+        textDescricaoGasto.setText("");
+        textValorGasto.setText("");
+        textMetodoPagamento.setText("");
+        textDataGasto.setText("");
     }
-
 }

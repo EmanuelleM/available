@@ -48,6 +48,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + GastoEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + GastoEntry.COLUMN_DESCRICAO_GASTO + " TEXT NOT NULL, "
                 + GastoEntry.COLUMN_VIAGEM_ID + " INTEGER, "
+                + GastoEntry.COLUMN_METODO_PAGAMENTO + " INTEGER, "
                 + GastoEntry.COLUMN_VALOR_GASTO + " TEXT, "
                 + GastoEntry.COLUMN_DATA_GASTO + " TEXT);";
 

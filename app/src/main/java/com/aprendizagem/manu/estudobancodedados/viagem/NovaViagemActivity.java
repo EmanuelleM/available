@@ -118,6 +118,8 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
             } else {
                 Toast.makeText(this, getString(R.string.sucesso_insercao),
                         Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(NovaViagemActivity.this, ListaViagemActivity.class);
+                startActivity(intent);
             }
         } else {
 

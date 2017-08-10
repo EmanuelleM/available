@@ -1,15 +1,14 @@
 package com.aprendizagem.manu.estudobancodedados.viagem;
 
 import android.app.LoaderManager;
-import android.content.ContentUris;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -17,7 +16,6 @@ import android.widget.ListView;
 import com.aprendizagem.manu.estudobancodedados.R;
 import com.aprendizagem.manu.estudobancodedados.adapter.ViagemCursorAdapter;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
-import com.aprendizagem.manu.estudobancodedados.gasto.ListaGastoActivity;
 import com.aprendizagem.manu.estudobancodedados.gasto.NovoGastoActivity;
 import com.facebook.stetho.Stetho;
 
@@ -52,11 +50,9 @@ public class ListaViagemActivity extends AppCompatActivity implements
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
                 Intent intent = new Intent(ListaViagemActivity.this, NovoGastoActivity.class);
-
-                Uri currentViagemUri = ContentUris.withAppendedId(ViagemEntry.CONTENT_URI, id);
-
-                intent.setData(currentViagemUri);
-
+                String currentViagemId = String.valueOf(position+1);
+                intent.putExtra("id_viagem", currentViagemId);
+                Log.d("id da viagem passado", ""+currentViagemId);
                 startActivity(intent);
             }
         });

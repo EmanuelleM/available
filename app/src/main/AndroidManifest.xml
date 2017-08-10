@@ -17,12 +17,13 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".viagem.NovaViagemActivity"/>
+        <activity android:name=".gasto.NovoGastoActivity"/>
+        <activity android:name=".gasto.ListaGastoActivity"/>
         <provider
             android:name=".database.Provider"
             android:authorities="com.aprendizagem.manu.estudobancodedados"
             android:exported="false" />
-
-        <activity android:name=".gasto.ListaGastoActivity"/>
     </application>
 
 </manifest>

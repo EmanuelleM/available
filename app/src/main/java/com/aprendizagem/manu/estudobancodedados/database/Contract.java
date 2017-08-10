@@ -90,6 +90,7 @@ public final class Contract {
         public static final String COLUMN_VIAGEM_ID = "viagem_id";
         public final static String COLUMN_DESCRICAO_GASTO = "descricao_gasto";
         public final static String COLUMN_VALOR_GASTO = "valor_gasto";
+        public final static String COLUMN_METODO_PAGAMENTO = "metodo_pagamento";
         public final static String COLUMN_DATA_GASTO = "data_gasto";
     }
 }
