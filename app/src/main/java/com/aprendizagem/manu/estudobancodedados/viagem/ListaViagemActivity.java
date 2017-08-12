@@ -1,23 +1,29 @@
 package com.aprendizagem.manu.estudobancodedados.viagem;
 
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.aprendizagem.manu.estudobancodedados.R;
 import com.aprendizagem.manu.estudobancodedados.adapter.ViagemCursorAdapter;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
+import com.aprendizagem.manu.estudobancodedados.gasto.ListaGastoActivity;
 import com.aprendizagem.manu.estudobancodedados.gasto.NovoGastoActivity;
-import com.facebook.stetho.Stetho;
+//import com.facebook.stetho.Stetho;
 
 public class ListaViagemActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -30,7 +36,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lista_viagem);
-        Stetho.initializeWithDefaults(this);
+//        Stetho.initializeWithDefaults(this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_nova_viagem);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,13 +53,32 @@ public class ListaViagemActivity extends AppCompatActivity implements
 
         viagemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, final long id) {
+                final int posicaoViagem = position +1;
+                AlertDialog.Builder builder = new AlertDialog.Builder(ListaViagemActivity.this);
 
-                Intent intent = new Intent(ListaViagemActivity.this, NovoGastoActivity.class);
-                String currentViagemId = String.valueOf(position+1);
-                intent.putExtra("id_viagem", currentViagemId);
-                Log.d("id da viagem passado", ""+currentViagemId);
-                startActivity(intent);
+                builder.setItems(R.array.opcoes_item_viagem, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        Intent intent;
+                        switch (item) {
+                            case 0:
+                                intent = new Intent(ListaViagemActivity.this, ListaGastoActivity.class);
+//                                intent.setData(posicaoViagem);
+                                intent.putExtra("id_viagem", posicaoViagem);
+                                startActivity(intent);
+                                break;
+                            case 1:
+                                intent = new Intent(ListaViagemActivity.this, NovoGastoActivity.class);
+                                intent.putExtra("id_viagem", posicaoViagem);
+//                                intent.setData(currentViagemUri);
+                                startActivity(intent);
+                                break;
+                        }
+                    }
+                });
+                AlertDialog dialog =
+                        builder.create();
+                dialog.show();
             }
         });
 

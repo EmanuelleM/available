@@ -58,7 +58,10 @@ public class Provider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
+    public Cursor query(Uri uri,
+                        String[] projection,
+                        String selection,
+                        String[] selectionArgs,
                         String sortOrder) {
         // Get readable database
         SQLiteDatabase database = mDbHelper.getReadableDatabase();
@@ -73,8 +76,14 @@ public class Provider extends ContentProvider {
                 // For the VIAGEM code, query the pets table directly with the given
                 // projection, selection, selection arguments, and sort order. The cursor
                 // could contain multiple rows of the pets table.
-                cursor = database.query(ViagemEntry.TABLE_NAME, projection, selection, selectionArgs,
-                        null, null, sortOrder);
+                cursor = database.query(
+                        ViagemEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
                 break;
             case VIAGEM_ID:
                 // For the VIAGEM_ID code, extract out the ID from the URI.
@@ -97,8 +106,13 @@ public class Provider extends ContentProvider {
                 // projection, selection, selection arguments, and sort order. The cursor
                 // could contain multiple rows of the pets table.
                 cursor = database.query(
-                        GastoEntry.TABLE_NAME, projection, selection, selectionArgs,
-                        null, null, sortOrder);
+                        GastoEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
                 break;
             case GASTO_ID:
                 // For the VIAGEM_ID code, extract out the ID from the URI.
@@ -109,28 +123,24 @@ public class Provider extends ContentProvider {
                 // For every "?" in the selection, we need to have an element in the selection
                 // arguments that will fill in the "?". Since we have 1 question mark in the
                 // selection, we have 1 String in the selection arguments' String array.
-                selection = GastoEntry._ID + "=?";
+                selection = GastoEntry.COLUMN_VIAGEM_ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 // This will perform a query on the pets table where the _id equals 3 to return a
                 // Cursor containing that row of the table.
-                cursor = database.query(GastoEntry.TABLE_NAME, projection, selection, selectionArgs,
-                        null, null, sortOrder);
+                cursor = database.query(
+                        GastoEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
                 break;
-
-            case GASTOS_VIAGEM_ID:
-
-                selection = GastoEntry.COLUMN_VIAGEM_ID + " = ?";
-                selectionArgs = new String[]{uri.getLastPathSegment()};
-                return database.query(GastoEntry.TABLE_NAME, projection,
-                        selection, selectionArgs, null, null, sortOrder);
 
             default:
                 throw new IllegalArgumentException("Cannot query unknown URI " + uri);
         }
 
-        // Set notification URI on the Cursor,
-        // so we know what content URI the Cursor was created for.
-        // If the data at this URI changes, then we know we need to update the Cursor.
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
 
         // Return the cursor

@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -18,10 +17,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.aprendizagem.manu.estudobancodedados.R;
-import com.aprendizagem.manu.estudobancodedados.database.Contract;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.GastoEntry;
 import com.aprendizagem.manu.estudobancodedados.viagem.ListaViagemActivity;
-import com.aprendizagem.manu.estudobancodedados.viagem.NovaViagemActivity;
 
 public class NovoGastoActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -88,7 +85,7 @@ public class NovoGastoActivity extends AppCompatActivity implements
     private void salvarGasto() {
         Intent intent = getIntent();
         Bundle idViagem = intent.getExtras();
-        String getIdViagem = (String) idViagem.get("id_viagem");
+        String getIdViagem = String.valueOf(idViagem.get("id_viagem"));
         String descricaoGasto = textDescricaoGasto.getText().toString().trim();
         String valorGasto = textValorGasto.getText().toString().trim();
         String metodoPagamento = textMetodoPagamento.getText().toString().trim();

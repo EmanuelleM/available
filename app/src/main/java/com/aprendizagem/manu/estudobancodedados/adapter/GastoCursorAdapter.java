@@ -12,10 +12,6 @@ import android.widget.TextView;
 import com.aprendizagem.manu.estudobancodedados.R;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.GastoEntry;
 
-/**
- * Created by emanu on 06/08/2017.
- */
-
 public class GastoCursorAdapter extends CursorAdapter {
 
     public GastoCursorAdapter(Context context, Cursor c) {
@@ -34,7 +30,6 @@ public class GastoCursorAdapter extends CursorAdapter {
         TextView indiceGasto = (TextView) view.findViewById(R.id.id_gasto);
         TextView idViagemGasto = (TextView) view.findViewById(R.id.id_viagem_gasto);
         TextView txtDescricaoGasto = (TextView) view.findViewById(R.id.descricao_gasto);
-
 
         // Find the columns of pet attributes that we're interested in
         int idColumnIndex = cursor.getColumnIndex(GastoEntry._ID);

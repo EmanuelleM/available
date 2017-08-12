@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="opcoes_item_viagem">
+        <item>Lista de gastos</item>
+        <item>Novo gasto</item>
+    </string-array>
+</resources>
