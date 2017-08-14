@@ -6,33 +6,20 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.GastoEntry;
+import com.aprendizagem.manu.estudobancodedados.model.Viagem;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String LOG_TAG = DatabaseHelper.class.getSimpleName();
 
-    /**
-     * Name of the database file
-     */
     private static final String DATABASE_NAME = "boaviagem.db";
 
-    /**
-     * Database version. If you change the database schema, you must increment the database version.
-     */
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
-    /**
-     * Constructs a new instance of {@link DatabaseHelper}.
-     *
-     * @param context of the app
-     */
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    /**
-     * This is called when the database is created for the first time.
-     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create a String that contains the SQL statement to create the pets table
@@ -42,7 +29,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + ViagemEntry.COLUMN_RAZAO + " INTEGER, "
                 + ViagemEntry.COLUMN_LOCAL_ACOMODACAO + " TEXT, "
                 + ViagemEntry.COLUMN_DATA_CHEGADA + " TEXT, "
-                + ViagemEntry.COLUMN_DATA_PARTIDA + " TEXT);";
+                + ViagemEntry.COLUMN_DATA_PARTIDA + " TEXT, "
+                + ViagemEntry.COLUMN_GASTO_TOTAL + " TEXT );";
 
         String SQL_CREATE_GASTO_TABLE = "CREATE TABLE " + GastoEntry.TABLE_NAME + " ("
                 + GastoEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -57,12 +45,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_GASTO_TABLE);
     }
 
-    /**
-     * This is called when the database needs to be upgraded.
-     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // The database is still at version 1, so there's nothing to do be done here.
+        db.execSQL("DROP TABLE IF EXISTS " + ViagemEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + GastoEntry.TABLE_NAME);
+        onCreate(db);
 
     }
 }

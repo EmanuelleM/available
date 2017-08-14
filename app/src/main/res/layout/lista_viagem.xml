@@ -8,7 +8,7 @@
 
     <ListView
         android:id="@+id/list_view_viagem"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <android.support.design.widget.FloatingActionButton
@@ -17,8 +17,13 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:src="@drawable/ic_add_24dp"
-        android:text="add viagem"
+        android:contentDescription="@string/adicionar_viagem"
         app:layout_anchor="@id/list_view_viagem"
         app:layout_anchorGravity="bottom|end" />
+
+    <include
+        android:id="@+id/include_lista_vazia"
+        layout="@layout/lista_viagem_vazia"
+        android:visibility="gone" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -6,19 +6,28 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.icu.text.NumberFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.aprendizagem.manu.estudobancodedados.Constantes;
 import com.aprendizagem.manu.estudobancodedados.R;
+import com.aprendizagem.manu.estudobancodedados.database.Contract;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.GastoEntry;
+import com.aprendizagem.manu.estudobancodedados.database.DatabaseHelper;
+import com.aprendizagem.manu.estudobancodedados.model.Viagem;
 import com.aprendizagem.manu.estudobancodedados.viagem.ListaViagemActivity;
+
+import java.util.Locale;
 
 public class NovoGastoActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -32,9 +41,13 @@ public class NovoGastoActivity extends AppCompatActivity implements
     private EditText textMetodoPagamento;
     private EditText textDataGasto;
 
+    double valorTotalGasto;
+
     private Button salvarGasto;
 
     private boolean mGastomodificado = false;
+
+    String idViagem = String.valueOf(Constantes.getIdViagemSelecionada());
 
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
@@ -48,6 +61,8 @@ public class NovoGastoActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.novo_gasto);
+        DatabaseHelper helper = new DatabaseHelper(this);
+        final SQLiteDatabase db = helper.getReadableDatabase();
 
         Intent intent = getIntent();
         mCurrentGastoUri = intent.getData();
@@ -61,7 +76,6 @@ public class NovoGastoActivity extends AppCompatActivity implements
 
             getLoaderManager().initLoader(EXISTING_GASTO_LOADER, null, this);
         }
-
         // Find all relevant views that we will need to read user input from
         textDescricaoGasto = (EditText) findViewById(R.id.edit_text_descricao_gasto);
         textValorGasto = (EditText) findViewById(R.id.edit_text_valor_gasto);
@@ -71,33 +85,69 @@ public class NovoGastoActivity extends AppCompatActivity implements
         salvarGasto = (Button) findViewById(R.id.button_salvar_gasto);
         salvarGasto.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                novoGastoTotal(db, idViagem);
                 salvarGasto();
             }
         });
 
-        textDescricaoGasto.setOnTouchListener(mTouchListener);
-        textValorGasto.setOnTouchListener(mTouchListener);
-        textMetodoPagamento.setOnTouchListener(mTouchListener);
-        textDataGasto.setOnTouchListener(mTouchListener);
+    }
 
+    private double getGastoTotal(SQLiteDatabase db, String id) {
+        Cursor cursor = db.rawQuery(
+                "SELECT gasto_total FROM viagens WHERE _id = ?",
+                new String[]{id}
+        );
+        cursor.moveToFirst();
+        double gastoTotal = cursor.getDouble(0);
+        cursor.close();
+        return gastoTotal;
+    }
+
+    private double novoGastoTotal(SQLiteDatabase db, String id) {
+
+        double antigoGastoTotal = getGastoTotal(db, idViagem);
+
+        double valorAdicionadoUsuario = 0;
+        String value = textValorGasto.getText().toString().trim();
+        if (!value.isEmpty())
+            try {
+                valorAdicionadoUsuario = Double.parseDouble(value);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+
+        double novoValorGastoTotal = valorAdicionadoUsuario + antigoGastoTotal;
+        Cursor cursor = db.rawQuery("Update viagens SET gasto_total= ? where _id = ? ",
+                new String[]{String.valueOf(novoValorGastoTotal), id});
+
+        cursor.moveToFirst();
+        cursor.close();
+
+        return novoValorGastoTotal;
     }
 
     private void salvarGasto() {
-        Intent intent = getIntent();
-        Bundle idViagem = intent.getExtras();
-        String getIdViagem = String.valueOf(idViagem.get("id_viagem"));
+
+        Intent intent;
+        String getIdViagem = String.valueOf(Constantes.getIdViagemSelecionada());
         String descricaoGasto = textDescricaoGasto.getText().toString().trim();
+
+
         String valorGasto = textValorGasto.getText().toString().trim();
+        String valorGastoConvertido = valorGasto;
+        valorGastoConvertido.replaceAll(",", ".");
+
         String metodoPagamento = textMetodoPagamento.getText().toString().trim();
         String dataGasto = textDataGasto.getText().toString().trim();
-        if ( mCurrentGastoUri== null && TextUtils.isEmpty(descricaoGasto) && TextUtils.isEmpty(valorGasto)) {
+
+        if (mCurrentGastoUri == null && TextUtils.isEmpty(descricaoGasto) && TextUtils.isEmpty(valorGasto)) {
             return;
         }
 
         ContentValues values = new ContentValues();
         values.put(GastoEntry.COLUMN_VIAGEM_ID, getIdViagem);
         values.put(GastoEntry.COLUMN_DESCRICAO_GASTO, descricaoGasto);
-        values.put(GastoEntry.COLUMN_VALOR_GASTO, valorGasto);
+        values.put(GastoEntry.COLUMN_VALOR_GASTO, valorGastoConvertido);
         values.put(GastoEntry.COLUMN_DATA_GASTO, dataGasto);
         values.put(GastoEntry.COLUMN_METODO_PAGAMENTO, metodoPagamento);
 
@@ -131,8 +181,6 @@ public class NovoGastoActivity extends AppCompatActivity implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        // Since the editor shows all pet attributes, define a projection that contains
-        // all columns from the pet table
         String[] projection = {
                 GastoEntry._ID,
                 GastoEntry.COLUMN_DESCRICAO_GASTO,
@@ -153,30 +201,7 @@ public class NovoGastoActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if (cursor == null || cursor.getCount() < 1) {
-            return;
-        }
 
-        if (cursor.moveToFirst()) {
-            // Find the columns of viagem attributes that we're interested in
-            int descricaoGastoColumnIndex = cursor.getColumnIndex(GastoEntry.COLUMN_DESCRICAO_GASTO);
-            int valorGastoColumnIndex = cursor.getColumnIndex(GastoEntry.COLUMN_VALOR_GASTO);
-            int metodoPagamentoColumnIndex = cursor.getColumnIndex(GastoEntry.COLUMN_METODO_PAGAMENTO);
-            int dataGastoColumnIndex = cursor.getColumnIndex(GastoEntry.COLUMN_DATA_GASTO);
-
-            // Extract out the value from the Cursor for the given column index
-            String descricaoGasto = cursor.getString(descricaoGastoColumnIndex);
-            String valorGasto = cursor.getString(valorGastoColumnIndex);
-            String metodoPagemento = cursor.getString(metodoPagamentoColumnIndex);
-            String dataPagamento = cursor.getString(dataGastoColumnIndex);
-
-            // Update the views on the screen with the values from the database
-            textDescricaoGasto.setText(descricaoGasto);
-            textValorGasto.setText(valorGasto);
-            textMetodoPagamento.setText(metodoPagemento);
-            textDataGasto.setText(dataPagamento);
-
-        }
     }
 
     @Override

@@ -58,13 +58,14 @@ public final class Contract {
         public final static String COLUMN_LOCAL_ACOMODACAO = "local_acomodacao";
         public final static String COLUMN_DATA_CHEGADA = "data_chegada";
         public final static String COLUMN_DATA_PARTIDA = "data_saida";
+        public final static String COLUMN_GASTO_TOTAL = "gasto_total";
 
         /**
          * valores para razao da viagem
          */
         public static final int RAZAO_DESCONHECIDA= 0;
-        public static final int RAZAO_TRABALHO = 2;
         public static final int RAZAO_LAZER = 1;
+        public static final int RAZAO_TRABALHO = 2;
 
         public static boolean getRazaoDaViagem(int razao) {
             if (razao == RAZAO_DESCONHECIDA ||razao == RAZAO_TRABALHO || razao == RAZAO_LAZER) {

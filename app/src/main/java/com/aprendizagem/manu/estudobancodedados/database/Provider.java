@@ -21,23 +21,14 @@ public class Provider extends ContentProvider {
      */
     private static final int VIAGEM = 100;
 
-    /**
-     * URI matcher code for the content URI for a single pet in the pets table
-     */
     private static final int VIAGEM_ID = 101;
 
     private static final int GASTO = 102;
     private static final int GASTO_ID = 103;
     private static final int GASTOS_VIAGEM_ID = 104;
 
-    /**
-     * UriMatcher object to match a content URI to a corresponding code.
-     * The input passed into the constructor represents the code to return for the root URI.
-     * It's common to use NO_MATCH as the input for this case.
-     */
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-    // Static initializer. This is run the first time anything is called from this class.
     static {
         sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, Contract.PATH_VIAGENS, VIAGEM);
         sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, Contract.PATH_VIAGENS + "/#", VIAGEM_ID);
@@ -46,9 +37,6 @@ public class Provider extends ContentProvider {
         sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, Contract.PATH_GASTOS + "/#", GASTO_ID);
     }
 
-    /**
-     * Database helper object
-     */
     private DatabaseHelper mDbHelper;
 
     @Override
@@ -73,9 +61,6 @@ public class Provider extends ContentProvider {
         int match = sUriMatcher.match(uri);
         switch (match) {
             case VIAGEM:
-                // For the VIAGEM code, query the pets table directly with the given
-                // projection, selection, selection arguments, and sort order. The cursor
-                // could contain multiple rows of the pets table.
                 cursor = database.query(
                         ViagemEntry.TABLE_NAME,
                         projection,
@@ -86,25 +71,12 @@ public class Provider extends ContentProvider {
                         sortOrder);
                 break;
             case VIAGEM_ID:
-                // For the VIAGEM_ID code, extract out the ID from the URI.
-                // For an example URI such as "content://com.example.android.pets/pets/3",
-                // the selection will be "_id=?" and the selection argument will be a
-                // String array containing the actual ID of 3 in this case.
-                //
-                // For every "?" in the selection, we need to have an element in the selection
-                // arguments that will fill in the "?". Since we have 1 question mark in the
-                // selection, we have 1 String in the selection arguments' String array.
                 selection = ViagemEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                // This will perform a query on the pets table where the _id equals 3 to return a
-                // Cursor containing that row of the table.
                 cursor = database.query(ViagemEntry.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
                 break;
             case GASTO:
-                // For the VIAGEM code, query the pets table directly with the given
-                // projection, selection, selection arguments, and sort order. The cursor
-                // could contain multiple rows of the pets table.
                 cursor = database.query(
                         GastoEntry.TABLE_NAME,
                         projection,
@@ -115,18 +87,8 @@ public class Provider extends ContentProvider {
                         sortOrder);
                 break;
             case GASTO_ID:
-                // For the VIAGEM_ID code, extract out the ID from the URI.
-                // For an example URI such as "content://com.example.android.pets/pets/3",
-                // the selection will be "_id=?" and the selection argument will be a
-                // String array containing the actual ID of 3 in this case.
-                //
-                // For every "?" in the selection, we need to have an element in the selection
-                // arguments that will fill in the "?". Since we have 1 question mark in the
-                // selection, we have 1 String in the selection arguments' String array.
                 selection = GastoEntry.COLUMN_VIAGEM_ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                // This will perform a query on the pets table where the _id equals 3 to return a
-                // Cursor containing that row of the table.
                 cursor = database.query(
                         GastoEntry.TABLE_NAME,
                         projection,

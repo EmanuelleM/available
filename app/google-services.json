@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "999899051771",
+    "firebase_url": "https://estudobancodedados.firebaseio.com",
+    "project_id": "estudobancodedados",
+    "storage_bucket": "estudobancodedados.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999899051771:android:fed3ef121b6dbf29",
+        "android_client_info": {
+          "package_name": "com.aprendizagem.manu.estudobancodedados"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "999899051771-6qdv2satpi2req8038ffiblsf2sq0of8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aprendizagem.manu.estudobancodedados",
+            "certificate_hash": "eefb6cee1044b88c53c2ae846aa8ed029a897811"
+          }
+        },
+        {
+          "client_id": "999899051771-fjqj554ldbsk3p3h9vahkvahp5h0qi9n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7kbECpHuK6IYW1I4wICDoEnmZXkXjHIo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "999899051771-fjqj554ldbsk3p3h9vahkvahp5h0qi9n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

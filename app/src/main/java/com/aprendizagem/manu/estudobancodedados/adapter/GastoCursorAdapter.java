@@ -41,12 +41,6 @@ public class GastoCursorAdapter extends CursorAdapter {
         String descricaoGasto = cursor.getString(destinoColumnIndex);
         String viagemGasto = cursor.getString(idViagemGastoColumIndex);
 
-        // If the pet breed is empty string or null, then use some default text
-        // that says "Unknown breed", so the TextView isn't blank.
-        if (TextUtils.isEmpty(descricaoGasto)) {
-            descricaoGasto = context.getString(R.string.unknown_breed);
-        }
-
         // Update the TextViews with the attributes for the current pet
         txtDescricaoGasto.setText(descricaoGasto);
         indiceGasto.setText(idGasto);

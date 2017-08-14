@@ -2,7 +2,6 @@ package com.aprendizagem.manu.estudobancodedados.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,44 +11,42 @@ import android.widget.TextView;
 import com.aprendizagem.manu.estudobancodedados.R;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
 
-/**
- * Created by emanu on 06/08/2017.
- */
-
 public class ViagemCursorAdapter extends CursorAdapter {
 
     public ViagemCursorAdapter(Context context, Cursor c) {
-        super(context, c, 0 /* flags */);
+
+        super(context, c, 0);
     }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        // Inflate a list item view using the layout specified in list_item.xml
         return LayoutInflater.from(context).inflate(R.layout.item_lista_viagem, parent, false);
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        // Find individual views that we want to modify in the list item layout
-        TextView idViagem = (TextView) view.findViewById(R.id.id_viagem);
-        TextView destinoViagem = (TextView) view.findViewById(R.id.destino_viagem);
+        TextView campoDestinoViagem = view.findViewById(R.id.text_view_destino_viagem);
+        TextView campoValorTotalGastoViagem = view.findViewById(R.id.text_view_total_viagem);
+        TextView campoRazaoViagem = view.findViewById(R.id.text_view_razao_viagem);
 
-        // Find the columns of pet attributes that we're interested in
         int destinoColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DESTINO);
-        int idColumnIndex = cursor.getColumnIndex(ViagemEntry._ID);
+        int razaoViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_RAZAO);
+        int gastoViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_GASTO_TOTAL);
 
-        // Read the pet attributes from the Cursor for the current pet
         String destino = cursor.getString(destinoColumnIndex);
-        String idviagem = cursor.getString(idColumnIndex);
+        String gastoViagem = cursor.getString(gastoViagemColumnIndex);
+        int razaoViagem = cursor.getInt(razaoViagemColumnIndex);
 
-        // If the pet breed is empty string or null, then use some default text
-        // that says "Unknown breed", so the TextView isn't blank.
-        if (TextUtils.isEmpty(idviagem)) {
-            idviagem = context.getString(R.string.unknown_breed);
+        if (razaoViagem == 1){
+            campoRazaoViagem.setText(R.string.razao_lazer);
+        }else if (razaoViagem == 2){
+            campoRazaoViagem.setText(R.string.razao_negocios);
+        }else if (razaoViagem == 0){
+            campoRazaoViagem.setText("");
         }
 
-        // Update the TextViews with the attributes for the current pet
-        idViagem.setText(destino);
-        destinoViagem.setText(idviagem);
+        campoDestinoViagem.setText(destino);
+        campoValorTotalGastoViagem.setText(gastoViagem);
+
     }
 }

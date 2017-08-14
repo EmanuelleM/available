@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.aprendizagem.manu.estudobancodedados.R;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
+import com.aprendizagem.manu.estudobancodedados.model.Viagem;
 
 public class NovaViagemActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 

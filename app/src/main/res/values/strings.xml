@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Estudo Banco de dados</string>
-    <string name="unknown_breed">viagem nao encontrada</string>
     <string name="destino">Destino</string>
     <string name="razao_viagem">Razão viagem</string>
     <string name="lazer">Lazer</string>
@@ -20,4 +19,13 @@
     <string name="forma_de_pagamento">Forma de pagamento</string>
     <string name="data_do_gasto">Data do gasto</string>
     <string name="salvar_gasto">Salvar gasto</string>
+    <string name="adicionar_viagem">adicionar viagem</string>
+    <string name="sem_viagens_na_lista">Você não tem nenhuma viagem salva</string>
+    <string name="sem_gasto_na_lista">Nenhum salvo gasto ainda.</string>
+    <string name="description_primeira_viagem">clique aqui para adicionar sua primeira viagem</string>
+    <string name="description_primeiro_gasto">clique aqui para adicionar seu primeiro gasto</string>
+    <string name="razao_lazer">- Lazer</string>
+    <string name="razao_negocios">- Negócios</string>
+    <string name="content_decriotion_arrow_item">Clique aqui para escolher uma ação</string>
+    <string name="gasto_total_cifrao">Gasto total R$</string>
 </resources>
