@@ -95,7 +95,7 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
     private void salvarViagem() {
         String destino = textDestino.getText().toString().trim();
         String localHospedagem = textLocalHospedagem.getText().toString().trim();
-        String nomeDousuario = Constantes.getIdDoUsuario();
+        String idDousuario = Constantes.getIdDoUsuario();
         int razaoViagem = mRazao;
 
         if (mCurrentViagemUri == null && TextUtils.isEmpty(localHospedagem) && TextUtils.isEmpty(destino)
@@ -107,7 +107,7 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
         values.put(ViagemEntry.COLUMN_DESTINO, destino);
         values.put(ViagemEntry.COLUMN_LOCAL_ACOMODACAO, localHospedagem);
         values.put(ViagemEntry.COLUMN_RAZAO, razaoViagem);
-        values.put(ViagemEntry.COLUMN_NOME_USUARIO, nomeDousuario);
+        values.put(ViagemEntry.COLUMN_ID_USUARIO, idDousuario);
 
         if (mCurrentViagemUri == null) {
 

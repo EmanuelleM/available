@@ -41,8 +41,6 @@ public class NovoGastoActivity extends AppCompatActivity implements
     private EditText textMetodoPagamento;
     private EditText textDataGasto;
 
-    double valorTotalGasto;
-
     private Button salvarGasto;
 
     private boolean mGastomodificado = false;
@@ -89,7 +87,6 @@ public class NovoGastoActivity extends AppCompatActivity implements
                 salvarGasto();
             }
         });
-
     }
 
     private double getGastoTotal(SQLiteDatabase db, String id) {
@@ -117,7 +114,7 @@ public class NovoGastoActivity extends AppCompatActivity implements
             }
 
         double novoValorGastoTotal = valorAdicionadoUsuario + antigoGastoTotal;
-        Cursor cursor = db.rawQuery("Update viagens SET gasto_total= ? where _id = ? ",
+        Cursor cursor = db.rawQuery("Update viagens SET gasto_total = ? where _id = ? ",
                 new String[]{String.valueOf(novoValorGastoTotal), id});
 
         cursor.moveToFirst();
@@ -132,10 +129,7 @@ public class NovoGastoActivity extends AppCompatActivity implements
         String getIdViagem = String.valueOf(Constantes.getIdViagemSelecionada());
         String descricaoGasto = textDescricaoGasto.getText().toString().trim();
 
-
         String valorGasto = textValorGasto.getText().toString().trim();
-        String valorGastoConvertido = valorGasto;
-        valorGastoConvertido.replaceAll(",", ".");
 
         String metodoPagamento = textMetodoPagamento.getText().toString().trim();
         String dataGasto = textDataGasto.getText().toString().trim();
@@ -147,7 +141,7 @@ public class NovoGastoActivity extends AppCompatActivity implements
         ContentValues values = new ContentValues();
         values.put(GastoEntry.COLUMN_VIAGEM_ID, getIdViagem);
         values.put(GastoEntry.COLUMN_DESCRICAO_GASTO, descricaoGasto);
-        values.put(GastoEntry.COLUMN_VALOR_GASTO, valorGastoConvertido);
+        values.put(GastoEntry.COLUMN_VALOR_GASTO, valorGasto);
         values.put(GastoEntry.COLUMN_DATA_GASTO, dataGasto);
         values.put(GastoEntry.COLUMN_METODO_PAGAMENTO, metodoPagamento);
 

@@ -37,7 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + ViagemEntry.COLUMN_DATA_CHEGADA + " TEXT, "
                 + ViagemEntry.COLUMN_DATA_PARTIDA + " TEXT, "
                 + ViagemEntry.COLUMN_GASTO_TOTAL + " TEXT, "
-                + ViagemEntry.COLUMN_NOME_USUARIO + " TEXT);";
+                + ViagemEntry.COLUMN_ID_USUARIO + " TEXT);";
 
         String SQL_CREATE_GASTO_TABLE = "CREATE TABLE " + GastoEntry.TABLE_NAME + " ("
                 + GastoEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "

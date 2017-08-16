@@ -2,7 +2,6 @@ package com.aprendizagem.manu.estudobancodedados.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,35 +14,31 @@ import com.aprendizagem.manu.estudobancodedados.database.Contract.GastoEntry;
 public class GastoCursorAdapter extends CursorAdapter {
 
     public GastoCursorAdapter(Context context, Cursor c) {
-        super(context, c, 0 /* flags */);
+        super(context, c, 0);
     }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        // Inflate a list item view using the layout specified in list_item.xml
         return LayoutInflater.from(context).inflate(R.layout.item_lista_gasto, parent, false);
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        // Find individual views that we want to modify in the list item layout
-        TextView indiceGasto = (TextView) view.findViewById(R.id.id_gasto);
-        TextView idViagemGasto = (TextView) view.findViewById(R.id.id_viagem_gasto);
-        TextView txtDescricaoGasto = (TextView) view.findViewById(R.id.descricao_gasto);
 
-        // Find the columns of pet attributes that we're interested in
-        int idColumnIndex = cursor.getColumnIndex(GastoEntry._ID);
+        TextView txtDescricaoGasto = view.findViewById(R.id.text_view_descricao_gasto);
+        TextView txtValorGasto = view.findViewById(R.id.text_view_valor_gasto);
+        TextView txtDataGasto = view.findViewById(R.id.text_view_data_gasto);
+
         int destinoColumnIndex = cursor.getColumnIndex(GastoEntry.COLUMN_DESCRICAO_GASTO);
-        int idViagemGastoColumIndex = cursor.getColumnIndex(GastoEntry.COLUMN_VIAGEM_ID);
+        int idValorGastoColumIndex = cursor.getColumnIndex(GastoEntry.COLUMN_VALOR_GASTO);
+        int dataGastoColumIndex = cursor.getColumnIndex(GastoEntry.COLUMN_DATA_GASTO);
 
-        // Read the pet attributes from the Cursor for the current pet
-        String idGasto = cursor.getString(idColumnIndex);
         String descricaoGasto = cursor.getString(destinoColumnIndex);
-        String viagemGasto = cursor.getString(idViagemGastoColumIndex);
+        String valorGastoViagem = cursor.getString(idValorGastoColumIndex);
+        String dataGastoViagem = cursor.getString(dataGastoColumIndex);
 
-        // Update the TextViews with the attributes for the current pet
         txtDescricaoGasto.setText(descricaoGasto);
-        indiceGasto.setText(idGasto);
-        idViagemGasto.setText(viagemGasto);
+        txtValorGasto.setText(valorGastoViagem);
+        txtDataGasto.setText(dataGastoViagem);
     }
 }

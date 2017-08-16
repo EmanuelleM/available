@@ -39,4 +39,7 @@
     <string name="erro_salvar_viagem">Erro ao salvar viagem</string>
     <string name="gasto_salvo">Gasto salvo com sucesso</string>
     <string name="erro_salvar_gasto">Erro ao salvar gasto</string>
+    <string name="_00_00">00,00</string>
+    <string name="mock_data">27/10/2017</string>
+    <string name="id_app_admob">ca-app-pub-3940256099942544/2177258514</string>
 </resources>

@@ -46,7 +46,10 @@ public class ViagemCursorAdapter extends CursorAdapter {
         }
 
         campoDestinoViagem.setText(destino);
-        campoValorTotalGastoViagem.setText(gastoViagem);
-
+        if(gastoViagem != ""){
+            campoValorTotalGastoViagem.setText(gastoViagem);
+        }else{
+            campoValorTotalGastoViagem.setText(" 0.00");
+        }
     }
 }

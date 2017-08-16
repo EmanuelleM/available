@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -7,31 +8,56 @@
     android:layout_marginEnd="@dimen/geral_5dp"
     android:layout_marginStart="@dimen/geral_16dp"
     android:layout_marginTop="@dimen/geral_16dp"
-    android:orientation="horizontal"
-    android:padding="@dimen/geral_5dp">
+    android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/id_gasto"
+        android:id="@+id/text_view_descricao_gasto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/geral_8dp"
+        android:layout_marginTop="@dimen/geral_8dp"
         android:padding="@dimen/geral_5dp"
-        android:textSize="16sp"
-        tools:text="1"/>
-
-    <TextView
-        android:id="@+id/id_viagem_gasto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/geral_5dp"
-        android:textSize="16sp"
-        tools:text="1"/>
-
-    <TextView
-        android:id="@+id/descricao_gasto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/geral_5dp"
-        android:textSize="16sp"
+        android:textSize="@dimen/text_size_16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Belo Horizonte" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/text_view_valor_gasto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/geral_8dp"
+        android:layout_marginLeft="@dimen/geral_8dp"
+        android:layout_marginRight="@dimen/geral_8dp"
+        android:layout_marginStart="@dimen/geral_8dp"
+        android:padding="@dimen/geral_5dp"
+        android:text="@string/_00_00"
+        android:textSize="@dimen/text_size_16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/text_view_descricao_gasto"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toRightOf="@+id/text_view_descricao_gasto"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/text_view_descricao_gasto"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/text_view_texto_data_gasto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/geral_8dp"
+        android:layout_marginTop="@dimen/geral_8dp"
+        android:padding="@dimen/geral_5dp"
+        android:text="@string/data_do_gasto"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_descricao_gasto" />
+
+    <TextView
+        android:id="@+id/text_view_data_gasto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/geral_5dp"
+        android:text="@string/mock_data"
+        app:layout_constraintBottom_toBottomOf="@+id/text_view_texto_data_gasto"
+        app:layout_constraintLeft_toRightOf="@+id/text_view_texto_data_gasto"
+        app:layout_constraintTop_toTopOf="@+id/text_view_texto_data_gasto" />
+</android.support.constraint.ConstraintLayout>

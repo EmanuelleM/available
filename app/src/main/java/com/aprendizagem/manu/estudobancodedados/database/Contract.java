@@ -38,7 +38,7 @@ public final class Contract {
         public final static String COLUMN_DATA_CHEGADA = "data_chegada";
         public final static String COLUMN_DATA_PARTIDA = "data_saida";
         public final static String COLUMN_GASTO_TOTAL = "gasto_total";
-        public final static String COLUMN_NOME_USUARIO = "id_usuario";
+        public final static String COLUMN_ID_USUARIO = "id_usuario";
 
         public static final int RAZAO_DESCONHECIDA= 0;
         public static final int RAZAO_LAZER = 1;

@@ -45,7 +45,7 @@ public class ListaGastoActivity extends AppCompatActivity implements
         setSupportActionBar(listaGastoToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         String idViagem = String.valueOf(Constantes.getIdViagemSelecionada());
-        destinoToolbar.setText(getDestino(db,idViagem));
+        destinoToolbar.setText(getDestino(db, idViagem));
 
         mCursorAdapter = new GastoCursorAdapter(this, null);
         gastoListView.setAdapter(mCursorAdapter);
@@ -53,15 +53,15 @@ public class ListaGastoActivity extends AppCompatActivity implements
         getLoaderManager().initLoader(GASTO_LOADER, null, this);
     }
 
-    private	String getDestino(SQLiteDatabase db, String	id) {
-        Cursor	cursor	= db.rawQuery(
+    private String getDestino(SQLiteDatabase db, String id) {
+        Cursor cursor = db.rawQuery(
                 "SELECT destino FROM viagens WHERE _id = ?",
-                new	String[]{id}
+                new String[]{id}
         );
         cursor.moveToFirst();
         String descricaoDesctino = cursor.getString(0);
         cursor.close();
-        return	descricaoDesctino;
+        return descricaoDesctino;
     }
 
     @Override
@@ -72,7 +72,10 @@ public class ListaGastoActivity extends AppCompatActivity implements
         String[] projection = {
                 GastoEntry._ID,
                 GastoEntry.COLUMN_DESCRICAO_GASTO,
-                GastoEntry.COLUMN_VIAGEM_ID};
+                GastoEntry.COLUMN_VIAGEM_ID,
+                GastoEntry.COLUMN_VALOR_GASTO,
+                GastoEntry.COLUMN_DATA_GASTO,
+                GastoEntry.COLUMN_METODO_PAGAMENTO};
 
         String selection = GastoEntry.COLUMN_VIAGEM_ID +
                 " = " + getIdViagem;

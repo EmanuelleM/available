@@ -28,6 +28,8 @@ import com.aprendizagem.manu.estudobancodedados.gasto.ListaGastoActivity;
 import com.aprendizagem.manu.estudobancodedados.gasto.NovoGastoActivity;
 import com.aprendizagem.manu.estudobancodedados.login.Login;
 import com.facebook.stetho.Stetho;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.NativeExpressAdView;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -107,6 +109,11 @@ public class ListaViagemActivity extends AppCompatActivity implements
             });
 
             getLoaderManager().initLoader(VIAGEM_LOADER, null, this);
+
+            NativeExpressAdView adView = (NativeExpressAdView)findViewById(R.id.native_ad_view);
+
+            AdRequest request = new AdRequest.Builder().build();
+            adView.loadAd(request);
         }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -171,10 +178,11 @@ public class ListaViagemActivity extends AppCompatActivity implements
                 ViagemEntry.COLUMN_RAZAO,
                 ViagemEntry.COLUMN_DATA_PARTIDA,
                 ViagemEntry.COLUMN_LOCAL_ACOMODACAO,
-                ViagemEntry.COLUMN_GASTO_TOTAL, ViagemEntry.COLUMN_NOME_USUARIO
+                ViagemEntry.COLUMN_GASTO_TOTAL,
+                ViagemEntry.COLUMN_ID_USUARIO
         };
 
-        String selection = ViagemEntry.COLUMN_NOME_USUARIO +
+        String selection = ViagemEntry.COLUMN_ID_USUARIO +
                 " = '" + idUsuarioVindoDoFirebase + "'";
 
         return new CursorLoader(this,
