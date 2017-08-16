@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "999899051771-ad5212j5k7mh4d9mric701u5cfj72uib.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aprendizagem.manu.estudobancodedados",
+            "certificate_hash": "0630829562fa0e4fe353422cb59efca3f28b565d"
+          }
+        },
+        {
           "client_id": "999899051771-6qdv2satpi2req8038ffiblsf2sq0of8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

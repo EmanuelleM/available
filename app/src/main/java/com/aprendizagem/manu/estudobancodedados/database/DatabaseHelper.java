@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.GastoEntry;
-import com.aprendizagem.manu.estudobancodedados.model.Viagem;
+import com.aprendizagem.manu.estudobancodedados.database.Contract.UsuarioEntry;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -23,6 +23,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create a String that contains the SQL statement to create the pets table
+        String SQL_CREATE_USUARIO_TABLE = "CREATE TABLE " + UsuarioEntry.TABLE_NAME + " ("
+                + UsuarioEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + UsuarioEntry.COLUMN_NOME_USUARIO + " TEXT "
+                + UsuarioEntry.COLUMN_SENHA_USUARIO  + " TEXT "
+                + UsuarioEntry.COLUMN_ID_FIREBASE + " TEXT);";
+
         String SQL_CREATE_VIAGEM_TABLE = "CREATE TABLE " + ViagemEntry.TABLE_NAME + " ("
                 + ViagemEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + ViagemEntry.COLUMN_DESTINO + " TEXT NOT NULL, "
@@ -30,7 +36,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + ViagemEntry.COLUMN_LOCAL_ACOMODACAO + " TEXT, "
                 + ViagemEntry.COLUMN_DATA_CHEGADA + " TEXT, "
                 + ViagemEntry.COLUMN_DATA_PARTIDA + " TEXT, "
-                + ViagemEntry.COLUMN_GASTO_TOTAL + " TEXT );";
+                + ViagemEntry.COLUMN_GASTO_TOTAL + " TEXT, "
+                + ViagemEntry.COLUMN_NOME_USUARIO + " TEXT);";
 
         String SQL_CREATE_GASTO_TABLE = "CREATE TABLE " + GastoEntry.TABLE_NAME + " ("
                 + GastoEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "

@@ -13,43 +13,22 @@ public final class Contract {
 
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
-    /**
-     * Nessa classe defini quais tabelas eu irei criar, onde irei criar e com quais campos irei criar
-     * <p>
-     * Possible path (appended to base content URI for possible URI's)
-     * For instance, content://com.example.android.pets/pets/ is a valid path for
-     * looking at pet data. content://com.example.android.pets/staff/ will fail,
-     * as the ContentProvider hasn't been given any information on what to do with "staff".
-     */
     public static final String PATH_VIAGENS = "viagens";
     public static final String PATH_GASTOS = "gastos";
+    public static final String PATH_USUARIOS = "usuarios";
 
-    /**
-     * Inner class that defines constant values for the pets database table.
-     * Each entry in the table represents a single pet.
-     */
     public static final class ViagemEntry implements BaseColumns {
 
-        /**
-         * The content URI to access the pet data in the provider
-         */
         public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_VIAGENS);
 
-        /**
-         * The MIME type of the {@link #CONTENT_URI} for a list of pets.
-         */
+
         public static final String CONTENT_LIST_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_VIAGENS;
 
-        /**
-         * The MIME type of the {@link #CONTENT_URI} for a single pet.
-         */
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_VIAGENS;
 
-        /**
-         * Name of database table for travels
-         */
+
         public final static String TABLE_NAME = "viagens";
 
         public final static String _ID = BaseColumns._ID;
@@ -59,10 +38,8 @@ public final class Contract {
         public final static String COLUMN_DATA_CHEGADA = "data_chegada";
         public final static String COLUMN_DATA_PARTIDA = "data_saida";
         public final static String COLUMN_GASTO_TOTAL = "gasto_total";
+        public final static String COLUMN_NOME_USUARIO = "id_usuario";
 
-        /**
-         * valores para razao da viagem
-         */
         public static final int RAZAO_DESCONHECIDA= 0;
         public static final int RAZAO_LAZER = 1;
         public static final int RAZAO_TRABALHO = 2;
@@ -93,5 +70,23 @@ public final class Contract {
         public final static String COLUMN_VALOR_GASTO = "valor_gasto";
         public final static String COLUMN_METODO_PAGAMENTO = "metodo_pagamento";
         public final static String COLUMN_DATA_GASTO = "data_gasto";
+    }
+
+    public static final class UsuarioEntry implements BaseColumns {
+
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_USUARIOS);
+
+        public static final String CONTENT_LIST_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_USUARIOS;
+
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_USUARIOS;
+
+        public final static String TABLE_NAME = "usuarios";
+
+        public final static String _ID = BaseColumns._ID;
+        public static final String COLUMN_NOME_USUARIO = "viagem_id";
+        public final static String COLUMN_SENHA_USUARIO = "descricao_gasto";
+        public final static String COLUMN_ID_FIREBASE = "valor_gasto";
     }
 }

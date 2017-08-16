@@ -156,13 +156,14 @@ public class NovoGastoActivity extends AppCompatActivity implements
             Uri newUri = getContentResolver().insert(GastoEntry.CONTENT_URI, values);
 
             if (newUri == null) {
-                Toast.makeText(this, getString(R.string.falha_insercao),
+                Toast.makeText(this, getString(R.string.erro_salvar_gasto),
                         Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, getString(R.string.sucesso_insercao),
+                Toast.makeText(this, getString(R.string.gasto_salvo),
                         Toast.LENGTH_SHORT).show();
 
                 intent = new Intent(NovoGastoActivity.this, ListaViagemActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
         } else {

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Estudo Banco de dados</string>
+    <string name="app_name">Boa Viagem</string>
     <string name="destino">Destino</string>
     <string name="razao_viagem">Razão viagem</string>
     <string name="lazer">Lazer</string>
@@ -11,7 +11,6 @@
     <string name="falha_update">falha update</string>
     <string name="update_sucesso">update com sucesso</string>
     <string name="falha_insercao">falha insercao</string>
-    <string name="sucesso_insercao">sucesso insercao</string>
     <string name="novo_gasto">Novo gasto</string>
     <string name="editando_gasto">Editando gasto</string>
     <string name="descricao_gasto">Descrição do gasto</string>
@@ -28,4 +27,16 @@
     <string name="razao_negocios">- Negócios</string>
     <string name="content_decriotion_arrow_item">Clique aqui para escolher uma ação</string>
     <string name="gasto_total_cifrao">Gasto total R$</string>
+    <string name="bem_vindo">Bem vindo</string>
+    <string name="sair">Sair</string>
+    <string name="seu_email">seu_email</string>
+    <string name="seu_e_mail">Seu e-mail</string>
+    <string name="sua_senha">Senha</string>
+    <string name="entrar">Entrar</string>
+    <string name="entre_com">Entre com</string>
+    <string name="esqueceu_sua_senha">Esqueceu sua senha?</string>
+    <string name="viagem_salva">Viagem salva com suceso</string>
+    <string name="erro_salvar_viagem">Erro ao salvar viagem</string>
+    <string name="gasto_salvo">Gasto salvo com sucesso</string>
+    <string name="erro_salvar_gasto">Erro ao salvar gasto</string>
 </resources>

@@ -17,9 +17,9 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.aprendizagem.manu.estudobancodedados.Constantes;
 import com.aprendizagem.manu.estudobancodedados.R;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
-import com.aprendizagem.manu.estudobancodedados.model.Viagem;
 
 public class NovaViagemActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -62,7 +62,6 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
             getLoaderManager().initLoader(EXISTING_VIAGEM_LOADER, null, this);
         }
 
-        // Find all relevant views that we will need to read user input from
         textDestino = (EditText) findViewById(R.id.edit_text_destino);
         textLocalHospedagem = (EditText) findViewById(R.id.input_local_hospedagem);
 
@@ -79,10 +78,8 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
     }
 
     public void onRadioButtonClicked(View view) {
-        // Is the button now checked?
         boolean checked = ((RadioButton) view).isChecked();
 
-        // Check which radio button was clicked
         switch (view.getId()) {
             case R.id.radio_lazer:
                 if (checked)
@@ -98,7 +95,9 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
     private void salvarViagem() {
         String destino = textDestino.getText().toString().trim();
         String localHospedagem = textLocalHospedagem.getText().toString().trim();
+        String nomeDousuario = Constantes.getIdDoUsuario();
         int razaoViagem = mRazao;
+
         if (mCurrentViagemUri == null && TextUtils.isEmpty(localHospedagem) && TextUtils.isEmpty(destino)
                 && mRazao == ViagemEntry.RAZAO_DESCONHECIDA) {
             return;
@@ -108,18 +107,20 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
         values.put(ViagemEntry.COLUMN_DESTINO, destino);
         values.put(ViagemEntry.COLUMN_LOCAL_ACOMODACAO, localHospedagem);
         values.put(ViagemEntry.COLUMN_RAZAO, razaoViagem);
+        values.put(ViagemEntry.COLUMN_NOME_USUARIO, nomeDousuario);
 
         if (mCurrentViagemUri == null) {
 
             Uri newUri = getContentResolver().insert(ViagemEntry.CONTENT_URI, values);
 
             if (newUri == null) {
-                Toast.makeText(this, getString(R.string.falha_insercao),
+                Toast.makeText(this, getString(R.string.erro_salvar_viagem),
                         Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, getString(R.string.sucesso_insercao),
+                Toast.makeText(this, getString(R.string.viagem_salva),
                         Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(NovaViagemActivity.this, ListaViagemActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
         } else {
@@ -138,61 +139,25 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        // Since the editor shows all pet attributes, define a projection that contains
-        // all columns from the pet table
+
         String[] projection = {
                 ViagemEntry._ID,
                 ViagemEntry.COLUMN_DESTINO,
                 ViagemEntry.COLUMN_LOCAL_ACOMODACAO,
                 ViagemEntry.COLUMN_RAZAO};
 
-        // This loader will execute the ContentProvider's query method on a background thread
-        return new CursorLoader(this,   // Parent activity context
-                mCurrentViagemUri,         // Query the content URI for the current pet
-                projection,             // Columns to include in the resulting Cursor
-                null,                   // No selection clause
-                null,                   // No selection arguments
-                null);                  // Default sort order
+        return new CursorLoader(this,
+                mCurrentViagemUri,
+                projection,
+                null,
+                null,
+                null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        // Bail early if the cursor is null or there is less than 1 row in the cursor
         if (cursor == null || cursor.getCount() < 1) {
             return;
-        }
-
-        // Proceed with moving to the first row of the cursor and reading data from it
-        // (This should be the only row in the cursor)
-        if (cursor.moveToFirst()) {
-            // Find the columns of pet attributes that we're interested in
-            int destinoColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DESTINO);
-            int localHospedagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_LOCAL_ACOMODACAO);
-            int razaoColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_RAZAO);
-
-            // Extract out the value from the Cursor for the given column index
-            String destino = cursor.getString(destinoColumnIndex);
-            String localHospedagem = cursor.getString(localHospedagemColumnIndex);
-            int razao = cursor.getInt(razaoColumnIndex);
-
-            // Update the views on the screen with the values from the database
-            textDestino.setText(destino);
-            textLocalHospedagem.setText(localHospedagem);
-
-            // Gender is a dropdown spinner, so map the constant value from the database
-            // into one of the dropdown options (0 is Unknown, 1 is Male, 2 is Female).
-            // Then call setSelection() so that option is displayed on screen as the current selection.
-            switch (razao) {
-                case ViagemEntry.RAZAO_LAZER:
-                    mRazao = 1;
-                    break;
-                case ViagemEntry.RAZAO_TRABALHO:
-                    mRazao = 2;
-                    break;
-                default:
-                    mRazao = 0;
-                    break;
-            }
         }
     }
 

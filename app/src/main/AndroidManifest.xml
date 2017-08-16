@@ -4,10 +4,10 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:theme="@style/AppTheme">
+        android:roundIcon="@drawable/ic_launcher"
+        android:theme="@style/AppThemeWithoutActionBar">
         <activity
             android:name=".viagem.ListaViagemActivity"
             android:label="@string/app_name">
@@ -19,8 +19,7 @@
         <activity android:name=".login.Login"/>
         <activity android:name=".viagem.NovaViagemActivity"/>
         <activity android:name=".gasto.NovoGastoActivity"/>
-        <activity android:name=".gasto.ListaGastoActivity"
-            android:theme="@style/AppThemeWithoutActionBar"/>
+        <activity android:name=".gasto.ListaGastoActivity"/>
 
         <provider
             android:name=".database.Provider"
