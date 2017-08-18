@@ -3,6 +3,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application
         android:allowBackup="true"
@@ -22,6 +23,7 @@
         <activity android:name=".viagem.NovaViagemActivity"/>
         <activity android:name=".gasto.NovoGastoActivity"/>
         <activity android:name=".gasto.ListaGastoActivity"/>
+        <activity android:name=".calendar.CalendarMain"/>
 
         <provider
             android:name=".database.Provider"

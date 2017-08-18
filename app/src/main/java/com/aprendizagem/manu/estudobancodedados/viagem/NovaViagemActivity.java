@@ -36,6 +36,8 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
 
     private boolean mViagemModificada = false;
 
+    private int ano, mes, dia;
+
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {

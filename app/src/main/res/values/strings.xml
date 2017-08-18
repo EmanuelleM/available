@@ -42,4 +42,10 @@
     <string name="_00_00">00,00</string>
     <string name="mock_data">27/10/2017</string>
     <string name="id_app_admob">ca-app-pub-3940256099942544/2177258514</string>
+    <string name="API_KEY_CALENDAR">AIzaSyD7kbECpHuK6IYW1I4wICDoEnmZXkXjHIo</string>
+    <string name="selecione">selecione</string>
+    <string name="data_da_chegada">Data chegada</string>
+    <string name="data_da_saida">Data saida</string>
+    <string name="exibe_lista_de_gastos">Lista de gastos</string>
+    <string name="adicionar_viagem_ao_calendario">Adicionar viagem ao calendário</string>
 </resources>

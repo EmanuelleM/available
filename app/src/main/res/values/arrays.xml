@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="opcoes_item_viagem">
-        <item>Lista de gastos</item>
-        <item>Novo gasto</item>
+        <item>@string/exibe_lista_de_gastos</item>
+        <item>@string/novo_gasto</item>
+        <item>@string/adicionar_viagem_ao_calendario</item>
     </string-array>
 </resources>

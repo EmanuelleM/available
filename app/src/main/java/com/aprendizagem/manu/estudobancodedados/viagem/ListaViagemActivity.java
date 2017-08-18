@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.aprendizagem.manu.estudobancodedados.Constantes;
 import com.aprendizagem.manu.estudobancodedados.R;
 import com.aprendizagem.manu.estudobancodedados.adapter.ViagemCursorAdapter;
+import com.aprendizagem.manu.estudobancodedados.calendar.CalendarMain;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
 import com.aprendizagem.manu.estudobancodedados.gasto.ListaGastoActivity;
 import com.aprendizagem.manu.estudobancodedados.gasto.NovoGastoActivity;
@@ -139,6 +140,15 @@ public class ListaViagemActivity extends AppCompatActivity implements
                         Constantes.setIdViagemSelecionada(posicaoViagem);
                         startActivity(intent);
                         break;
+
+                    case 2:
+                        intent = new Intent(ListaViagemActivity.this, CalendarMain.class);
+                        startActivity(intent);
+
+
+//                        CalendarMain calendarMain = new CalendarMain();
+
+
                 }
             }
         });

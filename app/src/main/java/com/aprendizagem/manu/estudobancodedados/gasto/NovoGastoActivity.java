@@ -7,12 +7,10 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.icu.text.NumberFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -21,13 +19,9 @@ import android.widget.Toast;
 
 import com.aprendizagem.manu.estudobancodedados.Constantes;
 import com.aprendizagem.manu.estudobancodedados.R;
-import com.aprendizagem.manu.estudobancodedados.database.Contract;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.GastoEntry;
 import com.aprendizagem.manu.estudobancodedados.database.DatabaseHelper;
-import com.aprendizagem.manu.estudobancodedados.model.Viagem;
 import com.aprendizagem.manu.estudobancodedados.viagem.ListaViagemActivity;
-
-import java.util.Locale;
 
 public class NovoGastoActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
