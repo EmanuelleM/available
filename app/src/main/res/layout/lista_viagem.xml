@@ -46,7 +46,7 @@
         android:id="@+id/include_lista_viagem_vazia"
         layout="@layout/lista_viagem_vazia"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginBottom="@dimen/geral_8dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -54,13 +54,14 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_lista_viagem" />
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/list_view_viagem"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/geral_8dp"
         android:layout_marginEnd="@dimen/geral_8dp"
         android:layout_marginStart="@dimen/geral_8dp"
-        android:layout_marginTop="0dp"
+        ads:layout_constraintBottom_toBottomOf="@+id/native_ad_view"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -74,8 +75,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/geral_8dp"
+        android:layout_marginEnd="@dimen/geral_8dp"
         android:layout_marginLeft="@dimen/geral_8dp"
         android:layout_marginRight="@dimen/geral_8dp"
+        android:layout_marginStart="@dimen/geral_8dp"
         ads:adSize="300x100"
         ads:adUnitId="@string/id_app_admob"
         app:layout_constraintBottom_toBottomOf="parent"

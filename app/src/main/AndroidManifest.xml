@@ -24,7 +24,11 @@
             android:name=".viagem.NovaViagemActivity"
             android:theme="@style/AppTheme" />
         <activity android:name=".gasto.NovoGastoActivity" />
-        <activity android:name=".gasto.ListaGastoActivity" />
+        <activity android:name=".gasto.ListaGastoActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".viagem.ListaViagemActivity" />
+            </activity>
         <activity android:name=".calendar.CalendarMain" />
         <activity
             android:name=".login.RegistroUsuarioActivity"

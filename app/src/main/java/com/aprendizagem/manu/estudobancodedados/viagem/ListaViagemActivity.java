@@ -6,20 +6,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.aprendizagem.manu.estudobancodedados.Constantes;
@@ -27,7 +26,6 @@ import com.aprendizagem.manu.estudobancodedados.R;
 import com.aprendizagem.manu.estudobancodedados.adapter.ViagemCursorAdapter;
 import com.aprendizagem.manu.estudobancodedados.calendar.CalendarMain;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
-import com.aprendizagem.manu.estudobancodedados.database.DatabaseHelper;
 import com.aprendizagem.manu.estudobancodedados.gasto.ListaGastoActivity;
 import com.aprendizagem.manu.estudobancodedados.gasto.NovoGastoActivity;
 import com.aprendizagem.manu.estudobancodedados.login.Login;
@@ -57,7 +55,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
 
     Toolbar listaGastoToolbar;
     TextView nomeUsuarioToolbar;
-    ListView viagemListView;
+    RecyclerView recyclerViewViagem;
     View emptyView;
 
     @Override
@@ -80,9 +78,9 @@ public class ListaViagemActivity extends AppCompatActivity implements
 
             nomeUsuarioToolbar = (TextView) findViewById(R.id.text_view_nome_usuario);
             setSupportActionBar(listaGastoToolbar);
-            if (nomeUsuarioVindoDoFirebase != null){
+            if (nomeUsuarioVindoDoFirebase != null) {
                 nomeUsuarioToolbar.setText(" " + nomeUsuarioVindoDoFirebase);
-            }else{
+            } else {
                 //colocar a logica pra pegar usuario
                 nomeUsuarioToolbar.setText(" " + idUsuarioVindoDoFirebase);
             }
@@ -97,21 +95,31 @@ public class ListaViagemActivity extends AppCompatActivity implements
                 }
             });
 
-            viagemListView = (ListView) findViewById(R.id.list_view_viagem);
+            recyclerViewViagem = (RecyclerView) findViewById(R.id.list_view_viagem);
+            recyclerViewViagem.setHasFixedSize(true);
+//            emptyView = findViewById(R.id.include_lista_viagem_vazia);
+//            recyclerViewViagem.setEmptyView(emptyView);
 
-            emptyView = findViewById(R.id.include_lista_viagem_vazia);
-            viagemListView.setEmptyView(emptyView);
+            mCursorAdapter = new ViagemCursorAdapter(
+                    new ViagemCursorAdapter.AoClicarNoItem() {
+                        @Override
+                        public void itemFoiClicado(Cursor cursor) {
+                            long id = cursor.getLong(
+                                    cursor.getColumnIndex(ViagemEntry._ID));
+                        }
+                    });
 
-            mCursorAdapter = new ViagemCursorAdapter(this, null);
-            viagemListView.setAdapter(mCursorAdapter);
+            recyclerViewViagem.setLayoutManager(new LinearLayoutManager(ListaViagemActivity.this));
+            mCursorAdapter.setHasStableIds(true);
+            recyclerViewViagem.setAdapter(mCursorAdapter);
 
-            viagemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, final long id) {
-                    final int posicaoViagem = position + 1;
-                    opcoesParaCliqueDaViagem(posicaoViagem);
-                }
-            });
+//            recyclerViewViagem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> adapterView, View view, int position, final long id) {
+//                    final int posicaoViagem = position + 1;
+//                    opcoesParaCliqueDaViagem(posicaoViagem);
+//                }
+//            });
 
             getLoaderManager().initLoader(VIAGEM_LOADER, null, this);
 
@@ -210,12 +218,12 @@ public class ListaViagemActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mCursorAdapter.swapCursor(data);
+        mCursorAdapter.setCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mCursorAdapter.swapCursor(null);
+        mCursorAdapter.setCursor(null);
     }
 
     @Override

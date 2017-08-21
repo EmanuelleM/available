@@ -26,7 +26,7 @@ import com.aprendizagem.manu.estudobancodedados.Constantes;
 import com.aprendizagem.manu.estudobancodedados.R;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
 
-public class NovaViagemActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,  View.OnClickListener {
+public class NovaViagemActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,  View.OnClickListener, DatePickerDialog.OnDateSetListener {
 
     private static final int EXISTING_VIAGEM_LOADER = 0;
 
@@ -34,9 +34,12 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
 
     private EditText editDestino;
     private EditText editLocalHospedagem;
-    private Button buttonDataChegada;
-    private Button buttonDataPartida;
     private Button salvarViagem;
+
+    private Button buttonDataPartida;
+    private Button buttonDataChegada;
+    private String dataChegada;
+    private String dataPartida;
 
     private int mRazao = ViagemEntry.RAZAO_DESCONHECIDA;
 
@@ -122,13 +125,10 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
     }
 
     private void salvarViagem() {
-        DialogFragment newFragment = new DatePickerFragment();
 
         String destino = editDestino.getText().toString().trim();
         String localHospedagem = editLocalHospedagem.getText().toString().trim();
         String idDousuario = Constantes.getIdDoUsuario();
-//        String dataChegada = newFragment.populateSetDate
-//        String dataPartida = editDataPartida.getText().toString().trim();
         int razaoViagem = mRazao;
 
         if (mCurrentViagemUri == null && TextUtils.isEmpty(localHospedagem) && TextUtils.isEmpty(destino)
@@ -140,8 +140,8 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
         values.put(ViagemEntry.COLUMN_DESTINO, destino);
         values.put(ViagemEntry.COLUMN_LOCAL_ACOMODACAO, localHospedagem);
         values.put(ViagemEntry.COLUMN_RAZAO, razaoViagem);
-//        values.put(ViagemEntry.COLUMN_DATA_CHEGADA, dataChegada);
-//        values.put(ViagemEntry.COLUMN_DATA_PARTIDA, dataPartida);
+        values.put(ViagemEntry.COLUMN_DATA_CHEGADA, dataChegada);
+        values.put(ViagemEntry.COLUMN_DATA_PARTIDA, dataPartida);
         values.put(ViagemEntry.COLUMN_ID_USUARIO, idDousuario);
 
 
@@ -192,37 +192,31 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
         editLocalHospedagem.setText("");
     }
 
-    public static class DatePickerFragment extends DialogFragment
-            implements DatePickerDialog.OnDateSetListener {
+    @Override
+    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
 
+        buttonDataChegada = (Button) findViewById(R.id.button_pega_data_chegada);
+        buttonDataChegada.setText(datePicker.getDayOfMonth()+"/" + datePicker.getMonth() + "/" + datePicker.getYear());
+
+        dataChegada = datePicker.getDayOfMonth()+"/" + datePicker.getMonth() + "/" + datePicker.getYear();
+
+        buttonDataPartida = (Button) findViewById(R.id.button_pega_data_saida);
+        buttonDataPartida.setText(8+"/" + 8 + "/" + 1991);
+    }
+
+
+    public static class DatePickerFragment extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current date as the default date in the picker
             final Calendar c = Calendar.getInstance();
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
 
-            // Create a new instance of DatePickerDialog and return it
-            return new DatePickerDialog(getActivity(), this, year, month, day);
-        }
-
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            Button buttonDataChegada = (Button) getActivity().findViewById(R.id.button_pega_data_chegada);
-            buttonDataChegada.setText(view.getDayOfMonth()+"/" + view.getMonth() + "/" + view.getYear());
-
-            Button buttonDataPartida = (Button) getActivity().findViewById(R.id.button_pega_data_saida);
-            buttonDataPartida.setText(view.getDayOfMonth()+"/" + view.getMonth() + "/" + view.getYear());
-
-            int setAno = view.getYear();
-            int setMes = view.getMonth();
-            int setDia = view.getDayOfMonth();
-            populateSetDate(setDia, setMes+1, setAno);
-        }
-
-        public void populateSetDate(int year, int month, int day) {
-
-
+            return new DatePickerDialog(getActivity(),
+                    (DatePickerDialog.OnDateSetListener)
+                            getActivity(), year, month, day);
         }
     }
+
 }
