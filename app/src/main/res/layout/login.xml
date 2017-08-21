@@ -37,10 +37,12 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_bem_vindo">
 
-        <android.support.design.widget.TextInputEditText
+        <EditText
+            android:id="@+id/edit_text_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/seu_e_mail" />
+            android:hint="@string/seu_e_mail"
+            android:inputType="textEmailAddress" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -56,10 +58,12 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_input_email">
 
-        <android.support.design.widget.TextInputEditText
+        <EditText
+            android:id="@+id/edit_text_senha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/sua_senha" />
+            android:hint="@string/sua_senha"
+            android:inputType="textPassword" />
     </android.support.design.widget.TextInputLayout>
 
     <Button
@@ -77,16 +81,16 @@
         app:layout_constraintTop_toBottomOf="@+id/text_input_senha" />
 
     <TextView
+        android:id="@+id/text_view_criar_conta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/esqueceu_sua_senha"
-        android:layout_marginTop="25dp"
-        app:layout_constraintTop_toBottomOf="@+id/button_entrar"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="25dp"
+        android:text="@string/criar_conta"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:id="@+id/textView3" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_entrar" />
 
     <View
         android:id="@+id/view_separadora"
@@ -94,28 +98,28 @@
         android:layout_height="2dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="34dp"
         android:background="@android:color/darker_gray"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="34dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/text_view_criar_conta" />
 
     <TextView
         android:id="@+id/text_view_entre_com"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/geral_8dp"
+        android:layout_marginEnd="@dimen/geral_8dp"
         android:layout_marginLeft="@dimen/geral_8dp"
         android:layout_marginRight="@dimen/geral_8dp"
+        android:layout_marginStart="@dimen/geral_8dp"
         android:layout_marginTop="@dimen/geral_8dp"
         android:text="@string/entre_com"
         android:textSize="@dimen/text_size_16sp"
         app:layout_constraintBottom_toTopOf="@+id/sign_in_button"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_separadora"
-        android:layout_marginStart="@dimen/geral_8dp"
-        android:layout_marginEnd="@dimen/geral_8dp" />
+        app:layout_constraintTop_toBottomOf="@+id/view_separadora" />
 
 
     <com.google.android.gms.common.SignInButton

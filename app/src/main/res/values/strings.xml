@@ -48,4 +48,14 @@
     <string name="data_da_saida">Data saida</string>
     <string name="exibe_lista_de_gastos">Lista de gastos</string>
     <string name="adicionar_viagem_ao_calendario">Adicionar viagem ao calendário</string>
+    <string name="falha_login">Falha no login</string>
+    <string name="email_obrigatorio">Email obrigatório</string>
+    <string name="senha_obrigatoria">Senha obrigatória</string>
+    <string name="registrando_nova_conta">Criando sua conta</string>
+    <string name="conta_criada_sucesso">Conta criada com sucesso</string>
+    <string name="falha_criacao_conta">Falha ao criar conta, talvez a conta já esteja registrada</string>
+    <string name="criar_conta">Criar conta</string>
+    <string name="seu_nome_de_usuario">Seu nome</string>
+    <string name="buscar">Buscar</string>
+    <string name="fazendo_login">Fazendo Login</string>
 </resources>

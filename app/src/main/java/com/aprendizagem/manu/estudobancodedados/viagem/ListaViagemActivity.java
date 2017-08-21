@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -25,6 +27,7 @@ import com.aprendizagem.manu.estudobancodedados.R;
 import com.aprendizagem.manu.estudobancodedados.adapter.ViagemCursorAdapter;
 import com.aprendizagem.manu.estudobancodedados.calendar.CalendarMain;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
+import com.aprendizagem.manu.estudobancodedados.database.DatabaseHelper;
 import com.aprendizagem.manu.estudobancodedados.gasto.ListaGastoActivity;
 import com.aprendizagem.manu.estudobancodedados.gasto.NovoGastoActivity;
 import com.aprendizagem.manu.estudobancodedados.login.Login;
@@ -67,11 +70,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
-        if (mFirebaseUser == null) {
-            startActivity(new Intent(this, Login.class));
-            finish();
-            return;
-        } else {
+        if (mFirebaseUser != null) {
             setContentView(R.layout.lista_viagem);
 
             nomeUsuarioVindoDoFirebase = mFirebaseUser.getDisplayName();
@@ -81,7 +80,12 @@ public class ListaViagemActivity extends AppCompatActivity implements
 
             nomeUsuarioToolbar = (TextView) findViewById(R.id.text_view_nome_usuario);
             setSupportActionBar(listaGastoToolbar);
-            nomeUsuarioToolbar.setText(" " + nomeUsuarioVindoDoFirebase);
+            if (nomeUsuarioVindoDoFirebase != null){
+                nomeUsuarioToolbar.setText(" " + nomeUsuarioVindoDoFirebase);
+            }else{
+                //colocar a logica pra pegar usuario
+                nomeUsuarioToolbar.setText(" " + idUsuarioVindoDoFirebase);
+            }
 
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_nova_viagem);
             fab.setOnClickListener(new View.OnClickListener() {
@@ -111,10 +115,15 @@ public class ListaViagemActivity extends AppCompatActivity implements
 
             getLoaderManager().initLoader(VIAGEM_LOADER, null, this);
 
-            NativeExpressAdView adView = (NativeExpressAdView)findViewById(R.id.native_ad_view);
+            NativeExpressAdView adView = (NativeExpressAdView) findViewById(R.id.native_ad_view);
 
             AdRequest request = new AdRequest.Builder().build();
             adView.loadAd(request);
+
+        } else {
+            startActivity(new Intent(this, Login.class));
+            finish();
+            return;
         }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -144,11 +153,6 @@ public class ListaViagemActivity extends AppCompatActivity implements
                     case 2:
                         intent = new Intent(ListaViagemActivity.this, CalendarMain.class);
                         startActivity(intent);
-
-
-//                        CalendarMain calendarMain = new CalendarMain();
-
-
                 }
             }
         });
@@ -186,6 +190,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
                 ViagemEntry._ID,
                 ViagemEntry.COLUMN_DESTINO,
                 ViagemEntry.COLUMN_RAZAO,
+                ViagemEntry.COLUMN_DATA_CHEGADA,
                 ViagemEntry.COLUMN_DATA_PARTIDA,
                 ViagemEntry.COLUMN_LOCAL_ACOMODACAO,
                 ViagemEntry.COLUMN_GASTO_TOTAL,

@@ -28,13 +28,20 @@ public class ViagemCursorAdapter extends CursorAdapter {
         TextView campoDestinoViagem = view.findViewById(R.id.text_view_destino_viagem);
         TextView campoValorTotalGastoViagem = view.findViewById(R.id.text_view_total_viagem);
         TextView campoRazaoViagem = view.findViewById(R.id.text_view_razao_viagem);
+        TextView campoDataChegada = view.findViewById(R.id.text_view_data_chegada);
+        TextView campoDataPartida = view.findViewById(R.id.text_view_data_partida);
 
         int destinoColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DESTINO);
         int razaoViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_RAZAO);
         int gastoViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_GASTO_TOTAL);
+        int dataChegadaViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DATA_CHEGADA);
+        int dataPartidaViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DATA_PARTIDA);
 
         String destino = cursor.getString(destinoColumnIndex);
         String gastoViagem = cursor.getString(gastoViagemColumnIndex);
+        String dataChegada = cursor.getString(dataChegadaViagemColumnIndex);
+        String dataPartida = cursor.getString(dataPartidaViagemColumnIndex);
+
         int razaoViagem = cursor.getInt(razaoViagemColumnIndex);
 
         if (razaoViagem == 1){
@@ -46,10 +53,13 @@ public class ViagemCursorAdapter extends CursorAdapter {
         }
 
         campoDestinoViagem.setText(destino);
-        if(gastoViagem != ""){
+        if(gastoViagem != " "){
             campoValorTotalGastoViagem.setText(gastoViagem);
         }else{
             campoValorTotalGastoViagem.setText(" 0.00");
         }
+
+        campoDataChegada.setText(dataChegada);
+        campoDataPartida.setText(dataPartida);
     }
 }

@@ -15,15 +15,20 @@
             android:name=".viagem.ListaViagemActivity"
             android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".login.Login"/>
-        <activity android:name=".viagem.NovaViagemActivity"/>
-        <activity android:name=".gasto.NovoGastoActivity"/>
-        <activity android:name=".gasto.ListaGastoActivity"/>
-        <activity android:name=".calendar.CalendarMain"/>
+        <activity android:name=".login.Login" />
+        <activity
+            android:name=".viagem.NovaViagemActivity"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".gasto.NovoGastoActivity" />
+        <activity android:name=".gasto.ListaGastoActivity" />
+        <activity android:name=".calendar.CalendarMain" />
+        <activity
+            android:name=".login.RegistroUsuarioActivity"
+            android:theme="@style/AppTheme" />
 
         <provider
             android:name=".database.Provider"

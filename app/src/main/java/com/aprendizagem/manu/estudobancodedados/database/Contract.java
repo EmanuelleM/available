@@ -71,22 +71,4 @@ public final class Contract {
         public final static String COLUMN_METODO_PAGAMENTO = "metodo_pagamento";
         public final static String COLUMN_DATA_GASTO = "data_gasto";
     }
-
-    public static final class UsuarioEntry implements BaseColumns {
-
-        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_USUARIOS);
-
-        public static final String CONTENT_LIST_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_USUARIOS;
-
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_USUARIOS;
-
-        public final static String TABLE_NAME = "usuarios";
-
-        public final static String _ID = BaseColumns._ID;
-        public static final String COLUMN_NOME_USUARIO = "viagem_id";
-        public final static String COLUMN_SENHA_USUARIO = "descricao_gasto";
-        public final static String COLUMN_ID_FIREBASE = "valor_gasto";
-    }
 }

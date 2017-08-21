@@ -76,7 +76,7 @@
         android:layout_marginBottom="@dimen/geral_8dp"
         android:layout_marginLeft="@dimen/geral_8dp"
         android:layout_marginRight="@dimen/geral_8dp"
-        ads:adSize="100x300"
+        ads:adSize="300x100"
         ads:adUnitId="@string/id_app_admob"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

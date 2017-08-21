@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "999899051771-fdodl9u1sgdjgu77jhqrva3b7nih5hu2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aprendizagem.manu.estudobancodedados",
+            "certificate_hash": "ae270236ff27aea5d1d5fecefe8193fb679494fd"
+          }
+        },
+        {
+          "client_id": "999899051771-gd5l16pbub52qh01uvaicnpoufm83tvj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aprendizagem.manu.estudobancodedados",
+            "certificate_hash": "4e85e9485f207a49cca26f7914564de0e22036d9"
+          }
+        },
+        {
           "client_id": "999899051771-ad5212j5k7mh4d9mric701u5cfj72uib.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

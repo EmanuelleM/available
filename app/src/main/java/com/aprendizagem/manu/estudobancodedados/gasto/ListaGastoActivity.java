@@ -81,11 +81,11 @@ public class ListaGastoActivity extends AppCompatActivity implements
                 " = " + getIdViagem;
 
         return new CursorLoader(this,
-                GastoEntry.CONTENT_URI, //tabela
-                projection, //campos retornados
-                selection, //clausula where e condicao
-                null, //se eu tivesse mais de uma condicao poderia colocar aqui?
-                null); //ordem de exibicao da lista
+                GastoEntry.CONTENT_URI,
+                projection,
+                selection,
+                null,
+                null);
 
     }
 

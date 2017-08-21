@@ -10,15 +10,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.view.MotionEvent;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aprendizagem.manu.estudobancodedados.Constantes;
 import com.aprendizagem.manu.estudobancodedados.R;
+import com.aprendizagem.manu.estudobancodedados.database.Contract;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.GastoEntry;
 import com.aprendizagem.manu.estudobancodedados.database.DatabaseHelper;
 import com.aprendizagem.manu.estudobancodedados.viagem.ListaViagemActivity;
@@ -37,24 +39,26 @@ public class NovoGastoActivity extends AppCompatActivity implements
 
     private Button salvarGasto;
 
-    private boolean mGastomodificado = false;
+    DatabaseHelper helper = new DatabaseHelper(this);
 
     String idViagem = String.valueOf(Constantes.getIdViagemSelecionada());
 
-    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            mGastomodificado = true;
-            return false;
-        }
-    };
+    Toolbar novoGastoToolbar;
+    TextView nomeLocalViagem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.novo_gasto);
+
         DatabaseHelper helper = new DatabaseHelper(this);
         final SQLiteDatabase db = helper.getReadableDatabase();
+
+        novoGastoToolbar = (Toolbar) findViewById(R.id.toolbar_novo_gasto);
+        nomeLocalViagem = (TextView) findViewById(R.id.text_view_viagem_gasto);
+        setSupportActionBar(novoGastoToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        nomeLocalViagem.setText(getDestino(db, idViagem));
 
         Intent intent = getIntent();
         mCurrentGastoUri = intent.getData();
@@ -68,7 +72,6 @@ public class NovoGastoActivity extends AppCompatActivity implements
 
             getLoaderManager().initLoader(EXISTING_GASTO_LOADER, null, this);
         }
-        // Find all relevant views that we will need to read user input from
         textDescricaoGasto = (EditText) findViewById(R.id.edit_text_descricao_gasto);
         textValorGasto = (EditText) findViewById(R.id.edit_text_valor_gasto);
         textMetodoPagamento = (EditText) findViewById(R.id.edit_text_metodo_pagamento);
@@ -77,29 +80,54 @@ public class NovoGastoActivity extends AppCompatActivity implements
         salvarGasto = (Button) findViewById(R.id.button_salvar_gasto);
         salvarGasto.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                novoGastoTotal(db, idViagem);
+                novoValorGastoTotal(db, idViagem);
                 salvarGasto();
             }
         });
     }
 
-    private double getGastoTotal(SQLiteDatabase db, String id) {
+    private String getDestino(SQLiteDatabase db, String id) {
         Cursor cursor = db.rawQuery(
-                "SELECT gasto_total FROM viagens WHERE _id = ?",
+                "SELECT destino FROM viagens WHERE _id = ?",
                 new String[]{id}
         );
+        cursor.moveToFirst();
+        String descricaoDesctino = cursor.getString(0);
+        cursor.close();
+        return descricaoDesctino;
+    }
+    private double getGastoTotal(SQLiteDatabase db, String id) {
+
+        String[] projection = {
+                Contract.ViagemEntry.COLUMN_GASTO_TOTAL
+        };
+
+        String selection = Contract.ViagemEntry._ID + " = ?";
+        String[] selectionArgs = {id};
+
+        Cursor cursor = db.query(
+                Contract.ViagemEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+
         cursor.moveToFirst();
         double gastoTotal = cursor.getDouble(0);
         cursor.close();
         return gastoTotal;
+
     }
 
-    private double novoGastoTotal(SQLiteDatabase db, String id) {
+    private void novoValorGastoTotal(SQLiteDatabase db, String id) {
 
         double antigoGastoTotal = getGastoTotal(db, idViagem);
-
         double valorAdicionadoUsuario = 0;
-        String value = textValorGasto.getText().toString().trim();
+        String value = textValorGasto.getText().toString().trim().replace(",", ".");
+
         if (!value.isEmpty())
             try {
                 valorAdicionadoUsuario = Double.parseDouble(value);
@@ -108,13 +136,23 @@ public class NovoGastoActivity extends AppCompatActivity implements
             }
 
         double novoValorGastoTotal = valorAdicionadoUsuario + antigoGastoTotal;
-        Cursor cursor = db.rawQuery("Update viagens SET gasto_total = ? where _id = ? ",
-                new String[]{String.valueOf(novoValorGastoTotal), id});
 
-        cursor.moveToFirst();
-        cursor.close();
+        db = helper.getReadableDatabase();
 
-        return novoValorGastoTotal;
+        ContentValues values = new ContentValues();
+        values.put(Contract.ViagemEntry.COLUMN_GASTO_TOTAL, novoValorGastoTotal);
+
+        String selection = Contract.ViagemEntry._ID + " LIKE ?";
+        String[] selectionArgs = {id};
+
+        db.update(
+                Contract.ViagemEntry.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs);
+
+        db.close();
+
     }
 
     private void salvarGasto() {
@@ -128,10 +166,6 @@ public class NovoGastoActivity extends AppCompatActivity implements
         String metodoPagamento = textMetodoPagamento.getText().toString().trim();
         String dataGasto = textDataGasto.getText().toString().trim();
 
-        if (mCurrentGastoUri == null && TextUtils.isEmpty(descricaoGasto) && TextUtils.isEmpty(valorGasto)) {
-            return;
-        }
-
         ContentValues values = new ContentValues();
         values.put(GastoEntry.COLUMN_VIAGEM_ID, getIdViagem);
         values.put(GastoEntry.COLUMN_DESCRICAO_GASTO, descricaoGasto);
@@ -139,32 +173,20 @@ public class NovoGastoActivity extends AppCompatActivity implements
         values.put(GastoEntry.COLUMN_DATA_GASTO, dataGasto);
         values.put(GastoEntry.COLUMN_METODO_PAGAMENTO, metodoPagamento);
 
-        if (mCurrentGastoUri == null) {
 
-            Uri newUri = getContentResolver().insert(GastoEntry.CONTENT_URI, values);
+        Uri newUri = getContentResolver().insert(GastoEntry.CONTENT_URI, values);
 
-            if (newUri == null) {
-                Toast.makeText(this, getString(R.string.erro_salvar_gasto),
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, getString(R.string.gasto_salvo),
-                        Toast.LENGTH_SHORT).show();
-
-                intent = new Intent(NovoGastoActivity.this, ListaViagemActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-            }
+        if (newUri == null) {
+            Toast.makeText(this, getString(R.string.erro_salvar_gasto),
+                    Toast.LENGTH_SHORT).show();
         } else {
+            Toast.makeText(this, getString(R.string.gasto_salvo),
+                    Toast.LENGTH_SHORT).show();
 
-            int rowsAffected = getContentResolver().update(mCurrentGastoUri, values, null, null);
+            intent = new Intent(NovoGastoActivity.this, ListaViagemActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
 
-            if (rowsAffected == 0) {
-                Toast.makeText(this, getString(R.string.falha_update),
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, getString(R.string.update_sucesso),
-                        Toast.LENGTH_SHORT).show();
-            }
         }
     }
 
@@ -179,18 +201,16 @@ public class NovoGastoActivity extends AppCompatActivity implements
                 GastoEntry.COLUMN_VIAGEM_ID
         };
 
-        // This loader will execute the ContentProvider's query method on a background thread
-        return new CursorLoader(this,   // Parent activity context
-                mCurrentGastoUri,         // Query the content URI for the current pet
-                projection,             // Columns to include in the resulting Cursor
-                null,                   // No selection clause
-                null,                   // No selection arguments
-                null);                  // Default sort order
+        return new CursorLoader(this,
+                mCurrentGastoUri,
+                projection,
+                null,
+                null,
+                null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-
     }
 
     @Override

@@ -1,11 +1,15 @@
 package com.aprendizagem.manu.estudobancodedados.viagem;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.support.v4.app.DialogFragment;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.icu.util.Calendar;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +17,7 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
@@ -21,27 +26,23 @@ import com.aprendizagem.manu.estudobancodedados.Constantes;
 import com.aprendizagem.manu.estudobancodedados.R;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
 
-public class NovaViagemActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class NovaViagemActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,  View.OnClickListener {
 
     private static final int EXISTING_VIAGEM_LOADER = 0;
 
     private Uri mCurrentViagemUri;
 
-    private EditText textDestino;
-    private EditText textLocalHospedagem;
-
+    private EditText editDestino;
+    private EditText editLocalHospedagem;
+    private Button buttonDataChegada;
+    private Button buttonDataPartida;
     private Button salvarViagem;
 
     private int mRazao = ViagemEntry.RAZAO_DESCONHECIDA;
 
-    private boolean mViagemModificada = false;
-
-    private int ano, mes, dia;
-
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            mViagemModificada = true;
             return false;
         }
     };
@@ -64,19 +65,20 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
             getLoaderManager().initLoader(EXISTING_VIAGEM_LOADER, null, this);
         }
 
-        textDestino = (EditText) findViewById(R.id.edit_text_destino);
-        textLocalHospedagem = (EditText) findViewById(R.id.input_local_hospedagem);
+        editDestino = (EditText) findViewById(R.id.edit_text_destino);
+        editLocalHospedagem = (EditText) findViewById(R.id.edit_text_local_hospedagem);
 
         salvarViagem = (Button) findViewById(R.id.button_salvar_viagem);
-        salvarViagem.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                salvarViagem();
-            }
-        });
+        salvarViagem.setOnClickListener(this);
 
-        textDestino.setOnTouchListener(mTouchListener);
-        textLocalHospedagem.setOnTouchListener(mTouchListener);
+        editDestino.setOnTouchListener(mTouchListener);
+        editLocalHospedagem.setOnTouchListener(mTouchListener);
 
+        buttonDataChegada = (Button) findViewById(R.id.button_pega_data_chegada);
+        buttonDataPartida = (Button) findViewById(R.id.button_pega_data_saida);
+
+        buttonDataChegada.setOnClickListener(this);
+        buttonDataPartida.setOnClickListener(this);
     }
 
     public void onRadioButtonClicked(View view) {
@@ -94,10 +96,39 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
         }
     }
 
+    public void getDataChegadaPicker(View v) {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "datePicker");
+    }
+
+    public void getDataPartidaPicker(View v) {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "datePicker");
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button_salvar_viagem:
+                salvarViagem();
+                break;
+            case R.id.button_pega_data_chegada:
+                getDataChegadaPicker(v);
+                break;
+            case R.id.button_pega_data_saida:
+                getDataPartidaPicker(v);
+
+        }
+    }
+
     private void salvarViagem() {
-        String destino = textDestino.getText().toString().trim();
-        String localHospedagem = textLocalHospedagem.getText().toString().trim();
+        DialogFragment newFragment = new DatePickerFragment();
+
+        String destino = editDestino.getText().toString().trim();
+        String localHospedagem = editLocalHospedagem.getText().toString().trim();
         String idDousuario = Constantes.getIdDoUsuario();
+//        String dataChegada = newFragment.populateSetDate
+//        String dataPartida = editDataPartida.getText().toString().trim();
         int razaoViagem = mRazao;
 
         if (mCurrentViagemUri == null && TextUtils.isEmpty(localHospedagem) && TextUtils.isEmpty(destino)
@@ -109,33 +140,22 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
         values.put(ViagemEntry.COLUMN_DESTINO, destino);
         values.put(ViagemEntry.COLUMN_LOCAL_ACOMODACAO, localHospedagem);
         values.put(ViagemEntry.COLUMN_RAZAO, razaoViagem);
+//        values.put(ViagemEntry.COLUMN_DATA_CHEGADA, dataChegada);
+//        values.put(ViagemEntry.COLUMN_DATA_PARTIDA, dataPartida);
         values.put(ViagemEntry.COLUMN_ID_USUARIO, idDousuario);
 
-        if (mCurrentViagemUri == null) {
 
-            Uri newUri = getContentResolver().insert(ViagemEntry.CONTENT_URI, values);
+        Uri newUri = getContentResolver().insert(ViagemEntry.CONTENT_URI, values);
 
-            if (newUri == null) {
-                Toast.makeText(this, getString(R.string.erro_salvar_viagem),
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, getString(R.string.viagem_salva),
-                        Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(NovaViagemActivity.this, ListaViagemActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-            }
+        if (newUri == null) {
+            Toast.makeText(this, getString(R.string.erro_salvar_viagem),
+                    Toast.LENGTH_SHORT).show();
         } else {
-
-            int rowsAffected = getContentResolver().update(mCurrentViagemUri, values, null, null);
-
-            if (rowsAffected == 0) {
-                Toast.makeText(this, getString(R.string.falha_update),
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, getString(R.string.update_sucesso),
-                        Toast.LENGTH_SHORT).show();
-            }
+            Toast.makeText(this, getString(R.string.viagem_salva),
+                    Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(NovaViagemActivity.this, ListaViagemActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         }
     }
 
@@ -146,7 +166,10 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
                 ViagemEntry._ID,
                 ViagemEntry.COLUMN_DESTINO,
                 ViagemEntry.COLUMN_LOCAL_ACOMODACAO,
-                ViagemEntry.COLUMN_RAZAO};
+                ViagemEntry.COLUMN_RAZAO,
+                ViagemEntry.COLUMN_DATA_CHEGADA,
+                ViagemEntry.COLUMN_DATA_PARTIDA
+        };
 
         return new CursorLoader(this,
                 mCurrentViagemUri,
@@ -165,7 +188,41 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        textDestino.setText("");
-        textLocalHospedagem.setText("");
+        editDestino.setText("");
+        editLocalHospedagem.setText("");
+    }
+
+    public static class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            Button buttonDataChegada = (Button) getActivity().findViewById(R.id.button_pega_data_chegada);
+            buttonDataChegada.setText(view.getDayOfMonth()+"/" + view.getMonth() + "/" + view.getYear());
+
+            Button buttonDataPartida = (Button) getActivity().findViewById(R.id.button_pega_data_saida);
+            buttonDataPartida.setText(view.getDayOfMonth()+"/" + view.getMonth() + "/" + view.getYear());
+
+            int setAno = view.getYear();
+            int setMes = view.getMonth();
+            int setDia = view.getDayOfMonth();
+            populateSetDate(setDia, setMes+1, setAno);
+        }
+
+        public void populateSetDate(int year, int month, int day) {
+
+
+        }
     }
 }

@@ -1,21 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/geral_16dp">
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_novo_gasto"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/geral_5dp"
-        android:textSize="24sp"
-        tools:text="Belo Horizonte" />
+        android:background="?attr/colorPrimaryDark"
+        android:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/text_view_viagem_gasto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textSize="@dimen/text_size_20sp" />
+    </android.support.v7.widget.Toolbar>
 
     <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:id="@+id/textInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/geral_8dp"
+        android:layout_marginStart="@dimen/geral_8dp"
+        android:layout_marginTop="@dimen/geral_8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_novo_gasto">
 
         <EditText
             android:id="@+id/edit_text_descricao_gasto"
@@ -25,8 +44,14 @@
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:id="@+id/textInputLayout2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/geral_8dp"
+        android:layout_marginStart="@dimen/geral_8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
 
         <EditText
             android:id="@+id/edit_text_valor_gasto"
@@ -36,8 +61,14 @@
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:id="@+id/textInputLayout3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/geral_8dp"
+        android:layout_marginStart="@dimen/geral_8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
 
         <EditText
             android:id="@+id/edit_text_metodo_pagamento"
@@ -46,9 +77,31 @@
             android:hint="@string/forma_de_pagamento" />
     </android.support.design.widget.TextInputLayout>
 
+    <Button
+        android:id="@+id/button_salvar_gasto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/geral_5dp"
+        android:layout_marginBottom="@dimen/geral_8dp"
+        android:layout_marginStart="@dimen/geral_8dp"
+        android:layout_marginEnd="@dimen/geral_8dp"
+        android:layout_marginTop="@dimen/geral_8dp"
+        android:text="@string/salvar_gasto"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout5" />
+
+
     <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:id="@+id/textInputLayout5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/geral_8dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout3"
+        app:layout_constraintRight_toRightOf="parent">
 
         <EditText
             android:id="@+id/edit_text_data_gasto"
@@ -58,11 +111,4 @@
             android:inputType="date" />
     </android.support.design.widget.TextInputLayout>
 
-    <Button
-        android:id="@+id/button_salvar_gasto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/geral_5dp"
-        android:text="@string/salvar_gasto" />
-
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
