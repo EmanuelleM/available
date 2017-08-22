@@ -2,7 +2,6 @@ package com.aprendizagem.manu.estudobancodedados.viagem;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.support.v4.app.DialogFragment;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
@@ -26,7 +25,8 @@ import com.aprendizagem.manu.estudobancodedados.Constantes;
 import com.aprendizagem.manu.estudobancodedados.R;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
 
-public class NovaViagemActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,  View.OnClickListener, DatePickerDialog.OnDateSetListener {
+public class NovaViagemActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
+        View.OnClickListener {
 
     private static final int EXISTING_VIAGEM_LOADER = 0;
 
@@ -40,6 +40,8 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
     private Button buttonDataChegada;
     private String dataChegada;
     private String dataPartida;
+
+    private Calendar calendar = Calendar.getInstance();
 
     private int mRazao = ViagemEntry.RAZAO_DESCONHECIDA;
 
@@ -99,27 +101,50 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
         }
     }
 
-    public void getDataChegadaPicker(View v) {
-        DialogFragment newFragment = new DatePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "datePicker");
+    private Dialog pegaDataChegada() {
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int year,
+                                  int monthOfYear, int dayOfMonth) {
+                dataChegada = dayOfMonth + "/" + monthOfYear + "/" + year;
+                buttonDataChegada.setText(dataChegada);
+            }
+        };
+        return new DatePickerDialog(this,
+                dateSetListener,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)) {
+        };
     }
 
-    public void getDataPartidaPicker(View v) {
-        DialogFragment newFragment = new DatePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "datePicker");
+    private Dialog pegaDataPartida() {
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int year,
+                                  int monthOfYear, int dayOfMonth) {
+                dataPartida = dayOfMonth + "/" + monthOfYear + "/" + year;
+                buttonDataPartida.setText(dataPartida);
+            }
+        };
+        return new DatePickerDialog(this,
+                dateSetListener,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)) {
+        };
     }
+
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.button_salvar_viagem:
                 salvarViagem();
                 break;
             case R.id.button_pega_data_chegada:
-                getDataChegadaPicker(v);
+                pegaDataChegada().show();
                 break;
             case R.id.button_pega_data_saida:
-                getDataPartidaPicker(v);
+                pegaDataPartida().show();
 
         }
     }
@@ -191,32 +216,4 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
         editDestino.setText("");
         editLocalHospedagem.setText("");
     }
-
-    @Override
-    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-
-        buttonDataChegada = (Button) findViewById(R.id.button_pega_data_chegada);
-        buttonDataChegada.setText(datePicker.getDayOfMonth()+"/" + datePicker.getMonth() + "/" + datePicker.getYear());
-
-        dataChegada = datePicker.getDayOfMonth()+"/" + datePicker.getMonth() + "/" + datePicker.getYear();
-
-        buttonDataPartida = (Button) findViewById(R.id.button_pega_data_saida);
-        buttonDataPartida.setText(8+"/" + 8 + "/" + 1991);
-    }
-
-
-    public static class DatePickerFragment extends DialogFragment {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-            return new DatePickerDialog(getActivity(),
-                    (DatePickerDialog.OnDateSetListener)
-                            getActivity(), year, month, day);
-        }
-    }
-
 }

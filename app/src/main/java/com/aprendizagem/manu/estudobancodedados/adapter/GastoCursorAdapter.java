@@ -38,7 +38,7 @@ public class GastoCursorAdapter extends CursorAdapter {
         String dataGastoViagem = cursor.getString(dataGastoColumIndex);
 
         txtDescricaoGasto.setText(descricaoGasto);
-        txtValorGasto.setText(valorGastoViagem);
-        txtDataGasto.setText(dataGastoViagem.replace(".", ","));
+        txtValorGasto.setText(valorGastoViagem.replace(".", ","));
+        txtDataGasto.setText(dataGastoViagem);
     }
 }

@@ -3,6 +3,5 @@
     <string-array name="opcoes_item_viagem">
         <item>@string/exibe_lista_de_gastos</item>
         <item>@string/novo_gasto</item>
-        <item>@string/adicionar_viagem_ao_calendario</item>
     </string-array>
 </resources>

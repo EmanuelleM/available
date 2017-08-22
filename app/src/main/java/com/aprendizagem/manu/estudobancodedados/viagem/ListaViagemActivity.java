@@ -1,6 +1,7 @@
 package com.aprendizagem.manu.estudobancodedados.viagem;
 
 import android.app.LoaderManager;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,17 +15,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aprendizagem.manu.estudobancodedados.Constantes;
 import com.aprendizagem.manu.estudobancodedados.R;
 import com.aprendizagem.manu.estudobancodedados.adapter.ViagemCursorAdapter;
-import com.aprendizagem.manu.estudobancodedados.calendar.CalendarMain;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
 import com.aprendizagem.manu.estudobancodedados.gasto.ListaGastoActivity;
 import com.aprendizagem.manu.estudobancodedados.gasto.NovoGastoActivity;
@@ -41,22 +43,19 @@ import com.google.firebase.auth.FirebaseUser;
 public class ListaViagemActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, GoogleApiClient.OnConnectionFailedListener {
 
+    public static final String ANONYMOUS = "anonymous";
     private static final int VIAGEM_LOADER = 0;
 
     ViagemCursorAdapter mCursorAdapter;
-
-    public static final String ANONYMOUS = "anonymous";
-    private GoogleApiClient mGoogleApiClient;
-    private FirebaseAuth mFirebaseAuth;
-    private FirebaseUser mFirebaseUser;
-
-    private String nomeUsuarioVindoDoFirebase;
-    private String idUsuarioVindoDoFirebase;
-
     Toolbar listaGastoToolbar;
     TextView nomeUsuarioToolbar;
     RecyclerView recyclerViewViagem;
-    View emptyView;
+
+    private GoogleApiClient mGoogleApiClient;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
+    private String nomeUsuarioVindoDoFirebase;
+    private String idUsuarioVindoDoFirebase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,12 +77,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
 
             nomeUsuarioToolbar = (TextView) findViewById(R.id.text_view_nome_usuario);
             setSupportActionBar(listaGastoToolbar);
-            if (nomeUsuarioVindoDoFirebase != null) {
-                nomeUsuarioToolbar.setText(" " + nomeUsuarioVindoDoFirebase);
-            } else {
-                //colocar a logica pra pegar usuario
-                nomeUsuarioToolbar.setText(" " + idUsuarioVindoDoFirebase);
-            }
+            nomeUsuarioToolbar.setText(" " + nomeUsuarioVindoDoFirebase);
 
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_nova_viagem);
             fab.setOnClickListener(new View.OnClickListener() {
@@ -97,29 +91,33 @@ public class ListaViagemActivity extends AppCompatActivity implements
 
             recyclerViewViagem = (RecyclerView) findViewById(R.id.list_view_viagem);
             recyclerViewViagem.setHasFixedSize(true);
-//            emptyView = findViewById(R.id.include_lista_viagem_vazia);
-//            recyclerViewViagem.setEmptyView(emptyView);
 
-            mCursorAdapter = new ViagemCursorAdapter(
-                    new ViagemCursorAdapter.AoClicarNoItem() {
-                        @Override
-                        public void itemFoiClicado(Cursor cursor) {
-                            long id = cursor.getLong(
-                                    cursor.getColumnIndex(ViagemEntry._ID));
-                        }
-                    });
+            recyclerViewViagem.addOnItemTouchListener(new RecyclerTouchListener(this,
+                    recyclerViewViagem, new ClickListener() {
+                @Override
+                public void onClick(View view, final int position) {
+                    opcoesParaCliqueDaViagem(position);
+                }
+
+                @Override
+                public void onLongClick(View view, int position) {
+                    Toast.makeText(getApplicationContext(), "Long press on position :" + position,
+                            Toast.LENGTH_LONG).show();
+                }
+            }));
+
+            mCursorAdapter = new ViagemCursorAdapter(new ViagemCursorAdapter.ItemClickListenerAdapter() {
+                @Override
+                public void itemFoiClicado(Cursor cursor) {
+                    long id = cursor.getLong(
+                            cursor.getColumnIndex(ViagemEntry._ID));
+
+                }
+            }, getApplicationContext());
 
             recyclerViewViagem.setLayoutManager(new LinearLayoutManager(ListaViagemActivity.this));
             mCursorAdapter.setHasStableIds(true);
             recyclerViewViagem.setAdapter(mCursorAdapter);
-
-//            recyclerViewViagem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                @Override
-//                public void onItemClick(AdapterView<?> adapterView, View view, int position, final long id) {
-//                    final int posicaoViagem = position + 1;
-//                    opcoesParaCliqueDaViagem(posicaoViagem);
-//                }
-//            });
 
             getLoaderManager().initLoader(VIAGEM_LOADER, null, this);
 
@@ -140,7 +138,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
                 .build();
     }
 
-    private void opcoesParaCliqueDaViagem(final int posicaoViagem) {
+    private void opcoesParaCliqueDaViagem(final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(ListaViagemActivity.this);
 
         builder.setItems(R.array.opcoes_item_viagem, new DialogInterface.OnClickListener() {
@@ -149,18 +147,15 @@ public class ListaViagemActivity extends AppCompatActivity implements
                 switch (item) {
                     case 0:
                         intent = new Intent(ListaViagemActivity.this, ListaGastoActivity.class);
-                        Constantes.setIdViagemSelecionada(posicaoViagem);
+                        Constantes.setIdViagemSelecionada(position + 1);
                         startActivity(intent);
                         break;
                     case 1:
                         intent = new Intent(ListaViagemActivity.this, NovoGastoActivity.class);
-                        Constantes.setIdViagemSelecionada(posicaoViagem);
+                        Constantes.setIdViagemSelecionada(position + 1);
                         startActivity(intent);
                         break;
 
-                    case 2:
-                        intent = new Intent(ListaViagemActivity.this, CalendarMain.class);
-                        startActivity(intent);
                 }
             }
         });
@@ -230,4 +225,52 @@ public class ListaViagemActivity extends AppCompatActivity implements
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+    //implementando o onclicklistener
+    public static interface ClickListener {
+        void onClick(View view, int position);
+
+        void onLongClick(View view, int position);
+    }
+
+    class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
+
+        private ClickListener clicklistener;
+        private GestureDetector gestureDetector;
+
+        public RecyclerTouchListener(Context context, final RecyclerView recycleView, final ClickListener clicklistener) {
+
+            this.clicklistener = clicklistener;
+            gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onSingleTapUp(MotionEvent e) {
+                    return true;
+                }
+
+            });
+        }
+
+        @Override
+        public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+            View child = rv.findChildViewUnder(e.getX(), e.getY());
+            if (child != null && clicklistener != null && gestureDetector.onTouchEvent(e)) {
+                clicklistener.onClick(child, rv.getChildAdapterPosition(child));
+            }
+
+            return false;
+        }
+
+        @Override
+        public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+        }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+        }
+
+    }
+
 }
+

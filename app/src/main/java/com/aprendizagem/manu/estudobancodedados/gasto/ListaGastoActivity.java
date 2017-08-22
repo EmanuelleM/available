@@ -37,8 +37,8 @@ public class ListaGastoActivity extends AppCompatActivity implements
 
         ListView gastoListView = (ListView) findViewById(R.id.list_view_gasto);
 
-        View emptyView = findViewById(R.id.include_lista_gasto_vazia);
-        gastoListView.setEmptyView(emptyView);
+//        View emptyView = findViewById(R.id.include_lista_gasto_vazia);
+//        gastoListView.setEmptyView(emptyView);
 
         listaGastoToolbar = (Toolbar) findViewById(R.id.toolbar_lista_gasto);
         destinoToolbar = (TextView) findViewById(R.id.text_view_destino);

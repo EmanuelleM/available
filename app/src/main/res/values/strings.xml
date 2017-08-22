@@ -58,4 +58,6 @@
     <string name="seu_nome_de_usuario">Seu nome</string>
     <string name="buscar">Buscar</string>
     <string name="fazendo_login">Fazendo Login</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>

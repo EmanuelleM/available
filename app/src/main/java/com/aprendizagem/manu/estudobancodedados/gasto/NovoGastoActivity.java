@@ -1,5 +1,7 @@
 package com.aprendizagem.manu.estudobancodedados.gasto;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
@@ -7,15 +9,16 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.icu.util.Calendar;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aprendizagem.manu.estudobancodedados.Constantes;
@@ -26,77 +29,125 @@ import com.aprendizagem.manu.estudobancodedados.database.DatabaseHelper;
 import com.aprendizagem.manu.estudobancodedados.viagem.ListaViagemActivity;
 
 public class NovoGastoActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
 
-    private static final int EXISTING_GASTO_LOADER = 0;
+    DatabaseHelper helper = new DatabaseHelper(this);
+    String idViagem = String.valueOf(Constantes.getIdViagemSelecionada());
 
     private Uri mCurrentGastoUri;
 
     private EditText textDescricaoGasto;
     private EditText textValorGasto;
     private EditText textMetodoPagamento;
-    private EditText textDataGasto;
 
+    private Button buttonDataChegada;
     private Button salvarGasto;
 
-    DatabaseHelper helper = new DatabaseHelper(this);
+    private String dataGasto;
 
-    String idViagem = String.valueOf(Constantes.getIdViagemSelecionada());
 
-    Toolbar novoGastoToolbar;
-    TextView nomeLocalViagem;
+    private Calendar calendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.novo_gasto);
-
         DatabaseHelper helper = new DatabaseHelper(this);
         final SQLiteDatabase db = helper.getReadableDatabase();
 
-        novoGastoToolbar = (Toolbar) findViewById(R.id.toolbar_novo_gasto);
-        nomeLocalViagem = (TextView) findViewById(R.id.text_view_viagem_gasto);
-        setSupportActionBar(novoGastoToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        nomeLocalViagem.setText(getDestino(db, idViagem));
-
         Intent intent = getIntent();
         mCurrentGastoUri = intent.getData();
+        setTitle(getString(R.string.novo_gasto));
+        invalidateOptionsMenu();
 
-        if (mCurrentGastoUri == null) {
-            setTitle(getString(R.string.novo_gasto));
-
-            invalidateOptionsMenu();
-        } else {
-            setTitle(getString(R.string.editando_gasto));
-
-            getLoaderManager().initLoader(EXISTING_GASTO_LOADER, null, this);
-        }
+        // Find all relevant views that we will need to read user input from
         textDescricaoGasto = (EditText) findViewById(R.id.edit_text_descricao_gasto);
         textValorGasto = (EditText) findViewById(R.id.edit_text_valor_gasto);
         textMetodoPagamento = (EditText) findViewById(R.id.edit_text_metodo_pagamento);
-        textDataGasto = (EditText) findViewById(R.id.edit_text_data_gasto);
+
+        buttonDataChegada = (Button) findViewById(R.id.button_pega_data_gasto);
+        buttonDataChegada.setOnClickListener(this);
 
         salvarGasto = (Button) findViewById(R.id.button_salvar_gasto);
+
         salvarGasto.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                novoValorGastoTotal(db, idViagem);
-                salvarGasto();
+                novoGastoTotal(db, idViagem);
+
+                final String getIdViagem = String.valueOf(Constantes.getIdViagemSelecionada());
+                final String descricaoGasto = textDescricaoGasto.getText().toString().trim();
+
+                final String valorGasto = textValorGasto.getText().toString().trim();
+
+                final String metodoPagamento = textMetodoPagamento.getText().toString().trim();
+
+                if (mCurrentGastoUri == null && TextUtils.isEmpty(descricaoGasto) && TextUtils.isEmpty(valorGasto)) {
+                    return;
+                }
+
+                new AsyncTask<Void, Void, Uri>() {
+
+                    @Override
+                    protected Uri doInBackground(Void... params) {
+
+                        ContentValues values = new ContentValues();
+
+                        values.put(GastoEntry.COLUMN_VIAGEM_ID, getIdViagem);
+                        values.put(GastoEntry.COLUMN_DESCRICAO_GASTO, descricaoGasto);
+                        values.put(GastoEntry.COLUMN_VALOR_GASTO, valorGasto);
+                        values.put(GastoEntry.COLUMN_DATA_GASTO, dataGasto);
+                        values.put(GastoEntry.COLUMN_METODO_PAGAMENTO, metodoPagamento);
+
+                        return getContentResolver().insert(GastoEntry.CONTENT_URI, values);
+
+                    }
+
+                    @Override
+                    protected void onPostExecute(Uri uri) {
+                        super.onPostExecute(uri);
+
+                        if (uri != null) {
+
+                            Toast.makeText(NovoGastoActivity.this, getString(R.string
+                                            .gasto_salvo),
+                                    Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(NovoGastoActivity.this, ListaViagemActivity
+                                    .class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+
+                        } else {
+                            Toast.makeText(NovoGastoActivity.this, getString(R.string
+                                            .erro_salvar_gasto),
+                                    Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                }.execute();
             }
         });
     }
 
-    private String getDestino(SQLiteDatabase db, String id) {
-        Cursor cursor = db.rawQuery(
-                "SELECT destino FROM viagens WHERE _id = ?",
-                new String[]{id}
-        );
-        cursor.moveToFirst();
-        String descricaoDesctino = cursor.getString(0);
-        cursor.close();
-        return descricaoDesctino;
+    private Dialog pegaDataGasto() {
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int year,
+                                  int monthOfYear, int dayOfMonth) {
+                dataGasto = dayOfMonth + "/" + monthOfYear + "/" + year;
+                buttonDataChegada.setText(dataGasto);
+            }
+        };
+        return new DatePickerDialog(this,
+                dateSetListener,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)) {
+        };
     }
+
     private double getGastoTotal(SQLiteDatabase db, String id) {
+
+        db = helper.getReadableDatabase();
 
         String[] projection = {
                 Contract.ViagemEntry.COLUMN_GASTO_TOTAL
@@ -122,7 +173,7 @@ public class NovoGastoActivity extends AppCompatActivity implements
 
     }
 
-    private void novoValorGastoTotal(SQLiteDatabase db, String id) {
+    private void novoGastoTotal(SQLiteDatabase db, String id) {
 
         double antigoGastoTotal = getGastoTotal(db, idViagem);
         double valorAdicionadoUsuario = 0;
@@ -155,41 +206,6 @@ public class NovoGastoActivity extends AppCompatActivity implements
 
     }
 
-    private void salvarGasto() {
-
-        Intent intent;
-        String getIdViagem = String.valueOf(Constantes.getIdViagemSelecionada());
-        String descricaoGasto = textDescricaoGasto.getText().toString().trim();
-
-        String valorGasto = textValorGasto.getText().toString().trim();
-
-        String metodoPagamento = textMetodoPagamento.getText().toString().trim();
-        String dataGasto = textDataGasto.getText().toString().trim();
-
-        ContentValues values = new ContentValues();
-        values.put(GastoEntry.COLUMN_VIAGEM_ID, getIdViagem);
-        values.put(GastoEntry.COLUMN_DESCRICAO_GASTO, descricaoGasto);
-        values.put(GastoEntry.COLUMN_VALOR_GASTO, valorGasto);
-        values.put(GastoEntry.COLUMN_DATA_GASTO, dataGasto);
-        values.put(GastoEntry.COLUMN_METODO_PAGAMENTO, metodoPagamento);
-
-
-        Uri newUri = getContentResolver().insert(GastoEntry.CONTENT_URI, values);
-
-        if (newUri == null) {
-            Toast.makeText(this, getString(R.string.erro_salvar_gasto),
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, getString(R.string.gasto_salvo),
-                    Toast.LENGTH_SHORT).show();
-
-            intent = new Intent(NovoGastoActivity.this, ListaViagemActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-
-        }
-    }
-
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         String[] projection = {
@@ -211,13 +227,21 @@ public class NovoGastoActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        textDescricaoGasto.setText("");
-        textValorGasto.setText("");
-        textMetodoPagamento.setText("");
-        textDataGasto.setText("");
+
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        switch (view.getId()) {
+            case R.id.button_pega_data_gasto:
+                pegaDataGasto().show();
+                break;
+        }
     }
 }
