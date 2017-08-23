@@ -15,7 +15,6 @@ public final class Contract {
 
     public static final String PATH_VIAGENS = "viagens";
     public static final String PATH_GASTOS = "gastos";
-    public static final String PATH_USUARIOS = "usuarios";
 
     public static final class ViagemEntry implements BaseColumns {
 
@@ -70,5 +69,6 @@ public final class Contract {
         public final static String COLUMN_VALOR_GASTO = "valor_gasto";
         public final static String COLUMN_METODO_PAGAMENTO = "metodo_pagamento";
         public final static String COLUMN_DATA_GASTO = "data_gasto";
+        public final static String COLUMN_ID_USUARIO = "id_usuario";
     }
 }

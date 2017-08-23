@@ -15,9 +15,9 @@ import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
 public class ViagemCursorAdapter extends
         RecyclerView.Adapter<ViagemCursorAdapter.ViewHolder> {
 
+    Context mContext;
     private Cursor cursor;
     private ItemClickListenerAdapter mListener;
-    Context mContext;
 
     public ViagemCursorAdapter(ItemClickListenerAdapter aoClicarNoItem, Context applicationContext) {
         mListener = aoClicarNoItem;
@@ -25,9 +25,16 @@ public class ViagemCursorAdapter extends
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, final int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_lista_viagem, parent, false);
+
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Log.d ("contador?" , ""+ getCursor().getColumnName(viewType));
+            }
+        });
 
         final ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -37,16 +44,19 @@ public class ViagemCursorAdapter extends
     public void onBindViewHolder(ViewHolder holder, final int position) {
         cursor.moveToPosition(position);
 
-        int destinoColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DESTINO);
+        final int identificadorColumnIndex = cursor.getColumnIndex(ViagemEntry._ID);
+        final int destinoColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DESTINO);
         int razaoViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_RAZAO);
         int gastoViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_GASTO_TOTAL);
         int dataChegadaViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DATA_CHEGADA);
         int dataPartidaViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DATA_PARTIDA);
 
-        String destino = cursor.getString(destinoColumnIndex);
+
+        final String destino = cursor.getString(destinoColumnIndex);
         String gastoViagem = cursor.getString(gastoViagemColumnIndex);
         String dataChegada = cursor.getString(dataChegadaViagemColumnIndex);
         String dataPartida = cursor.getString(dataPartidaViagemColumnIndex);
+        String valorIdViagem = cursor.getString(identificadorColumnIndex);
 
         int razaoViagem = cursor.getInt(razaoViagemColumnIndex);
 
@@ -62,7 +72,15 @@ public class ViagemCursorAdapter extends
         holder.campoValorTotalGastoViagem.setText(gastoViagem);
         holder.campoDataChegada.setText(dataChegada);
         holder.campoDataPartida.setText(dataPartida);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
+
 
     @Override
     public int getItemCount() {

@@ -6,24 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_lista_viagem"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimaryDark"
-        android:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/text_view_nome_usuario"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_20sp"
-            tools:text="Bem vinda Emanuelle" />
-    </android.support.v7.widget.Toolbar>
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_nova_viagem"
         android:layout_width="wrap_content"
@@ -41,47 +23,21 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
-    <include
-        android:id="@+id/include_lista_viagem_vazia"
-        layout="@layout/lista_viagem_vazia"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/geral_8dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_lista_viagem" />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_view_viagem"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/geral_8dp"
         android:layout_marginEnd="@dimen/geral_8dp"
         android:layout_marginStart="@dimen/geral_8dp"
-        ads:layout_constraintBottom_toBottomOf="@+id/native_ad_view"
+        android:layout_marginTop="8dp"
+        ads:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_lista_viagem"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
-
-    <com.google.android.gms.ads.NativeExpressAdView
-        android:id="@+id/native_ad_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/geral_8dp"
-        android:layout_marginEnd="@dimen/geral_8dp"
-        android:layout_marginLeft="@dimen/geral_8dp"
-        android:layout_marginRight="@dimen/geral_8dp"
-        android:layout_marginStart="@dimen/geral_8dp"
-        ads:adSize="300x100"
-        ads:adUnitId="@string/id_app_admob"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="@+id/toolbar_lista_viagem" />
+        tools:layout_constraintTop_creator="1"
+        ads:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp" />
 
 </android.support.constraint.ConstraintLayout>

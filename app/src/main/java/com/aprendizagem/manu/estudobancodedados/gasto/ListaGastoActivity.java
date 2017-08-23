@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,8 +25,6 @@ public class ListaGastoActivity extends AppCompatActivity implements
     private static final int GASTO_LOADER = 0;
 
     GastoCursorAdapter mCursorAdapter;
-    Toolbar listaGastoToolbar;
-    TextView destinoToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +36,8 @@ public class ListaGastoActivity extends AppCompatActivity implements
 
         ListView gastoListView = (ListView) findViewById(R.id.list_view_gasto);
 
-//        View emptyView = findViewById(R.id.include_lista_gasto_vazia);
-//        gastoListView.setEmptyView(emptyView);
-
-        listaGastoToolbar = (Toolbar) findViewById(R.id.toolbar_lista_gasto);
-        destinoToolbar = (TextView) findViewById(R.id.text_view_destino);
-        setSupportActionBar(listaGastoToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        String idViagem = String.valueOf(Constantes.getIdViagemSelecionada());
-        destinoToolbar.setText(getDestino(db, idViagem));
+        View emptyView = findViewById(R.id.include_lista_gasto_vazia);
+        gastoListView.setEmptyView(emptyView);
 
         mCursorAdapter = new GastoCursorAdapter(this, null);
         gastoListView.setAdapter(mCursorAdapter);
@@ -53,21 +45,11 @@ public class ListaGastoActivity extends AppCompatActivity implements
         getLoaderManager().initLoader(GASTO_LOADER, null, this);
     }
 
-    private String getDestino(SQLiteDatabase db, String id) {
-        Cursor cursor = db.rawQuery(
-                "SELECT destino FROM viagens WHERE _id = ?",
-                new String[]{id}
-        );
-        cursor.moveToFirst();
-        String descricaoDesctino = cursor.getString(0);
-        cursor.close();
-        return descricaoDesctino;
-    }
-
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
 
         String getIdViagem = String.valueOf(Constantes.getIdViagemSelecionada());
+        String getIdUsuario = String.valueOf(Constantes.getIdDoUsuario());
 
         String[] projection = {
                 GastoEntry._ID,
@@ -75,10 +57,13 @@ public class ListaGastoActivity extends AppCompatActivity implements
                 GastoEntry.COLUMN_VIAGEM_ID,
                 GastoEntry.COLUMN_VALOR_GASTO,
                 GastoEntry.COLUMN_DATA_GASTO,
-                GastoEntry.COLUMN_METODO_PAGAMENTO};
+                GastoEntry.COLUMN_METODO_PAGAMENTO,
+                GastoEntry.COLUMN_ID_USUARIO};
 
-        String selection = GastoEntry.COLUMN_VIAGEM_ID +
-                " = " + getIdViagem;
+        String selection = GastoEntry.COLUMN_VIAGEM_ID + " = " + getIdViagem + " AND "
+                + GastoEntry.COLUMN_ID_USUARIO + " = '" + getIdUsuario + "'";
+
+        Log.d("query", "" + selection);
 
         return new CursorLoader(this,
                 GastoEntry.CONTENT_URI,

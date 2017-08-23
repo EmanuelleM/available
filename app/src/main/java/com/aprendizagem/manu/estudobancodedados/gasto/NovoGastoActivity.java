@@ -138,8 +138,8 @@ public class NovoGastoActivity extends AppCompatActivity implements
                 Contract.ViagemEntry.COLUMN_GASTO_TOTAL
         };
 
-        String selection = Contract.ViagemEntry._ID + " = '" + id +"' AND "+
-                Contract.ViagemEntry.COLUMN_ID_USUARIO + "= '" + idUsuario +"'";
+        String selection = Contract.ViagemEntry._ID + " = '" + idViagem + "' AND " +
+                Contract.ViagemEntry.COLUMN_ID_USUARIO + "= '" + idUsuario + "'";
         String[] selectionArgs = {id, idUsuario};
 
         Cursor cursor = db.query(
@@ -153,12 +153,10 @@ public class NovoGastoActivity extends AppCompatActivity implements
         );
         double gastoTotal = 0;
 
-        if (cursor.moveToFirst()) {
-
-            gastoTotal = cursor.getDouble(0);
-            cursor.close();
-
-        }return gastoTotal;
+        if (cursor.moveToFirst()){
+        gastoTotal = cursor.getDouble(0);
+        cursor.close();}
+        return gastoTotal;
     }
 
     private void novoGastoTotal(SQLiteDatabase db, String id) {
@@ -181,14 +179,13 @@ public class NovoGastoActivity extends AppCompatActivity implements
         ContentValues values = new ContentValues();
         values.put(Contract.ViagemEntry.COLUMN_GASTO_TOTAL, novoValorGastoTotal);
 
-        String selection = Contract.ViagemEntry._ID + " LIKE ?";
-        String[] selectionArgs = {id};
+        String selection = Contract.ViagemEntry._ID + " = '" + idViagem  + "' AND " +
+                Contract.ViagemEntry.COLUMN_ID_USUARIO + "= '" + idUsuario + "'";
 
         db.update(
                 Contract.ViagemEntry.TABLE_NAME,
                 values,
-                selection,
-                selectionArgs);
+                selection, null);
 
         db.close();
 

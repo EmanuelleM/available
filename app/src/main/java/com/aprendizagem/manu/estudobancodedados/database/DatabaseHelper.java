@@ -38,7 +38,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + GastoEntry.COLUMN_VIAGEM_ID + " INTEGER, "
                 + GastoEntry.COLUMN_METODO_PAGAMENTO + " INTEGER, "
                 + GastoEntry.COLUMN_VALOR_GASTO + " TEXT, "
-                + GastoEntry.COLUMN_DATA_GASTO + " TEXT);";
+                + GastoEntry.COLUMN_DATA_GASTO + " TEXT, "
+                + GastoEntry.COLUMN_ID_USUARIO + " TEXT);";
 
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_VIAGEM_TABLE);

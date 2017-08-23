@@ -6,25 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_novo_gasto"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimaryDark"
-        android:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/text_view_viagem_gasto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAllCaps="true"
-            android:textSize="@dimen/text_size_20sp" />
-    </android.support.v7.widget.Toolbar>
-
     <android.support.design.widget.TextInputLayout
         android:id="@+id/textInputLayout"
         android:layout_width="0dp"
@@ -34,7 +15,7 @@
         android:layout_marginTop="@dimen/geral_16dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_novo_gasto">
+        app:layout_constraintTop_toTopOf="parent">
 
         <EditText
             android:id="@+id/edit_text_descricao_gasto"
@@ -92,7 +73,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_pega_data_chegada" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
 
 
     <Button

@@ -11,7 +11,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_launcher"
-        android:theme="@style/AppThemeWithoutActionBar">
+        android:theme="@style/AppTheme">
         <activity
             android:name=".viagem.ListaViagemActivity"
             android:label="@string/app_name">
@@ -22,32 +22,45 @@
             </intent-filter>
         </activity>
         <activity android:name=".login.Login" />
+        <activity android:name=".viagem.NovaViagemActivity" />
         <activity
-            android:name=".viagem.NovaViagemActivity"
-            android:theme="@style/AppTheme" />
-        <activity android:name=".gasto.NovoGastoActivity" />
-        <activity android:name=".gasto.ListaGastoActivity">
+            android:name=".gasto.NovoGastoActivity"
+            android:parentActivityName=".viagem.ListaViagemActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="viagem.ListaViagemActivity" />
+        </activity>
+        <activity
+            android:name=".gasto.ListaGastoActivity"
+            android:parentActivityName=".viagem.ListaViagemActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".viagem.ListaViagemActivity" />
         </activity>
-        <activity
-            android:name=".login.RegistroUsuarioActivity"
-            android:theme="@style/AppTheme" />
+        <activity android:name=".login.RegistroUsuarioActivity" />
 
         <provider
             android:name=".database.Provider"
             android:authorities="com.aprendizagem.manu.estudobancodedados"
             android:exported="false" />
 
-        <receiver android:name=".NewAppWidget">
+        <receiver android:name=".widget.NewAppWidgetViagem">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/new_app_widget_info" />
+                android:resource="@xml/new_app_widget_viagem_info" />
+        </receiver>
+        <receiver android:name=".widget.OficialAppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/oficial_app_widget_info" />
         </receiver>
     </application>
 

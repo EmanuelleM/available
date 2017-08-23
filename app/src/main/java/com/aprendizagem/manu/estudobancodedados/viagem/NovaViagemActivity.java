@@ -133,7 +133,6 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
         };
     }
 
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {

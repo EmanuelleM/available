@@ -28,17 +28,13 @@
         android:id="@+id/text_view_razao_viagem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/geral_8dp"
         android:layout_marginEnd="@dimen/geral_8dp"
         android:layout_marginStart="@dimen/geral_8dp"
-        android:layout_marginTop="@dimen/geral_8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.008"
+        app:layout_constraintHorizontal_bias="0.081"
         app:layout_constraintLeft_toRightOf="@+id/text_view_destino_viagem"
         app:layout_constraintRight_toLeftOf="@+id/image_view_arrow"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.00999999"
-        tools:text="Lazer" />
+        tools:text="Lazer"
+        app:layout_constraintBottom_toBottomOf="@+id/text_view_destino_viagem" />
 
     <ImageView
         android:id="@+id/image_view_arrow"
@@ -54,57 +50,55 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/text_view_gasto_totoal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/geral_8dp"
         android:layout_marginStart="@dimen/geral_8dp"
         android:layout_marginTop="@dimen/geral_8dp"
         android:text="@string/gasto_total_cifrao"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_destino_viagem"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/text_view_destino_viagem" />
 
     <TextView
         android:id="@+id/text_view_total_viagem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/geral_8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView"
+        app:layout_constraintBottom_toBottomOf="@+id/text_view_gasto_totoal"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toRightOf="@+id/textView"
+        app:layout_constraintLeft_toRightOf="@+id/text_view_gasto_totoal"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="@+id/text_view_gasto_totoal"
         app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/text_view_duracao_viagem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/geral_8dp"
+        android:layout_marginTop="@dimen/geral_8dp"
+        android:text="@string/duracao_da_viagem"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_gasto_totoal" />
 
     <TextView
         android:id="@+id/text_view_data_chegada"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/geral_8dp"
-        android:layout_marginEnd="@dimen/geral_8dp"
         android:layout_marginStart="@dimen/geral_8dp"
-        android:layout_marginTop="@dimen/geral_8dp"
+        android:layout_marginTop="8dp"
         android:text="@string/_00_00"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/text_view_total_viagem"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_duracao_viagem" />
 
     <TextView
         android:id="@+id/text_view_data_partida"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/geral_8dp"
-        android:layout_marginEnd="@dimen/geral_8dp"
         android:layout_marginStart="@dimen/geral_8dp"
-        android:layout_marginTop="@dimen/geral_8dp"
+        android:layout_marginTop="8dp"
         android:text="@string/_00_00"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/text_view_data_chegada"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
+        app:layout_constraintTop_toBottomOf="@+id/text_view_duracao_viagem" />
 
 </android.support.constraint.ConstraintLayout>

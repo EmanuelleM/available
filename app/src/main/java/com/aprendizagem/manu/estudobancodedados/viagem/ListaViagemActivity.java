@@ -14,14 +14,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aprendizagem.manu.estudobancodedados.Constantes;
@@ -32,8 +30,6 @@ import com.aprendizagem.manu.estudobancodedados.gasto.ListaGastoActivity;
 import com.aprendizagem.manu.estudobancodedados.gasto.NovoGastoActivity;
 import com.aprendizagem.manu.estudobancodedados.login.Login;
 import com.facebook.stetho.Stetho;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.NativeExpressAdView;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -47,8 +43,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
     private static final int VIAGEM_LOADER = 0;
 
     ViagemCursorAdapter mCursorAdapter;
-    Toolbar listaGastoToolbar;
-    TextView nomeUsuarioToolbar;
+
     RecyclerView recyclerViewViagem;
 
     private GoogleApiClient mGoogleApiClient;
@@ -56,6 +51,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
     private FirebaseUser mFirebaseUser;
     private String nomeUsuarioVindoDoFirebase;
     private String idUsuarioVindoDoFirebase;
+    private Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +68,6 @@ public class ListaViagemActivity extends AppCompatActivity implements
 
             nomeUsuarioVindoDoFirebase = mFirebaseUser.getDisplayName();
             idUsuarioVindoDoFirebase = mFirebaseUser.getUid();
-
-            listaGastoToolbar = (Toolbar) findViewById(R.id.toolbar_lista_viagem);
-
-            nomeUsuarioToolbar = (TextView) findViewById(R.id.text_view_nome_usuario);
-            setSupportActionBar(listaGastoToolbar);
-            nomeUsuarioToolbar.setText(" " + nomeUsuarioVindoDoFirebase);
 
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_nova_viagem);
             fab.setOnClickListener(new View.OnClickListener() {
@@ -109,22 +99,14 @@ public class ListaViagemActivity extends AppCompatActivity implements
             mCursorAdapter = new ViagemCursorAdapter(new ViagemCursorAdapter.ItemClickListenerAdapter() {
                 @Override
                 public void itemFoiClicado(Cursor cursor) {
-                    long id = cursor.getLong(
-                            cursor.getColumnIndex(ViagemEntry._ID));
-
                 }
-            }, getApplicationContext());
+            }, this);
 
             recyclerViewViagem.setLayoutManager(new LinearLayoutManager(ListaViagemActivity.this));
             mCursorAdapter.setHasStableIds(true);
             recyclerViewViagem.setAdapter(mCursorAdapter);
 
             getLoaderManager().initLoader(VIAGEM_LOADER, null, this);
-
-            NativeExpressAdView adView = (NativeExpressAdView) findViewById(R.id.native_ad_view);
-
-            AdRequest request = new AdRequest.Builder().build();
-            adView.loadAd(request);
 
         } else {
             startActivity(new Intent(this, Login.class));
@@ -136,32 +118,6 @@ public class ListaViagemActivity extends AppCompatActivity implements
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
-    }
-
-    private void opcoesParaCliqueDaViagem(final int position) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(ListaViagemActivity.this);
-
-        builder.setItems(R.array.opcoes_item_viagem, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                Intent intent;
-                switch (item) {
-                    case 0:
-                        intent = new Intent(ListaViagemActivity.this, ListaGastoActivity.class);
-                        Constantes.setIdViagemSelecionada(position + 1);
-                        startActivity(intent);
-                        break;
-                    case 1:
-                        intent = new Intent(ListaViagemActivity.this, NovoGastoActivity.class);
-                        Constantes.setIdViagemSelecionada(position + 1);
-                        startActivity(intent);
-                        break;
-
-                }
-            }
-        });
-        AlertDialog dialog =
-                builder.create();
-        dialog.show();
     }
 
     @Override
@@ -209,6 +165,34 @@ public class ListaViagemActivity extends AppCompatActivity implements
                 selection,
                 null,
                 null);
+    }
+
+    private void opcoesParaCliqueDaViagem(final int position) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(ListaViagemActivity.this);
+        builder.setItems(R.array.opcoes_item_viagem, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                Intent intent;
+                switch (item) {
+                    case 0:
+                        intent = new Intent(ListaViagemActivity.this, ListaGastoActivity.class);
+                        Constantes.setIdViagemSelecionada(position + 1);
+                        Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
+                        startActivity(intent);
+                        break;
+                    case 1:
+                        intent = new Intent(ListaViagemActivity.this, NovoGastoActivity.class);
+                        Constantes.setIdViagemSelecionada(position + 1);
+                        Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
+                        startActivity(intent);
+                        break;
+
+                }
+            }
+        });
+        AlertDialog dialog =
+                builder.create();
+        dialog.show();
     }
 
     @Override
