@@ -33,6 +33,7 @@ public class NovoGastoActivity extends AppCompatActivity implements
 
     DatabaseHelper helper = new DatabaseHelper(this);
     String idViagem = String.valueOf(Constantes.getIdViagemSelecionada());
+    String idUsuario = String.valueOf(Constantes.getIdDoUsuario());
 
     private Uri mCurrentGastoUri;
 
@@ -74,7 +75,6 @@ public class NovoGastoActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 novoGastoTotal(db, idViagem);
 
-                final String getIdViagem = String.valueOf(Constantes.getIdViagemSelecionada());
                 final String descricaoGasto = textDescricaoGasto.getText().toString().trim();
 
                 final String valorGasto = textValorGasto.getText().toString().trim();
@@ -92,11 +92,12 @@ public class NovoGastoActivity extends AppCompatActivity implements
 
                         ContentValues values = new ContentValues();
 
-                        values.put(GastoEntry.COLUMN_VIAGEM_ID, getIdViagem);
+                        values.put(GastoEntry.COLUMN_VIAGEM_ID, idViagem);
                         values.put(GastoEntry.COLUMN_DESCRICAO_GASTO, descricaoGasto);
                         values.put(GastoEntry.COLUMN_VALOR_GASTO, valorGasto);
                         values.put(GastoEntry.COLUMN_DATA_GASTO, dataGasto);
                         values.put(GastoEntry.COLUMN_METODO_PAGAMENTO, metodoPagamento);
+                        values.put(GastoEntry.COLUMN_ID_USUARIO, idUsuario);
 
                         return getContentResolver().insert(GastoEntry.CONTENT_URI, values);
 
@@ -129,23 +130,7 @@ public class NovoGastoActivity extends AppCompatActivity implements
         });
     }
 
-    private Dialog pegaDataGasto() {
-        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker view, int year,
-                                  int monthOfYear, int dayOfMonth) {
-                dataGasto = dayOfMonth + "/" + monthOfYear + "/" + year;
-                buttonDataChegada.setText(dataGasto);
-            }
-        };
-        return new DatePickerDialog(this,
-                dateSetListener,
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)) {
-        };
-    }
-
-    private double getGastoTotal(SQLiteDatabase db, String id) {
+    private double getGastoTotal(SQLiteDatabase db, String id, String idUsuario) {
 
         db = helper.getReadableDatabase();
 
@@ -153,29 +138,32 @@ public class NovoGastoActivity extends AppCompatActivity implements
                 Contract.ViagemEntry.COLUMN_GASTO_TOTAL
         };
 
-        String selection = Contract.ViagemEntry._ID + " = ?";
-        String[] selectionArgs = {id};
+        String selection = Contract.ViagemEntry._ID + " = '" + id +"' AND "+
+                Contract.ViagemEntry.COLUMN_ID_USUARIO + "= '" + idUsuario +"'";
+        String[] selectionArgs = {id, idUsuario};
 
         Cursor cursor = db.query(
                 Contract.ViagemEntry.TABLE_NAME,
                 projection,
                 selection,
-                selectionArgs,
+                null,
                 null,
                 null,
                 null
         );
+        double gastoTotal = 0;
 
-        cursor.moveToFirst();
-        double gastoTotal = cursor.getDouble(0);
-        cursor.close();
-        return gastoTotal;
+        if (cursor.moveToFirst()) {
 
+            gastoTotal = cursor.getDouble(0);
+            cursor.close();
+
+        }return gastoTotal;
     }
 
     private void novoGastoTotal(SQLiteDatabase db, String id) {
 
-        double antigoGastoTotal = getGastoTotal(db, idViagem);
+        double antigoGastoTotal = getGastoTotal(db, idViagem, idUsuario);
         double valorAdicionadoUsuario = 0;
         String value = textValorGasto.getText().toString().trim().replace(",", ".");
 
@@ -214,7 +202,8 @@ public class NovoGastoActivity extends AppCompatActivity implements
                 GastoEntry.COLUMN_VALOR_GASTO,
                 GastoEntry.COLUMN_METODO_PAGAMENTO,
                 GastoEntry.COLUMN_DATA_GASTO,
-                GastoEntry.COLUMN_VIAGEM_ID
+                GastoEntry.COLUMN_VIAGEM_ID,
+                GastoEntry.COLUMN_ID_USUARIO
         };
 
         return new CursorLoader(this,
@@ -243,5 +232,21 @@ public class NovoGastoActivity extends AppCompatActivity implements
                 pegaDataGasto().show();
                 break;
         }
+    }
+
+    private Dialog pegaDataGasto() {
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int year,
+                                  int monthOfYear, int dayOfMonth) {
+                dataGasto = dayOfMonth + "/" + monthOfYear + "/" + year;
+                buttonDataChegada.setText(dataGasto);
+            }
+        };
+        return new DatePickerDialog(this,
+                dateSetListener,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)) {
+        };
     }
 }
