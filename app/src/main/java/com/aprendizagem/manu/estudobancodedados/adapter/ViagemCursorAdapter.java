@@ -16,8 +16,8 @@ public class ViagemCursorAdapter extends
         RecyclerView.Adapter<ViagemCursorAdapter.ViewHolder> {
 
     Context mContext;
-    private Cursor cursor;
-    private ItemClickListenerAdapter mListener;
+    Cursor cursor;
+    ItemClickListenerAdapter mListener;
 
     public ViagemCursorAdapter(ItemClickListenerAdapter aoClicarNoItem, Context applicationContext) {
         mListener = aoClicarNoItem;
@@ -29,19 +29,22 @@ public class ViagemCursorAdapter extends
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_lista_viagem, parent, false);
 
+        final ViewHolder vh = new ViewHolder(v);
+
         v.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-//                Log.d ("contador?" , ""+ getCursor().getColumnName(viewType));
+            public void onClick(View v) {
+                int position = vh.getAdapterPosition();
+                cursor.moveToPosition(position);
+                if (mListener != null) mListener.itemFoiClicado(cursor);
             }
         });
 
-        final ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         cursor.moveToPosition(position);
 
         final int identificadorColumnIndex = cursor.getColumnIndex(ViagemEntry._ID);
@@ -50,7 +53,6 @@ public class ViagemCursorAdapter extends
         int gastoViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_GASTO_TOTAL);
         int dataChegadaViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DATA_CHEGADA);
         int dataPartidaViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DATA_PARTIDA);
-
 
         final String destino = cursor.getString(destinoColumnIndex);
         String gastoViagem = cursor.getString(gastoViagemColumnIndex);
@@ -72,13 +74,6 @@ public class ViagemCursorAdapter extends
         holder.campoValorTotalGastoViagem.setText(gastoViagem);
         holder.campoDataChegada.setText(dataChegada);
         holder.campoDataPartida.setText(dataPartida);
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
     }
 
 

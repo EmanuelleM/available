@@ -86,7 +86,10 @@ public class ListaViagemActivity extends AppCompatActivity implements
                     recyclerViewViagem, new ClickListener() {
                 @Override
                 public void onClick(View view, final int position) {
-                    opcoesParaCliqueDaViagem(position);
+//                    long id= cursor.getLong(cursor.getColumnIndex(ViagemEntry._ID));
+//                    opcoesParaCliqueDaViagem((int) id);
+//                    Toast.makeText(ListaViagemActivity.this, "" + id, Toast.LENGTH_SHORT).show();
+
                 }
 
                 @Override
@@ -99,6 +102,10 @@ public class ListaViagemActivity extends AppCompatActivity implements
             mCursorAdapter = new ViagemCursorAdapter(new ViagemCursorAdapter.ItemClickListenerAdapter() {
                 @Override
                 public void itemFoiClicado(Cursor cursor) {
+                    long id= cursor.getLong(cursor.getColumnIndex(ViagemEntry._ID));
+                    opcoesParaCliqueDaViagem((int) id);
+                    Toast.makeText(ListaViagemActivity.this, "" + id, Toast.LENGTH_SHORT).show();
+
                 }
             }, this);
 
