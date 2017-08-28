@@ -62,4 +62,5 @@
     <string name="add_widget">Add widget</string>
     <string name="configure">configure</string>
     <string name="duracao_da_viagem">Duração da viagem</string>
+    <string name="falha_de_conexao">Falha de conexão</string>
 </resources>

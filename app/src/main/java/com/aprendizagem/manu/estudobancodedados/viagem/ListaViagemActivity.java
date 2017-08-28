@@ -1,7 +1,6 @@
 package com.aprendizagem.manu.estudobancodedados.viagem;
 
 import android.app.LoaderManager;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,11 +13,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
@@ -49,9 +46,8 @@ public class ListaViagemActivity extends AppCompatActivity implements
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
-    private String nomeUsuarioVindoDoFirebase;
-    private String idUsuarioVindoDoFirebase;
-    private Cursor cursor;
+    String nomeUsuarioVindoDoFirebase;
+    String idUsuarioVindoDoFirebase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,30 +78,12 @@ public class ListaViagemActivity extends AppCompatActivity implements
             recyclerViewViagem = (RecyclerView) findViewById(R.id.list_view_viagem);
             recyclerViewViagem.setHasFixedSize(true);
 
-            recyclerViewViagem.addOnItemTouchListener(new RecyclerTouchListener(this,
-                    recyclerViewViagem, new ClickListener() {
-                @Override
-                public void onClick(View view, final int position) {
-//                    long id= cursor.getLong(cursor.getColumnIndex(ViagemEntry._ID));
-//                    opcoesParaCliqueDaViagem((int) id);
-//                    Toast.makeText(ListaViagemActivity.this, "" + id, Toast.LENGTH_SHORT).show();
-
-                }
-
-                @Override
-                public void onLongClick(View view, int position) {
-                    Toast.makeText(getApplicationContext(), "Long press on position :" + position,
-                            Toast.LENGTH_LONG).show();
-                }
-            }));
-
             mCursorAdapter = new ViagemCursorAdapter(new ViagemCursorAdapter.ItemClickListenerAdapter() {
                 @Override
                 public void itemFoiClicado(Cursor cursor) {
-                    long id= cursor.getLong(cursor.getColumnIndex(ViagemEntry._ID));
+                    long id = cursor.getLong(cursor.getColumnIndex(ViagemEntry._ID));
                     opcoesParaCliqueDaViagem((int) id);
                     Toast.makeText(ListaViagemActivity.this, "" + id, Toast.LENGTH_SHORT).show();
-
                 }
             }, this);
 
@@ -183,13 +161,13 @@ public class ListaViagemActivity extends AppCompatActivity implements
                 switch (item) {
                     case 0:
                         intent = new Intent(ListaViagemActivity.this, ListaGastoActivity.class);
-                        Constantes.setIdViagemSelecionada(position + 1);
+                        Constantes.setIdViagemSelecionada(position);
                         Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
                         startActivity(intent);
                         break;
                     case 1:
                         intent = new Intent(ListaViagemActivity.this, NovoGastoActivity.class);
-                        Constantes.setIdViagemSelecionada(position + 1);
+                        Constantes.setIdViagemSelecionada(position);
                         Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
                         startActivity(intent);
                         break;
@@ -215,53 +193,8 @@ public class ListaViagemActivity extends AppCompatActivity implements
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-    }
-
-    //implementando o onclicklistener
-    public static interface ClickListener {
-        void onClick(View view, int position);
-
-        void onLongClick(View view, int position);
-    }
-
-    class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
-
-        private ClickListener clicklistener;
-        private GestureDetector gestureDetector;
-
-        public RecyclerTouchListener(Context context, final RecyclerView recycleView, final ClickListener clicklistener) {
-
-            this.clicklistener = clicklistener;
-            gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
-                @Override
-                public boolean onSingleTapUp(MotionEvent e) {
-                    return true;
-                }
-
-            });
-        }
-
-        @Override
-        public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-            View child = rv.findChildViewUnder(e.getX(), e.getY());
-            if (child != null && clicklistener != null && gestureDetector.onTouchEvent(e)) {
-                clicklistener.onClick(child, rv.getChildAdapterPosition(child));
-            }
-
-            return false;
-        }
-
-        @Override
-        public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
-        }
-
-        @Override
-        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-        }
+        Toast.makeText(this, getResources().getString(R.string.falha_de_conexao), Toast.LENGTH_SHORT).show();
 
     }
-
 }
 
