@@ -14,7 +14,7 @@
     <string name="novo_gasto">Novo gasto</string>
     <string name="editando_gasto">Editando gasto</string>
     <string name="descricao_gasto">Descrição do gasto</string>
-    <string name="valor_gasto">Valor gasto</string>
+    <string name="valor_gasto">Valor gasto: </string>
     <string name="forma_de_pagamento">Forma de pagamento</string>
     <string name="data_do_gasto">Data do gasto</string>
     <string name="salvar_gasto">Salvar gasto</string>

@@ -12,12 +12,14 @@ import android.widget.TextView;
 import com.aprendizagem.manu.estudobancodedados.R;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
 
+import java.util.Locale;
+
 public class ViagemCursorAdapter extends
         RecyclerView.Adapter<ViagemCursorAdapter.ViewHolder> {
 
-    Context mContext;
-    Cursor cursor;
-    ItemClickListenerAdapter mListener;
+    private Context mContext;
+    private Cursor cursor;
+    private ItemClickListenerAdapter mListener;
 
     public ViagemCursorAdapter(ItemClickListenerAdapter aoClicarNoItem, Context applicationContext) {
         mListener = aoClicarNoItem;
@@ -47,7 +49,6 @@ public class ViagemCursorAdapter extends
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         cursor.moveToPosition(position);
 
-        final int identificadorColumnIndex = cursor.getColumnIndex(ViagemEntry._ID);
         final int destinoColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DESTINO);
         int razaoViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_RAZAO);
         int gastoViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_GASTO_TOTAL);
@@ -55,10 +56,9 @@ public class ViagemCursorAdapter extends
         int dataPartidaViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DATA_PARTIDA);
 
         final String destino = cursor.getString(destinoColumnIndex);
-        String gastoViagem = cursor.getString(gastoViagemColumnIndex);
+        double gastoViagem = cursor.getDouble(gastoViagemColumnIndex);
         String dataChegada = cursor.getString(dataChegadaViagemColumnIndex);
         String dataPartida = cursor.getString(dataPartidaViagemColumnIndex);
-        String valorIdViagem = cursor.getString(identificadorColumnIndex);
 
         int razaoViagem = cursor.getInt(razaoViagemColumnIndex);
 
@@ -69,13 +69,13 @@ public class ViagemCursorAdapter extends
         } else if (razaoViagem == 0) {
             holder.campoRazaoViagem.setText("");
         }
+        String valorFormatado = String.format(Locale.getDefault(), "%.2f", gastoViagem);
 
         holder.campoDestinoViagem.setText(destino);
-        holder.campoValorTotalGastoViagem.setText(gastoViagem);
+        holder.campoValorTotalGastoViagem.setText(valorFormatado.replace(".", ","));
         holder.campoDataChegada.setText(dataChegada);
         holder.campoDataPartida.setText(dataPartida);
     }
-
 
     @Override
     public int getItemCount() {

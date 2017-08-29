@@ -1,6 +1,7 @@
 package com.aprendizagem.manu.estudobancodedados.widget;
 
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -10,9 +11,10 @@ import android.widget.RemoteViews;
 import com.aprendizagem.manu.estudobancodedados.R;
 import com.aprendizagem.manu.estudobancodedados.database.Contract;
 import com.aprendizagem.manu.estudobancodedados.database.DatabaseHelper;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Locale;
 
 public class WidgetService extends IntentService {
 
@@ -27,7 +29,7 @@ public class WidgetService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         ComponentName cn = new ComponentName(this, WidgetAplicativo.class);
-        RemoteViews atualizarFrame = new RemoteViews(getPackageName(), R.layout.widget);
+        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.widget);
         DatabaseHelper gerenciador = new DatabaseHelper(this);
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
 
@@ -49,21 +51,32 @@ public class WidgetService extends IntentService {
 
                 final int destinoColumnIndex = c.getColumnIndex(Contract.ViagemEntry.COLUMN_DESTINO);
                 final String destino = c.getString(destinoColumnIndex);
-                atualizarFrame.setTextViewText(R.id.text_view_nome_viagem, destino);
+                remoteViews.setTextViewText(R.id.text_view_nome_viagem, destino);
+
+                final int dataChegadaColumnIndex = c.getColumnIndex(Contract.ViagemEntry.COLUMN_DATA_CHEGADA);
+                final String dataChegada= c.getString(dataChegadaColumnIndex);
+                remoteViews.setTextViewText(R.id.text_view_data_chegada, dataChegada);
+
+                final int dataSaidaColumnIndex = c.getColumnIndex(Contract.ViagemEntry.COLUMN_DATA_PARTIDA);
+                final String dataSaida= c.getString(dataSaidaColumnIndex);
+                remoteViews.setTextViewText(R.id.text_view_data_saida, dataSaida);
 
                 final int valorGastoColumnIndex = c.getColumnIndex(Contract.ViagemEntry.COLUMN_GASTO_TOTAL);
-                final String gastoTotal = c.getString(valorGastoColumnIndex);
-                atualizarFrame.setTextViewText(R.id.text_view_gasto_viagem, gastoTotal);
+                final double gastoTotal = c.getDouble(valorGastoColumnIndex);
+                String valorFormatado = String.format(Locale.getDefault(), "%.2f", gastoTotal);
+                remoteViews.setTextViewText(R.id.text_view_gasto_viagem, "R$" + valorFormatado.replace(".", ","));
 
                 c.close();
             } else {
-                atualizarFrame.setTextViewText(R.id.text_view_nome_viagem, getString(R.string.sem_viagens_na_lista));
+                remoteViews.setTextViewText(R.id.text_view_nome_viagem, getString(R.string.sem_viagens_na_lista));
             }
         } finally {
             gerenciador.close();
         }
-
-        appWidgetManager.updateAppWidget(cn, atualizarFrame);
+        Intent i = new Intent(this, WidgetService.class);
+        PendingIntent pi = PendingIntent.getService(this, 0, i, 0);
+        remoteViews.setOnClickPendingIntent(R.id.text_view_app_name, pi);
+        appWidgetManager.updateAppWidget(cn, remoteViews);
 
     }
 

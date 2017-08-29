@@ -83,7 +83,6 @@ public class ListaViagemActivity extends AppCompatActivity implements
                 public void itemFoiClicado(Cursor cursor) {
                     long id = cursor.getLong(cursor.getColumnIndex(ViagemEntry._ID));
                     opcoesParaCliqueDaViagem((int) id);
-                    Toast.makeText(ListaViagemActivity.this, "" + id, Toast.LENGTH_SHORT).show();
                 }
             }, this);
 

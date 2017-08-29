@@ -46,22 +46,18 @@ public class NovoGastoActivity extends AppCompatActivity implements
 
     private String dataGasto;
 
-
     private Calendar calendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.novo_gasto);
-        DatabaseHelper helper = new DatabaseHelper(this);
-        final SQLiteDatabase db = helper.getReadableDatabase();
 
         Intent intent = getIntent();
         mCurrentGastoUri = intent.getData();
         setTitle(getString(R.string.novo_gasto));
         invalidateOptionsMenu();
 
-        // Find all relevant views that we will need to read user input from
         textDescricaoGasto = (EditText) findViewById(R.id.edit_text_descricao_gasto);
         textValorGasto = (EditText) findViewById(R.id.edit_text_valor_gasto);
         textMetodoPagamento = (EditText) findViewById(R.id.edit_text_metodo_pagamento);
@@ -73,7 +69,7 @@ public class NovoGastoActivity extends AppCompatActivity implements
 
         salvarGasto.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                novoGastoTotal(db, idViagem);
+                novoGastoTotal();
 
                 final String descricaoGasto = textDescricaoGasto.getText().toString().trim();
 
@@ -130,9 +126,9 @@ public class NovoGastoActivity extends AppCompatActivity implements
         });
     }
 
-    private double getGastoTotal(SQLiteDatabase db, String id, String idUsuario) {
+    private double getGastoTotal(String idUsuario) {
 
-        db = helper.getReadableDatabase();
+        SQLiteDatabase db = helper.getReadableDatabase();
 
         String[] projection = {
                 Contract.ViagemEntry.COLUMN_GASTO_TOTAL
@@ -140,7 +136,6 @@ public class NovoGastoActivity extends AppCompatActivity implements
 
         String selection = Contract.ViagemEntry._ID + " = '" + idViagem + "' AND " +
                 Contract.ViagemEntry.COLUMN_ID_USUARIO + "= '" + idUsuario + "'";
-        String[] selectionArgs = {id, idUsuario};
 
         Cursor cursor = db.query(
                 Contract.ViagemEntry.TABLE_NAME,
@@ -159,9 +154,9 @@ public class NovoGastoActivity extends AppCompatActivity implements
         return gastoTotal;
     }
 
-    private void novoGastoTotal(SQLiteDatabase db, String id) {
+    private void novoGastoTotal() {
 
-        double antigoGastoTotal = getGastoTotal(db, idViagem, idUsuario);
+        double antigoGastoTotal = getGastoTotal(idUsuario);
         double valorAdicionadoUsuario = 0;
         String value = textValorGasto.getText().toString().trim().replace(",", ".");
 
@@ -174,7 +169,7 @@ public class NovoGastoActivity extends AppCompatActivity implements
 
         double novoValorGastoTotal = valorAdicionadoUsuario + antigoGastoTotal;
 
-        db = helper.getReadableDatabase();
+        SQLiteDatabase db = helper.getReadableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(Contract.ViagemEntry.COLUMN_GASTO_TOTAL, novoValorGastoTotal);
