@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -16,7 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,9 +24,8 @@ import android.widget.Toast;
 
 import com.aprendizagem.manu.estudobancodedados.Constantes;
 import com.aprendizagem.manu.estudobancodedados.R;
-import com.aprendizagem.manu.estudobancodedados.adapter.ViagemCursorAdapter;
+import com.aprendizagem.manu.estudobancodedados.adapter.ViagemAdapter;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
-import com.aprendizagem.manu.estudobancodedados.database.DatabaseHelper;
 import com.aprendizagem.manu.estudobancodedados.gasto.ListaGastoActivity;
 import com.aprendizagem.manu.estudobancodedados.gasto.NovoGastoActivity;
 import com.aprendizagem.manu.estudobancodedados.login.Login;
@@ -42,7 +41,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
 
     private static final int VIAGEM_LOADER = 0;
 
-    ViagemCursorAdapter mCursorAdapter;
+    ViagemAdapter mCursorAdapter;
     Toolbar listaGastoToolbar;
 
     RecyclerView recyclerViewViagem;
@@ -74,8 +73,8 @@ public class ListaViagemActivity extends AppCompatActivity implements
 
             exibeFloatActionButton();
             exibeMenu();
-
             exibeListaDeViagens();
+            configuraSwipe();
 
             getLoaderManager().initLoader(VIAGEM_LOADER, null, this);
 
@@ -95,7 +94,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
         recyclerViewViagem = (RecyclerView) findViewById(R.id.recycler_view_viagem);
         recyclerViewViagem.setHasFixedSize(true);
 
-        mCursorAdapter = new ViagemCursorAdapter(new ViagemCursorAdapter.ItemClickListenerAdapter() {
+        mCursorAdapter = new ViagemAdapter(new ViagemAdapter.ItemClickListenerAdapter() {
             @Override
             public void itemFoiClicado(Cursor cursor) {
                 long id = cursor.getLong(cursor.getColumnIndex(ViagemEntry._ID));
@@ -253,10 +252,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
 
     }
 
-    DatabaseHelper helper = new DatabaseHelper(this);
-
     private void deletarViagem(final int position) {
-        Log.d("entrou no  ", " deletarviagem");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -265,13 +261,13 @@ public class ListaViagemActivity extends AppCompatActivity implements
 
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                SQLiteDatabase db = helper.getReadableDatabase();
 
-                String selection = "_id = ?";
-                String[] selectionArgs = {"" + position};
-
-                db.delete(ViagemEntry.TABLE_NAME, selection, selectionArgs);
-
+                final int x = 1;
+                Cursor cursor = mCursorAdapter.getCursor();
+                cursor.moveToPosition(x);
+                getContentResolver().delete(
+                        Uri.withAppendedPath(ViagemEntry.CONTENT_URI, String.valueOf(position)),
+                        null, null);
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -282,6 +278,30 @@ public class ListaViagemActivity extends AppCompatActivity implements
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private void configuraSwipe() {
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(
+                0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                                  RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                final int x = viewHolder.getLayoutPosition();
+                Cursor cursor = mCursorAdapter.getCursor();
+                cursor.moveToPosition(x);
+                final long id = cursor.getLong(cursor.getColumnIndex(ViagemEntry._ID));
+                getContentResolver().delete(
+                        Uri.withAppendedPath(ViagemEntry.CONTENT_URI, String.valueOf(id)),
+                        null, null);
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerViewViagem);
     }
 }
 

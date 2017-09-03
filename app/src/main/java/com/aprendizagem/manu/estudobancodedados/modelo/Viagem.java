@@ -3,21 +3,16 @@ package com.aprendizagem.manu.estudobancodedados.modelo;
 import java.util.Date;
 
 public class Viagem{
+
     private String id;
+    private String localHospedagem;
     private String destino;
     private String razaoViagem;
     private String dataChegada;
     private String dataSaida;
     private String valorTotal;
+    private String idDoUsuario;
 
-    public Viagem(String id, String destino, String razaoViagem, String dataChegada, String dataSaida, String valorTotal) {
-        this.id = id;
-        this.destino = destino;
-        this.razaoViagem = razaoViagem;
-        this.dataChegada = dataChegada;
-        this.dataSaida = dataSaida;
-        this.valorTotal = valorTotal;
-    }
 
     public String getId() {
         return id;
@@ -25,6 +20,14 @@ public class Viagem{
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getLocalHospedagem() {
+        return localHospedagem;
+    }
+
+    public void setLocalHospedagem(String localHospedagem) {
+        this.localHospedagem = localHospedagem;
     }
 
     public String getDestino() {
@@ -65,5 +68,13 @@ public class Viagem{
 
     public void setValorTotal(String valorTotal) {
         this.valorTotal = valorTotal;
+    }
+
+    public String getIdDoUsuario() {
+        return idDoUsuario;
+    }
+
+    public void setIdDoUsuario(String idDoUsuario) {
+        this.idDoUsuario = idDoUsuario;
     }
 }

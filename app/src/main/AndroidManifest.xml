@@ -22,7 +22,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".login.Login" />
-        <activity android:name=".viagem.NovaViagemActivity" />
+        <activity
+            android:name=".viagem.NovaViagemActivity"
+            android:parentActivityName=".viagem.ListaViagemActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="viagem.ListaViagemActivity" />
+        </activity>
+
         <activity
             android:name=".gasto.NovoGastoActivity"
             android:parentActivityName=".viagem.ListaViagemActivity">

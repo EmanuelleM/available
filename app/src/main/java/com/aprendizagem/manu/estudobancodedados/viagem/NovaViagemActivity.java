@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -28,7 +27,6 @@ import com.aprendizagem.manu.estudobancodedados.Constantes;
 import com.aprendizagem.manu.estudobancodedados.R;
 import com.aprendizagem.manu.estudobancodedados.database.Contract;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
-import com.aprendizagem.manu.estudobancodedados.gasto.NovoGastoActivity;
 import com.aprendizagem.manu.estudobancodedados.modelo.Viagem;
 
 import java.util.Locale;
@@ -244,7 +242,8 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
         private final String datapartida;
         private final String idDousuario;
 
-        TaskSalvaViagem(String destino, String localHospedagem, int razaoViagem, String dataChegada, String datapartida, String idDousuario) {
+        TaskSalvaViagem(String destino, String localHospedagem, int razaoViagem, String dataChegada, String datapartida,
+                        String idDousuario) {
             this.destino = destino;
             this.localHospedagem = localHospedagem;
             this.razaoViagem = razaoViagem;
