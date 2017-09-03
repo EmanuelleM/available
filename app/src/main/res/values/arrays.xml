@@ -3,6 +3,10 @@
     <string-array name="opcoes_item_viagem">
         <item>@string/exibe_lista_de_gastos</item>
         <item>@string/novo_gasto</item>
+        <item>@string/editar</item>
         <item>@string/excluir_viagem</item>
     </string-array>
+    <string-array name="opcoes_item_gasto" >
+        <item>@string/excluir_gasto</item>
+        </string-array>
 </resources>

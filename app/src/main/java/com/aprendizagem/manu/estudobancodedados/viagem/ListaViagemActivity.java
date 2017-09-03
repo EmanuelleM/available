@@ -1,6 +1,7 @@
 package com.aprendizagem.manu.estudobancodedados.viagem;
 
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -97,8 +98,8 @@ public class ListaViagemActivity extends AppCompatActivity implements
         mCursorAdapter = new ViagemAdapter(new ViagemAdapter.ItemClickListenerAdapter() {
             @Override
             public void itemFoiClicado(Cursor cursor) {
-                long id = cursor.getLong(cursor.getColumnIndex(ViagemEntry._ID));
-                opcoesParaCliqueDaViagem((int) id);
+                opcoesParaCliqueDaViagem(cursor.getInt(cursor.getColumnIndex(ViagemEntry._ID)));
+                Constantes.setNomeDestinoViagem(cursor.getString(cursor.getColumnIndex(ViagemEntry.COLUMN_DESTINO)));
             }
         }, this);
 
@@ -225,6 +226,13 @@ public class ListaViagemActivity extends AppCompatActivity implements
                         startActivity(intent);
                         break;
                     case 2:
+                        intent = new Intent(ListaViagemActivity.this, NovaViagemActivity.class);
+                        Uri currentUri = ContentUris.withAppendedId(ViagemEntry.CONTENT_URI, position);
+                        intent.setData(currentUri);
+                        Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
+                        startActivity(intent);
+                        break;
+                    case 3:
                         deletarViagem(position);
                         break;
                 }

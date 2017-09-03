@@ -214,6 +214,14 @@ public class Provider extends ContentProvider {
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 rowsDeleted = database.delete(ViagemEntry.TABLE_NAME, selection, selectionArgs);
                 break;
+            case GASTO:
+                rowsDeleted = database.delete(GastoEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case GASTO_ID:
+                selection = GastoEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                rowsDeleted = database.delete(GastoEntry.TABLE_NAME, selection, selectionArgs);
+                break;
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
         }

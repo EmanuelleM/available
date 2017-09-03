@@ -27,9 +27,6 @@ import com.aprendizagem.manu.estudobancodedados.Constantes;
 import com.aprendizagem.manu.estudobancodedados.R;
 import com.aprendizagem.manu.estudobancodedados.database.Contract;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
-import com.aprendizagem.manu.estudobancodedados.modelo.Viagem;
-
-import java.util.Locale;
 
 public class NovaViagemActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
         View.OnClickListener {
@@ -47,7 +44,8 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
     private String dataChegada;
     private String dataPartida;
 
-    private Viagem viagem;
+    RadioButton razaoLazer;
+    RadioButton razaoNegocios;
 
     private Calendar calendar = Calendar.getInstance();
 
@@ -69,7 +67,6 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
         mCurrentViagemUri = intent.getData();
 
         if (mCurrentViagemUri == null) {
-
             setTitle(getString(R.string.nova_viagem));
             invalidateOptionsMenu();
         } else {
@@ -88,6 +85,10 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
 
         buttonDataChegada.setOnClickListener(this);
         buttonDataPartida.setOnClickListener(this);
+
+        razaoLazer = (RadioButton) findViewById(R.id.radio_lazer);
+        razaoNegocios = (RadioButton) findViewById(R.id.radio_negocios);
+
     }
 
     public void onRadioButtonClicked(View view) {
@@ -177,7 +178,25 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
         String idDousuario = Constantes.getIdDoUsuario();
         int razaoViagem = mRazao;
 
-        new TaskSalvaViagem(destino, localHospedagem, razaoViagem, dataChegada, dataPartida, idDousuario).execute();
+        if (mCurrentViagemUri == null) {
+
+            new TaskSalvaViagem(destino, localHospedagem, razaoViagem, dataChegada, dataPartida, idDousuario).execute();
+        } else {
+
+            ContentValues values = new ContentValues();
+            values.put(ViagemEntry.COLUMN_DESTINO, destino);
+            values.put(ViagemEntry.COLUMN_LOCAL_ACOMODACAO, localHospedagem);
+            values.put(ViagemEntry.COLUMN_RAZAO, razaoViagem);
+            values.put(ViagemEntry.COLUMN_DATA_CHEGADA, dataChegada);
+            values.put(ViagemEntry.COLUMN_DATA_PARTIDA, dataPartida);
+            values.put(ViagemEntry.COLUMN_ID_USUARIO, idDousuario);
+
+            String selection =
+                    Contract.ViagemEntry.COLUMN_ID_USUARIO + "= '" + idDousuario + "'";
+
+            getContentResolver().update(mCurrentViagemUri, values, selection, null);
+
+        }
     }
 
     @Override
@@ -207,20 +226,31 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
         }
         if (cursor.moveToFirst()) {
 
-            final int destinoColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DESTINO);
+            int destinoColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DESTINO);
+            int localHospedagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_LOCAL_ACOMODACAO);
             int razaoViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_RAZAO);
-            int gastoViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_GASTO_TOTAL);
             int dataChegadaViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DATA_CHEGADA);
             int dataPartidaViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DATA_PARTIDA);
 
-            final String destino = cursor.getString(destinoColumnIndex);
-            double gastoViagem = cursor.getDouble(gastoViagemColumnIndex);
+            String destino = cursor.getString(destinoColumnIndex);
+            String localHospedagem = cursor.getString(localHospedagemColumnIndex);
             String dataChegada = cursor.getString(dataChegadaViagemColumnIndex);
             String dataPartida = cursor.getString(dataPartidaViagemColumnIndex);
-            String valorFormatado = String.format(Locale.getDefault(), "%.2f", gastoViagem);
+            int razaoViagem = cursor.getInt(razaoViagemColumnIndex);
+
+            if (razaoViagem == 1) {
+
+                razaoLazer.setChecked(true);
+//                razaoNegocios.setChecked(false);
+
+            } else if (razaoViagem == 2) {
+
+                razaoNegocios.setChecked(true);
+//                razaoLazer.setChecked(false);
+            }
 
             editDestino.setText(destino);
-            editLocalHospedagem.setText(valorFormatado.replace(".", ","));
+            editLocalHospedagem.setText(localHospedagem);
             buttonDataChegada.setText(dataChegada);
             buttonDataPartida.setText(dataPartida);
 
@@ -229,8 +259,7 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        editDestino.setText("");
-        editLocalHospedagem.setText("");
+
     }
 
     private class TaskSalvaViagem extends AsyncTask<Void, Void, Uri> {
@@ -263,8 +292,12 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
             values.put(ViagemEntry.COLUMN_DATA_PARTIDA, dataPartida);
             values.put(ViagemEntry.COLUMN_ID_USUARIO, idDousuario);
 
-            return getContentResolver().insert(Contract.ViagemEntry.CONTENT_URI, values);
+            Uri result = null;
 
+            if (mCurrentViagemUri == null) {
+                result = getContentResolver().insert(ViagemEntry.CONTENT_URI, values);
+            }
+            return result;
         }
 
         @Override

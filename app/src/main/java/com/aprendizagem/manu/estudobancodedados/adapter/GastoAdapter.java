@@ -9,18 +9,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.aprendizagem.manu.estudobancodedados.R;
-import com.aprendizagem.manu.estudobancodedados.database.Contract;
+import com.aprendizagem.manu.estudobancodedados.database.Contract.GastoEntry;
 
 import java.util.Locale;
 
-public class GastoCursorAdapter extends
-        RecyclerView.Adapter<GastoCursorAdapter.ViewHolder> {
+public class GastoAdapter extends
+        RecyclerView.Adapter<GastoAdapter.ViewHolder> {
 
     private Context mContext;
     private Cursor cursor;
     private ItemClickListenerAdapter mListener;
 
-    public GastoCursorAdapter(ItemClickListenerAdapter aoClicarNoItem, Context applicationContext) {
+    public GastoAdapter(ItemClickListenerAdapter aoClicarNoItem, Context applicationContext) {
         mListener = aoClicarNoItem;
         mContext = applicationContext;
     }
@@ -48,22 +48,17 @@ public class GastoCursorAdapter extends
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         cursor.moveToPosition(position);
 
-        int descricaoGastoColumnIndex = cursor.getColumnIndex(Contract.GastoEntry.COLUMN_DESCRICAO_GASTO);
-        int valorGastoColumnIndex = cursor.getColumnIndex(Contract.GastoEntry.COLUMN_VALOR_GASTO);
-        int dataGastoColumnIndex = cursor.getColumnIndex(Contract.GastoEntry.COLUMN_DATA_GASTO);
-        int metodoPagamentoColumnIndex = cursor.getColumnIndex(Contract.GastoEntry.COLUMN_METODO_PAGAMENTO);
+        int descricaoGastoColumnIndex = cursor.getColumnIndex(GastoEntry.COLUMN_DESCRICAO_GASTO);
+        int valorGastoColumnIndex = cursor.getColumnIndex(GastoEntry.COLUMN_VALOR_GASTO);
+        int dataGastoColumnIndex = cursor.getColumnIndex(GastoEntry.COLUMN_DATA_GASTO);
 
         final String descricaoGasto = cursor.getString(descricaoGastoColumnIndex);
-        double valorGasto = cursor.getDouble(valorGastoColumnIndex);
+        String valorGasto = cursor.getString(valorGastoColumnIndex);
         String dataGasto = cursor.getString(dataGastoColumnIndex);
-        String metodoPagemento = cursor.getString(metodoPagamentoColumnIndex);
-
-        String valorFormatado = String.format(Locale.getDefault(), "%.2f", valorGasto);
 
         holder.txtDescricaoGasto.setText(descricaoGasto);
-        holder.txtValorGasto.setText(valorFormatado.replace(".", ","));
+        holder.txtValorGasto.setText(valorGasto);
         holder.txtDataGasto.setText(dataGasto);
-//        holder.metodoPagamentoGasto.setText(metodoPagemento);
     }
 
     @Override
@@ -75,7 +70,7 @@ public class GastoCursorAdapter extends
     public long getItemId(int position) {
         if (cursor != null) {
             if (cursor.moveToPosition(position)) {
-                int idx_id = cursor.getColumnIndex(Contract.GastoEntry._ID);
+                int idx_id = cursor.getColumnIndex(GastoEntry._ID);
                 return cursor.getLong(idx_id);
             } else {
                 return 0;
@@ -99,18 +94,18 @@ public class GastoCursorAdapter extends
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txtDescricaoGasto;  
+        TextView txtDescricaoGasto;
         TextView txtValorGasto;
-        TextView txtDataGasto; 
-        TextView metodoPagamentoGasto; 
-        
+        TextView txtDataGasto;
+        TextView metodoPagamentoGasto;
+
         public ViewHolder(View itemView) {
             super(itemView);
             txtDescricaoGasto = itemView.findViewById(R.id.text_view_descricao_gasto);
             txtValorGasto = itemView.findViewById(R.id.text_view_valor_gasto);
             txtDataGasto = itemView.findViewById(R.id.text_view_data_gasto);
             metodoPagamentoGasto = itemView.findViewById(R.id.edit_text_metodo_pagamento);
-            
+
         }
     }
 }

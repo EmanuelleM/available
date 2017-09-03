@@ -2,7 +2,6 @@ package com.aprendizagem.manu.estudobancodedados.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +22,6 @@ public class ViagemAdapter extends
     private ViagemAdapter.ItemClickListenerAdapter mListener;
 
     int index_id;
-    private boolean mDataValid;
 
     public ViagemAdapter(ViagemAdapter.ItemClickListenerAdapter aoClicarNoItem, Context applicationContext) {
         mListener = aoClicarNoItem;
@@ -53,7 +51,7 @@ public class ViagemAdapter extends
     public void onBindViewHolder(final ViagemAdapter.ViewHolder holder, final int position) {
         cursor.moveToPosition(position);
 
-        final int destinoColumnIndex = cursor.getColumnIndex(Contract.ViagemEntry.COLUMN_DESTINO);
+        int destinoColumnIndex = cursor.getColumnIndex(Contract.ViagemEntry.COLUMN_DESTINO);
         int razaoViagemColumnIndex = cursor.getColumnIndex(Contract.ViagemEntry.COLUMN_RAZAO);
         int gastoViagemColumnIndex = cursor.getColumnIndex(Contract.ViagemEntry.COLUMN_GASTO_TOTAL);
         int dataChegadaViagemColumnIndex = cursor.getColumnIndex(Contract.ViagemEntry.COLUMN_DATA_CHEGADA);
