@@ -72,3 +72,4 @@ public final class Contract {
         public final static String COLUMN_ID_USUARIO = "id_usuario";
     }
 }
+

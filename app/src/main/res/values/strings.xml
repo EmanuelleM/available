@@ -63,4 +63,9 @@
     <string name="configure">configure</string>
     <string name="duracao_da_viagem">Duração da viagem</string>
     <string name="falha_de_conexao">Falha de conexão</string>
+    <string name="editar">Editar</string>
+    <string name="salvar">Salvar</string>
+    <string name="preencha_os_campos">Preencha os campos correspondentes ao gasto.</string>
+    <string name="excluir_viagem">Excluir viagem</string>
+    <string name="confirmar_exclusao">Você deseja excluir essa viagem?</string>
 </resources>

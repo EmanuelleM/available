@@ -99,7 +99,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout4" />
 
-
     <Button
         android:id="@+id/button_pega_data_saida"
         android:layout_width="wrap_content"
@@ -110,20 +109,5 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout4" />
-
-    <Button
-        android:id="@+id/button_salvar_viagem"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/geral_8dp"
-        android:layout_marginLeft="@dimen/geral_8dp"
-        android:layout_marginRight="@dimen/geral_8dp"
-        android:text="@string/button_salvar_viagem"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_pega_data_chegada"
-        app:layout_constraintVertical_bias="0.251" />
-
 
 </android.support.constraint.ConstraintLayout>

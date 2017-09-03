@@ -1,7 +1,10 @@
 package com.aprendizagem.manu.estudobancodedados.login;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +31,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Login extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
@@ -38,10 +42,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
 
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mFirebaseAuth;
-
-    TextView criarConta;
-    EditText editEmail, editSenha;
-    Button buttonLoginComUsuarioESenhaManual;
 
     ProgressDialog progressLogin;
 
@@ -59,37 +59,25 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 .requestEmail()
                 .build();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
-        buttonLoginComUsuarioESenhaManual = (Button) findViewById(R.id.button_entrar);
-        buttonLoginComUsuarioESenhaManual.setOnClickListener(this);
-
         progressLogin = new ProgressDialog(this);
-
-        criarConta = (TextView) findViewById(R.id.text_view_criar_conta);
-        criarConta.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:
-                signIn();
+                signInGoogle();
                 break;
-            case R.id.button_entrar:
-                loginComUsuarioESenha();
-                break;
-            case R.id.text_view_criar_conta:
-                startActivity(new Intent(Login.this, RegistroUsuarioActivity.class));
-
         }
     }
 
-    private void signIn() {
+    private void signInGoogle() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -102,58 +90,13 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 GoogleSignInAccount account = result.getSignInAccount();
+                progressLogin.show();
                 firebaseAuthWithGoogle(account);
             } else {
                 Log.e(TAG, "Google Sign In failed.");
+                progressLogin.dismiss();
             }
         }
-    }
-
-    public void loginComUsuarioESenha() {
-
-        editEmail = (EditText) findViewById(R.id.edit_text_email);
-        editSenha = (EditText) findViewById(R.id.edit_text_senha);
-
-        final String email = editEmail. getText().toString().trim();
-        final String senha = editSenha.getText().toString().trim();
-
-        Log.d(TAG, email+ " " + senha + "email e senha");
-
-
-        if (TextUtils.isEmpty(email)) {
-            Toast.makeText(this, R.string.email_obrigatorio, Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        if (TextUtils.isEmpty(senha)) {
-            Toast.makeText(this, R.string.senha_obrigatoria, Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        progressLogin.setMessage(getString(R.string.fazendo_login));
-        progressLogin.show();
-
-//        mFirebaseAuth.signInWithEmailAndPassword("emanuelle.menalii@gmail.com", "123456")
-        mFirebaseAuth.signInWithEmailAndPassword(email, senha)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressLogin.dismiss();
-
-                        if(task.isSuccessful()){
-                            Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
-                            finish();
-                            Intent intent = new Intent(getApplicationContext(), ListaViagemActivity.class);
-                            startActivity(intent);
-
-                        } else if (!task.isSuccessful()) {
-                            Log.w(TAG, "signInWithEmail:failed", task.getException());
-                            Toast.makeText(Login.this, R.string.falha_login,
-                                    Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                });
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
@@ -164,12 +107,12 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
-
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(Login.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
+                            progressLogin.dismiss();
                             startActivity(new Intent(Login.this, ListaViagemActivity.class));
                             finish();
                         }

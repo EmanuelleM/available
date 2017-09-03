@@ -6,15 +6,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -23,6 +26,7 @@ import com.aprendizagem.manu.estudobancodedados.Constantes;
 import com.aprendizagem.manu.estudobancodedados.R;
 import com.aprendizagem.manu.estudobancodedados.adapter.ViagemCursorAdapter;
 import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
+import com.aprendizagem.manu.estudobancodedados.database.DatabaseHelper;
 import com.aprendizagem.manu.estudobancodedados.gasto.ListaGastoActivity;
 import com.aprendizagem.manu.estudobancodedados.gasto.NovoGastoActivity;
 import com.aprendizagem.manu.estudobancodedados.login.Login;
@@ -36,18 +40,17 @@ import com.google.firebase.auth.FirebaseUser;
 public class ListaViagemActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, GoogleApiClient.OnConnectionFailedListener {
 
-    public static final String ANONYMOUS = "anonymous";
     private static final int VIAGEM_LOADER = 0;
 
     ViagemCursorAdapter mCursorAdapter;
+    Toolbar listaGastoToolbar;
 
     RecyclerView recyclerViewViagem;
-
+    String idUsuarioVindoDoFirebase;
+    private Menu menu;
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
-    String nomeUsuarioVindoDoFirebase;
-    String idUsuarioVindoDoFirebase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,40 +58,24 @@ public class ListaViagemActivity extends AppCompatActivity implements
 
         Stetho.initializeWithDefaults(this);
 
-        nomeUsuarioVindoDoFirebase = ANONYMOUS;
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
         if (mFirebaseUser != null) {
+
             setContentView(R.layout.lista_viagem);
 
-            nomeUsuarioVindoDoFirebase = mFirebaseUser.getDisplayName();
+            listaGastoToolbar = (Toolbar) findViewById(R.id.toolbar_lista_viagem);
+            setSupportActionBar(listaGastoToolbar);
+
+            listaGastoToolbar.collapseActionView();
+
             idUsuarioVindoDoFirebase = mFirebaseUser.getUid();
 
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_nova_viagem);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(ListaViagemActivity.this, NovaViagemActivity.class);
-                    Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
-                    startActivity(intent);
-                }
-            });
+            exibeFloatActionButton();
+            exibeMenu();
 
-            recyclerViewViagem = (RecyclerView) findViewById(R.id.list_view_viagem);
-            recyclerViewViagem.setHasFixedSize(true);
-
-            mCursorAdapter = new ViagemCursorAdapter(new ViagemCursorAdapter.ItemClickListenerAdapter() {
-                @Override
-                public void itemFoiClicado(Cursor cursor) {
-                    long id = cursor.getLong(cursor.getColumnIndex(ViagemEntry._ID));
-                    opcoesParaCliqueDaViagem((int) id);
-                }
-            }, this);
-
-            recyclerViewViagem.setLayoutManager(new LinearLayoutManager(ListaViagemActivity.this));
-            mCursorAdapter.setHasStableIds(true);
-            recyclerViewViagem.setAdapter(mCursorAdapter);
+            exibeListaDeViagens();
 
             getLoaderManager().initLoader(VIAGEM_LOADER, null, this);
 
@@ -104,11 +91,79 @@ public class ListaViagemActivity extends AppCompatActivity implements
                 .build();
     }
 
+    private void exibeListaDeViagens() {
+        recyclerViewViagem = (RecyclerView) findViewById(R.id.recycler_view_viagem);
+        recyclerViewViagem.setHasFixedSize(true);
+
+        mCursorAdapter = new ViagemCursorAdapter(new ViagemCursorAdapter.ItemClickListenerAdapter() {
+            @Override
+            public void itemFoiClicado(Cursor cursor) {
+                long id = cursor.getLong(cursor.getColumnIndex(ViagemEntry._ID));
+                opcoesParaCliqueDaViagem((int) id);
+            }
+        }, this);
+
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
+
+        mCursorAdapter.notifyDataSetChanged();
+        recyclerViewViagem.setLayoutManager(mLayoutManager);
+        mCursorAdapter.setHasStableIds(true);
+        recyclerViewViagem.setAdapter(mCursorAdapter);
+    }
+
+    private void exibeFloatActionButton() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_nova_viagem);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ListaViagemActivity.this, NovaViagemActivity.class);
+                Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void exibeMenu() {
+        AppBarLayout mAppBarLayout = (AppBarLayout) findViewById(R.id.app_bar_lista_viagem);
+        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = false;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    isShow = true;
+                    showOption(R.id.sair);
+                } else if (isShow) {
+                    isShow = false;
+                    hideOption(R.id.sair);
+                    exibeFloatActionButton();
+                }
+            }
+        });
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.lista_viagem_menu, menu);
+        this.menu = menu;
+        getMenuInflater().inflate(R.menu.lista_viagem_menu, menu);
+        hideOption(R.id.sair);
         return true;
+    }
+
+    private void hideOption(int id) {
+        MenuItem item = menu.findItem(id);
+        item.setVisible(false);
+    }
+
+    private void showOption(int id) {
+        MenuItem item = menu.findItem(id);
+        item.setVisible(true);
     }
 
     @Override
@@ -170,7 +225,9 @@ public class ListaViagemActivity extends AppCompatActivity implements
                         Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
                         startActivity(intent);
                         break;
-
+                    case 2:
+                        deletarViagem(position);
+                        break;
                 }
             }
         });
@@ -194,6 +251,37 @@ public class ListaViagemActivity extends AppCompatActivity implements
 
         Toast.makeText(this, getResources().getString(R.string.falha_de_conexao), Toast.LENGTH_SHORT).show();
 
+    }
+
+    DatabaseHelper helper = new DatabaseHelper(this);
+
+    private void deletarViagem(final int position) {
+        Log.d("entrou no  ", " deletarviagem");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage(R.string.confirmar_exclusao)
+                .setTitle(R.string.excluir_viagem);
+
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                SQLiteDatabase db = helper.getReadableDatabase();
+
+                String selection = "_id = ?";
+                String[] selectionArgs = {"" + position};
+
+                db.delete(ViagemEntry.TABLE_NAME, selection, selectionArgs);
+
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
 

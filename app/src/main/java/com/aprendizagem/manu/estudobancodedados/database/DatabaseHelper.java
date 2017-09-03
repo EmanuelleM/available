@@ -9,8 +9,6 @@ import com.aprendizagem.manu.estudobancodedados.database.Contract.GastoEntry;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    public static final String LOG_TAG = DatabaseHelper.class.getSimpleName();
-
     private static final String DATABASE_NAME = "boaviagem.db";
 
     private static final int DATABASE_VERSION = 2;
@@ -41,7 +39,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + GastoEntry.COLUMN_DATA_GASTO + " TEXT, "
                 + GastoEntry.COLUMN_ID_USUARIO + " TEXT);";
 
-        // Execute the SQL statement
         db.execSQL(SQL_CREATE_VIAGEM_TABLE);
         db.execSQL(SQL_CREATE_GASTO_TABLE);
     }

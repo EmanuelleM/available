@@ -14,10 +14,10 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".viagem.ListaViagemActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:theme="@style/AppThemeBacon">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -30,6 +30,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="viagem.ListaViagemActivity" />
         </activity>
+
         <activity
             android:name=".gasto.ListaGastoActivity"
             android:parentActivityName=".viagem.ListaViagemActivity">
@@ -37,7 +38,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".viagem.ListaViagemActivity" />
         </activity>
-        <activity android:name=".login.RegistroUsuarioActivity" />
 
         <provider
             android:name=".database.Provider"
@@ -57,7 +57,7 @@
                 android:resource="@xml/provedor_widget" />
         </receiver>
 
-        <service android:name=".widget.WidgetService"/>
+        <service android:name=".widget.WidgetService" />
     </application>
 
 </manifest>

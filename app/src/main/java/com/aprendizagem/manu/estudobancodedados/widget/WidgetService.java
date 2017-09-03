@@ -11,8 +11,6 @@ import android.widget.RemoteViews;
 import com.aprendizagem.manu.estudobancodedados.R;
 import com.aprendizagem.manu.estudobancodedados.database.Contract;
 import com.aprendizagem.manu.estudobancodedados.database.DatabaseHelper;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Locale;
 
@@ -22,10 +20,6 @@ public class WidgetService extends IntentService {
         super("WidgetService");
     }
 
-    private FirebaseAuth mFirebaseAuth;
-    private FirebaseUser mFirebaseUser;
-    String idUsuarioVindoDoFirebase;
-
     @Override
     protected void onHandleIntent(Intent intent) {
         ComponentName cn = new ComponentName(this, WidgetAplicativo.class);
@@ -33,12 +27,8 @@ public class WidgetService extends IntentService {
         DatabaseHelper gerenciador = new DatabaseHelper(this);
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
 
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        mFirebaseUser = mFirebaseAuth.getCurrentUser();
-        idUsuarioVindoDoFirebase = mFirebaseUser.getUid();
-
         try {
-            Cursor c = gerenciador.getReadableDatabase().rawQuery("SELECT COUNT(*) FROM viagens WHERE id_usuario = '" + idUsuarioVindoDoFirebase + "'", null);
+            Cursor c = gerenciador.getReadableDatabase().rawQuery("SELECT COUNT(*) FROM viagens", null);
             c.moveToFirst();
             int contador = c.getInt(0);
             c.close();

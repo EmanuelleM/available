@@ -7,8 +7,7 @@
     android:layout_marginBottom="@dimen/geral_8dp"
     android:layout_marginEnd="@dimen/geral_8dp"
     android:layout_marginStart="@dimen/geral_8dp"
-    android:layout_marginTop="@dimen/geral_8dp"
-    android:background="@color/divider">
+    android:layout_marginTop="@dimen/geral_8dp">
 
     <TextView
         android:id="@+id/text_view_destino_viagem"
@@ -42,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/geral_8dp"
         android:layout_marginEnd="@dimen/geral_8dp"
-        android:layout_marginTop="@dimen/geral_5dp"
+        android:layout_marginTop="@dimen/geral_8dp"
         android:contentDescription="@string/content_decriotion_arrow_item"
         android:src="@drawable/ic_chevron_right_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"

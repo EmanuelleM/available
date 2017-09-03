@@ -4,6 +4,7 @@ public class Constantes {
 
     private static String ID_DO_USUARIO;
     private static int ID_VIAGEM_SELECIONADA;
+    private static int EDITAR_ITEM;
 
     public static String getIdDoUsuario() {
         return ID_DO_USUARIO;
@@ -19,5 +20,13 @@ public class Constantes {
 
     public static void setIdViagemSelecionada(int idViagemSelecionada) {
         ID_VIAGEM_SELECIONADA = idViagemSelecionada;
+    }
+
+    public static int getEditarItem() {
+        return EDITAR_ITEM;
+    }
+
+    public static void setEditarItem(int editarItem) {
+        EDITAR_ITEM = editarItem;
     }
 }

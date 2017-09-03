@@ -4,14 +4,11 @@ import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.aprendizagem.manu.estudobancodedados.Constantes;
 import com.aprendizagem.manu.estudobancodedados.R;
@@ -25,6 +22,7 @@ public class ListaGastoActivity extends AppCompatActivity implements
     private static final int GASTO_LOADER = 0;
 
     GastoCursorAdapter mCursorAdapter;
+    RecyclerView recyclerViewGasto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,15 +30,25 @@ public class ListaGastoActivity extends AppCompatActivity implements
         setContentView(R.layout.lista_gasto);
 
         DatabaseHelper helper = new DatabaseHelper(this);
-        SQLiteDatabase db = helper.getReadableDatabase();
 
-        ListView gastoListView = (ListView) findViewById(R.id.list_view_gasto);
+        recyclerViewGasto = (RecyclerView) findViewById(R.id.recycler_view_gasto);
+        recyclerViewGasto.setHasFixedSize(true);
 
-        View emptyView = findViewById(R.id.include_lista_gasto_vazia);
-        gastoListView.setEmptyView(emptyView);
+        mCursorAdapter = new GastoCursorAdapter(new GastoCursorAdapter.ItemClickListenerAdapter() {
+            @Override
+            public void itemFoiClicado(Cursor cursor) {
+//                long id = cursor.getLong(cursor.getColumnIndex(Contract.ViagemEntry._ID));
+//                opcoesParaCliqueDaViagem((int) id);
+            }
+        }, this);
 
-        mCursorAdapter = new GastoCursorAdapter(this, null);
-        gastoListView.setAdapter(mCursorAdapter);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
+
+        recyclerViewGasto.setLayoutManager(mLayoutManager);
+        mCursorAdapter.setHasStableIds(true);
+        recyclerViewGasto.setAdapter(mCursorAdapter);
 
         getLoaderManager().initLoader(GASTO_LOADER, null, this);
     }
@@ -76,12 +84,12 @@ public class ListaGastoActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mCursorAdapter.swapCursor(data);
+        mCursorAdapter.setCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mCursorAdapter.swapCursor(null);
+
     }
 
 }

@@ -15,6 +15,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -42,11 +44,12 @@ public class NovoGastoActivity extends AppCompatActivity implements
     private EditText textMetodoPagamento;
 
     private Button buttonDataChegada;
-    private Button salvarGasto;
 
     private String dataGasto;
 
     private Calendar calendar = Calendar.getInstance();
+
+    Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,65 +68,27 @@ public class NovoGastoActivity extends AppCompatActivity implements
         buttonDataChegada = (Button) findViewById(R.id.button_pega_data_gasto);
         buttonDataChegada.setOnClickListener(this);
 
-        salvarGasto = (Button) findViewById(R.id.button_salvar_gasto);
+    }
 
-        salvarGasto.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                novoGastoTotal();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
+        getMenuInflater().inflate(R.menu.menu_salvar_geral, menu);
+        return true;
+    }
 
-                final String descricaoGasto = textDescricaoGasto.getText().toString().trim();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.salvar:
+                salvarGasto();
+                startActivity(new Intent(this, ListaViagemActivity.class));
+                finish();
+                return true;
 
-                final String valorGasto = textValorGasto.getText().toString().trim();
-
-                final String metodoPagamento = textMetodoPagamento.getText().toString().trim();
-
-                if (mCurrentGastoUri == null && TextUtils.isEmpty(descricaoGasto) && TextUtils.isEmpty(valorGasto)) {
-                    return;
-                }
-
-                new AsyncTask<Void, Void, Uri>() {
-
-                    @Override
-                    protected Uri doInBackground(Void... params) {
-
-                        ContentValues values = new ContentValues();
-
-                        values.put(GastoEntry.COLUMN_VIAGEM_ID, idViagem);
-                        values.put(GastoEntry.COLUMN_DESCRICAO_GASTO, descricaoGasto);
-                        values.put(GastoEntry.COLUMN_VALOR_GASTO, valorGasto);
-                        values.put(GastoEntry.COLUMN_DATA_GASTO, dataGasto);
-                        values.put(GastoEntry.COLUMN_METODO_PAGAMENTO, metodoPagamento);
-                        values.put(GastoEntry.COLUMN_ID_USUARIO, idUsuario);
-
-                        return getContentResolver().insert(GastoEntry.CONTENT_URI, values);
-
-                    }
-
-                    @Override
-                    protected void onPostExecute(Uri uri) {
-                        super.onPostExecute(uri);
-
-                        if (uri != null) {
-
-                            Toast.makeText(NovoGastoActivity.this, getString(R.string
-                                            .gasto_salvo),
-                                    Toast.LENGTH_SHORT).show();
-
-                            Intent intent = new Intent(NovoGastoActivity.this, ListaViagemActivity
-                                    .class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-
-                        } else {
-                            Toast.makeText(NovoGastoActivity.this, getString(R.string
-                                            .erro_salvar_gasto),
-                                    Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-                }.execute();
-            }
-        });
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private double getGastoTotal(String idUsuario) {
@@ -226,6 +191,24 @@ public class NovoGastoActivity extends AppCompatActivity implements
         }
     }
 
+    private void salvarGasto(){
+        novoGastoTotal();
+
+        final String descricaoGasto = textDescricaoGasto.getText().toString().trim();
+        final String valorGasto = textValorGasto.getText().toString().trim();
+        final String metodoPagamento = textMetodoPagamento.getText().toString().trim();
+
+        if (mCurrentGastoUri == null && TextUtils.isEmpty(descricaoGasto) && TextUtils.isEmpty(valorGasto)) {
+            return;
+        }
+
+        if (descricaoGasto.isEmpty() && valorGasto.isEmpty() && metodoPagamento.isEmpty()){
+            Toast.makeText(this, getResources().getText(R.string.preencha_os_campos), Toast.LENGTH_SHORT).show();
+        } else{
+            new TaskSalvaGastos(descricaoGasto, valorGasto, metodoPagamento).execute();}
+    }
+
+
     private Dialog pegaDataGasto() {
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year,
@@ -240,5 +223,57 @@ public class NovoGastoActivity extends AppCompatActivity implements
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)) {
         };
+    }
+
+    private class TaskSalvaGastos extends AsyncTask<Void, Void, Uri> {
+
+        private final String descricaoGasto;
+        private final String valorGasto;
+        private final String metodoPagamento;
+
+        TaskSalvaGastos(String descricaoGasto, String valorGasto, String metodoPagamento) {
+            this.descricaoGasto = descricaoGasto;
+            this.valorGasto = valorGasto;
+            this.metodoPagamento = metodoPagamento;
+        }
+
+        @Override
+        protected Uri doInBackground(Void... params) {
+
+            ContentValues values = new ContentValues();
+
+            values.put(GastoEntry.COLUMN_VIAGEM_ID, idViagem);
+            values.put(GastoEntry.COLUMN_DESCRICAO_GASTO, descricaoGasto);
+            values.put(GastoEntry.COLUMN_VALOR_GASTO, valorGasto);
+            values.put(GastoEntry.COLUMN_DATA_GASTO, dataGasto);
+            values.put(GastoEntry.COLUMN_METODO_PAGAMENTO, metodoPagamento);
+            values.put(GastoEntry.COLUMN_ID_USUARIO, idUsuario);
+
+            return getContentResolver().insert(GastoEntry.CONTENT_URI, values);
+
+        }
+
+        @Override
+        protected void onPostExecute(Uri uri) {
+            super.onPostExecute(uri);
+
+            if (uri != null) {
+
+                Toast.makeText(NovoGastoActivity.this, getString(R.string
+                                .gasto_salvo),
+                        Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(NovoGastoActivity.this, ListaViagemActivity
+                        .class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+
+            } else {
+                Toast.makeText(NovoGastoActivity.this, getString(R.string
+                                .erro_salvar_gasto),
+                        Toast.LENGTH_SHORT).show();
+
+            }
+        }
     }
 }

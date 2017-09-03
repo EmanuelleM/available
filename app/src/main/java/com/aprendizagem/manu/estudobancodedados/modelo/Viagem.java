@@ -3,81 +3,67 @@ package com.aprendizagem.manu.estudobancodedados.modelo;
 import java.util.Date;
 
 public class Viagem{
-    private Long id;
+    private String id;
     private String destino;
-    private Integer tipoViagem;
-    private Date dataChegada;
-    private Date dataSaida;
-    private Double orcamento;
-    private Integer quantidadePessoas;
-    private String idEvento;
+    private String razaoViagem;
+    private String dataChegada;
+    private String dataSaida;
+    private String valorTotal;
 
-    public Viagem(){}
-
-    public Viagem(Long id, String destino, Integer tipoViagem, Date dataChegada,
-                  Date dataSaida, Double orcamento, Integer quantidadePessoas) {
+    public Viagem(String id, String destino, String razaoViagem, String dataChegada, String dataSaida, String valorTotal) {
         this.id = id;
         this.destino = destino;
-        this.tipoViagem = tipoViagem;
+        this.razaoViagem = razaoViagem;
         this.dataChegada = dataChegada;
         this.dataSaida = dataSaida;
-        this.orcamento = orcamento;
-        this.quantidadePessoas = quantidadePessoas;
+        this.valorTotal = valorTotal;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
-    public void setId(Long id) {
+
+    public void setId(String id) {
         this.id = id;
     }
+
     public String getDestino() {
         return destino;
     }
+
     public void setDestino(String destino) {
         this.destino = destino;
     }
-    public Integer getTipoViagem() {
-        return tipoViagem;
+
+    public String getRazaoViagem() {
+        return razaoViagem;
     }
-    public void setTipoViagem(Integer tipoViagem) {
-        this.tipoViagem = tipoViagem;
+
+    public void setRazaoViagem(String razaoViagem) {
+        this.razaoViagem = razaoViagem;
     }
-    public Date getDataChegada() {
+
+    public String getDataChegada() {
         return dataChegada;
     }
-    public void setDataChegada(Date dataChegada) {
+
+    public void setDataChegada(String dataChegada) {
         this.dataChegada = dataChegada;
     }
-    public Date getDataSaida() {
+
+    public String getDataSaida() {
         return dataSaida;
     }
-    public void setDataSaida(Date dataSaida) {
+
+    public void setDataSaida(String dataSaida) {
         this.dataSaida = dataSaida;
     }
-    public Double getOrcamento() {
-        return orcamento;
-    }
-    public void setOrcamento(Double orcamento) {
-        this.orcamento = orcamento;
-    }
-    public Integer getQuantidadePessoas() {
-        return quantidadePessoas;
-    }
-    public void setQuantidadePessoas(Integer quantidadePessoas) {
-        this.quantidadePessoas = quantidadePessoas;
+
+    public String getValorTotal() {
+        return valorTotal;
     }
 
-    public String getIdEvento() {
-        return idEvento;
-    }
-
-    public void setIdEvento(String idEvento) {
-        this.idEvento = idEvento;
-    }
-
-    @Override
-    public String toString() {
-        return destino;
+    public void setValorTotal(String valorTotal) {
+        this.valorTotal = valorTotal;
     }
 }
