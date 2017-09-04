@@ -69,4 +69,13 @@
     <string name="excluir_viagem">Excluir viagem</string>
     <string name="confirmar_exclusao">Você deseja excluir essa viagem?</string>
     <string name="excluir_gasto">Excluir gasto</string>
+    <string name="proxima_viagem">Próxima viagem</string>
+    <string name="informacoes_usuario">Perfil usuário</string>
+    <string name="exibe_detalhes_viagem">Detalhes da viagem</string>
+    <string name="string_adicione_uma_imagem">Adicione uma imagem</string>
+    <string name="voce_esta_viajando_para">Você está viajando para </string>
+    <string name="voce_esta_hospedado">Você está hospedado em </string>
+    <string name="sua_viagem_comecou">Sua viagem começou dia </string>
+    <string name="sua_viagem_termina">Sua viagem terminará, se já não terminou, dia </string>
+    <string name="gasto_atual_da_viagem">O gasto atual da sua viagem é de </string>
 </resources>

@@ -1,4 +1,4 @@
-package com.aprendizagem.manu.estudobancodedados.modelo;
+package com.aprendizagem.manu.boaviagemapp.modelo;
 
 /**
  * Created by emanu on 02/09/2017.

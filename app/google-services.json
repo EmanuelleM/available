@@ -1,59 +1,35 @@
 {
   "project_info": {
-    "project_number": "999899051771",
-    "firebase_url": "https://estudobancodedados.firebaseio.com",
-    "project_id": "estudobancodedados",
-    "storage_bucket": "estudobancodedados.appspot.com"
+    "project_number": "656022970166",
+    "firebase_url": "https://boaviagemappcapstone.firebaseio.com",
+    "project_id": "boaviagemappcapstone",
+    "storage_bucket": "boaviagemappcapstone.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:999899051771:android:fed3ef121b6dbf29",
+        "mobilesdk_app_id": "1:656022970166:android:fc23a394bdf1af5c",
         "android_client_info": {
-          "package_name": "com.aprendizagem.manu.estudobancodedados"
+          "package_name": "com.aprendizagem.manu.boaviagem"
         }
       },
       "oauth_client": [
         {
-          "client_id": "999899051771-fdodl9u1sgdjgu77jhqrva3b7nih5hu2.apps.googleusercontent.com",
+          "client_id": "656022970166-doq928q1k7m99d73iebc282fb3fosrfp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.aprendizagem.manu.estudobancodedados",
-            "certificate_hash": "ae270236ff27aea5d1d5fecefe8193fb679494fd"
-          }
-        },
-        {
-          "client_id": "999899051771-gd5l16pbub52qh01uvaicnpoufm83tvj.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.aprendizagem.manu.estudobancodedados",
-            "certificate_hash": "4e85e9485f207a49cca26f7914564de0e22036d9"
-          }
-        },
-        {
-          "client_id": "999899051771-ad5212j5k7mh4d9mric701u5cfj72uib.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.aprendizagem.manu.estudobancodedados",
-            "certificate_hash": "0630829562fa0e4fe353422cb59efca3f28b565d"
-          }
-        },
-        {
-          "client_id": "999899051771-6qdv2satpi2req8038ffiblsf2sq0of8.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.aprendizagem.manu.estudobancodedados",
+            "package_name": "com.aprendizagem.manu.boaviagem",
             "certificate_hash": "eefb6cee1044b88c53c2ae846aa8ed029a897811"
           }
         },
         {
-          "client_id": "999899051771-fjqj554ldbsk3p3h9vahkvahp5h0qi9n.apps.googleusercontent.com",
+          "client_id": "656022970166-hr7h0kt0rdvdlhcuigdjus1kcgj4vtlc.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD7kbECpHuK6IYW1I4wICDoEnmZXkXjHIo"
+          "current_key": "AIzaSyCHNQ_aojzzHpxsSms6c0SMYGb0n6uLUSc"
         }
       ],
       "services": {
@@ -64,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "999899051771-fjqj554ldbsk3p3h9vahkvahp5h0qi9n.apps.googleusercontent.com",
+              "client_id": "656022970166-hr7h0kt0rdvdlhcuigdjus1kcgj4vtlc.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

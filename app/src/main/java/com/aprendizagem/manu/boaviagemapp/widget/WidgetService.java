@@ -1,4 +1,4 @@
-package com.aprendizagem.manu.estudobancodedados.widget;
+package com.aprendizagem.manu.boaviagemapp.widget;
 
 import android.app.IntentService;
 import android.app.PendingIntent;
@@ -8,9 +8,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.widget.RemoteViews;
 
-import com.aprendizagem.manu.estudobancodedados.R;
-import com.aprendizagem.manu.estudobancodedados.database.Contract;
-import com.aprendizagem.manu.estudobancodedados.database.DatabaseHelper;
+import com.aprendizagem.manu.boaviagemapp.R;
+import com.aprendizagem.manu.boaviagemapp.database.Contract;
+import com.aprendizagem.manu.boaviagemapp.database.DatabaseHelper;
 
 import java.util.Locale;
 
@@ -35,7 +35,7 @@ public class WidgetService extends IntentService {
 
             if (contador > 0) {
                 int deslocamento = (int) (contador * Math.random());
-                String args[] = {String.valueOf(deslocamento)};
+                String args[] = {String.valueOf(1)};
                 c = gerenciador.getReadableDatabase().rawQuery("SELECT destino, gasto_total, data_chegada, data_saida FROM viagens LIMIT 1 OFFSET ?", args);
                 c.moveToFirst();
 
@@ -63,9 +63,10 @@ public class WidgetService extends IntentService {
         } finally {
             gerenciador.close();
         }
+
         Intent i = new Intent(this, WidgetService.class);
         PendingIntent pi = PendingIntent.getService(this, 0, i, 0);
-        remoteViews.setOnClickPendingIntent(R.id.text_view_app_name, pi);
+        remoteViews.setOnClickPendingIntent(R.id.proxima_viagem, pi);
         appWidgetManager.updateAppWidget(cn, remoteViews);
 
     }

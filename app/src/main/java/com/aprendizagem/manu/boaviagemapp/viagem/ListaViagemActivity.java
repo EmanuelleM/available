@@ -1,4 +1,4 @@
-package com.aprendizagem.manu.estudobancodedados.viagem;
+package com.aprendizagem.manu.boaviagemapp.viagem;
 
 import android.app.LoaderManager;
 import android.content.ContentUris;
@@ -23,13 +23,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.aprendizagem.manu.estudobancodedados.Constantes;
-import com.aprendizagem.manu.estudobancodedados.R;
-import com.aprendizagem.manu.estudobancodedados.adapter.ViagemAdapter;
-import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
-import com.aprendizagem.manu.estudobancodedados.gasto.ListaGastoActivity;
-import com.aprendizagem.manu.estudobancodedados.gasto.NovoGastoActivity;
-import com.aprendizagem.manu.estudobancodedados.login.Login;
+import com.aprendizagem.manu.boaviagemapp.Constantes;
+import com.aprendizagem.manu.boaviagemapp.R;
+import com.aprendizagem.manu.boaviagemapp.adapter.ViagemAdapter;
+import com.aprendizagem.manu.boaviagemapp.database.Contract.ViagemEntry;
+import com.aprendizagem.manu.boaviagemapp.gasto.ListaGastoActivity;
+import com.aprendizagem.manu.boaviagemapp.gasto.NovoGastoActivity;
+import com.aprendizagem.manu.boaviagemapp.login.Login;
 import com.facebook.stetho.Stetho;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
@@ -212,27 +212,33 @@ public class ListaViagemActivity extends AppCompatActivity implements
         builder.setItems(R.array.opcoes_item_viagem, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 Intent intent;
+                Uri currentUri = ContentUris.withAppendedId(ViagemEntry.CONTENT_URI, position);
                 switch (item) {
                     case 0:
+                        intent = new Intent(ListaViagemActivity.this, DetalhesViagem.class);
+                        intent.setData(currentUri);
+                        Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
+                        startActivity(intent);
+                        break;
+                    case 1:
                         intent = new Intent(ListaViagemActivity.this, ListaGastoActivity.class);
                         Constantes.setIdViagemSelecionada(position);
                         Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
                         startActivity(intent);
                         break;
-                    case 1:
+                    case 2:
                         intent = new Intent(ListaViagemActivity.this, NovoGastoActivity.class);
                         Constantes.setIdViagemSelecionada(position);
                         Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
                         startActivity(intent);
                         break;
-                    case 2:
+                    case 3:
                         intent = new Intent(ListaViagemActivity.this, NovaViagemActivity.class);
-                        Uri currentUri = ContentUris.withAppendedId(ViagemEntry.CONTENT_URI, position);
                         intent.setData(currentUri);
                         Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
                         startActivity(intent);
                         break;
-                    case 3:
+                    case 4:
                         deletarViagem(position);
                         break;
                 }

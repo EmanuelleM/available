@@ -5,4 +5,8 @@
         android:id="@+id/sair"
         android:title="@string/sair"
         app:showAsAction="never"/>
+    <!--<item-->
+        <!--android:id="@+id/info_usuario"-->
+        <!--android:title="@string/informacoes_usuario"-->
+        <!--app:showAsAction="never"/>-->
 </menu>

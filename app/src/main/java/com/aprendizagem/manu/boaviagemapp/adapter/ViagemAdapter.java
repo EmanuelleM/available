@@ -1,4 +1,4 @@
-package com.aprendizagem.manu.estudobancodedados.adapter;
+package com.aprendizagem.manu.boaviagemapp.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.aprendizagem.manu.estudobancodedados.R;
-import com.aprendizagem.manu.estudobancodedados.database.Contract;
+import com.aprendizagem.manu.boaviagemapp.R;
+import com.aprendizagem.manu.boaviagemapp.database.Contract;
 
 import java.util.Locale;
 

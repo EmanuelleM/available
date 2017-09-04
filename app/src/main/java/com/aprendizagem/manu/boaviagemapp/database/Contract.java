@@ -1,4 +1,4 @@
-package com.aprendizagem.manu.estudobancodedados.database;
+package com.aprendizagem.manu.boaviagemapp.database;
 
 import android.content.ContentResolver;
 import android.net.Uri;
@@ -9,7 +9,7 @@ public final class Contract {
     private Contract() {
     }
 
-    public static final String CONTENT_AUTHORITY = "com.aprendizagem.manu.estudobancodedados";
+    public static final String CONTENT_AUTHORITY = "com.aprendizagem.manu.boaviagemapp";
 
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 

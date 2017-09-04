@@ -1,4 +1,4 @@
-package com.aprendizagem.manu.estudobancodedados.adapter;
+package com.aprendizagem.manu.boaviagemapp.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -8,10 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.aprendizagem.manu.estudobancodedados.R;
-import com.aprendizagem.manu.estudobancodedados.database.Contract.GastoEntry;
-
-import java.util.Locale;
+import com.aprendizagem.manu.boaviagemapp.R;
+import com.aprendizagem.manu.boaviagemapp.database.Contract.GastoEntry;
 
 public class GastoAdapter extends
         RecyclerView.Adapter<GastoAdapter.ViewHolder> {

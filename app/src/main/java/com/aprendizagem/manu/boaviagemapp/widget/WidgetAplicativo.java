@@ -1,4 +1,4 @@
-package com.aprendizagem.manu.estudobancodedados.widget;
+package com.aprendizagem.manu.boaviagemapp.widget;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -12,7 +12,6 @@ public class WidgetAplicativo extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager,
                          int[] appWidgetIds) {
-        context.startService(new Intent(context, WidgetService.class));
     }
 
     @Override

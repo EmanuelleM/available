@@ -1,4 +1,4 @@
-package com.aprendizagem.manu.estudobancodedados.gasto;
+package com.aprendizagem.manu.boaviagemapp.gasto;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -23,12 +23,12 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.aprendizagem.manu.estudobancodedados.Constantes;
-import com.aprendizagem.manu.estudobancodedados.R;
-import com.aprendizagem.manu.estudobancodedados.database.Contract;
-import com.aprendizagem.manu.estudobancodedados.database.Contract.GastoEntry;
-import com.aprendizagem.manu.estudobancodedados.database.DatabaseHelper;
-import com.aprendizagem.manu.estudobancodedados.viagem.ListaViagemActivity;
+import com.aprendizagem.manu.boaviagemapp.Constantes;
+import com.aprendizagem.manu.boaviagemapp.R;
+import com.aprendizagem.manu.boaviagemapp.database.Contract;
+import com.aprendizagem.manu.boaviagemapp.database.Contract.GastoEntry;
+import com.aprendizagem.manu.boaviagemapp.database.DatabaseHelper;
+import com.aprendizagem.manu.boaviagemapp.viagem.ListaViagemActivity;
 
 public class NovoGastoActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="opcoes_item_viagem">
+        <item>@string/exibe_detalhes_viagem</item>
         <item>@string/exibe_lista_de_gastos</item>
         <item>@string/novo_gasto</item>
         <item>@string/editar</item>

@@ -1,4 +1,4 @@
-package com.aprendizagem.manu.estudobancodedados;
+package com.aprendizagem.manu.boaviagemapp;
 
 public class Constantes {
 

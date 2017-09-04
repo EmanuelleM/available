@@ -8,21 +8,15 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppThemeWithoutActionBar" parent="AppTheme">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
     <style name="AppThemeBacon" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-    <style name="exp_toolbar_title" parent="@android:style/TextAppearance.Holo.Medium">
-        <item name="android:textSize">36sp</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:textStyle">bold</item>
+
+    <style name="text_view_style" parent="@android:style/TextAppearance.Holo.Medium">
+        <item name="android:textSize">@dimen/text_size_16sp</item>
+        <item name="android:layout_margin">@dimen/geral_8dp</item>
     </style>
     <style name="coll_toolbar_title" parent="@android:style/TextAppearance.Medium">
         <item name="android:textSize">20sp</item>

@@ -1,4 +1,4 @@
-package com.aprendizagem.manu.estudobancodedados.viagem;
+package com.aprendizagem.manu.boaviagemapp.viagem;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -23,10 +23,10 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
-import com.aprendizagem.manu.estudobancodedados.Constantes;
-import com.aprendizagem.manu.estudobancodedados.R;
-import com.aprendizagem.manu.estudobancodedados.database.Contract;
-import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
+import com.aprendizagem.manu.boaviagemapp.Constantes;
+import com.aprendizagem.manu.boaviagemapp.R;
+import com.aprendizagem.manu.boaviagemapp.database.Contract;
+import com.aprendizagem.manu.boaviagemapp.database.Contract.ViagemEntry;
 
 public class NovaViagemActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
         View.OnClickListener {
@@ -51,13 +51,6 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
 
     private int mRazao = ViagemEntry.RAZAO_DESCONHECIDA;
 
-    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            return false;
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,9 +69,6 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
 
         editDestino = (EditText) findViewById(R.id.edit_text_destino);
         editLocalHospedagem = (EditText) findViewById(R.id.edit_text_local_hospedagem);
-
-        editDestino.setOnTouchListener(mTouchListener);
-        editLocalHospedagem.setOnTouchListener(mTouchListener);
 
         buttonDataChegada = (Button) findViewById(R.id.button_pega_data_chegada);
         buttonDataPartida = (Button) findViewById(R.id.button_pega_data_saida);
@@ -241,12 +231,10 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
             if (razaoViagem == 1) {
 
                 razaoLazer.setChecked(true);
-//                razaoNegocios.setChecked(false);
 
             } else if (razaoViagem == 2) {
 
                 razaoNegocios.setChecked(true);
-//                razaoLazer.setChecked(false);
             }
 
             editDestino.setText(destino);

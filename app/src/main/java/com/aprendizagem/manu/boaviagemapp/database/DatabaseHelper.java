@@ -1,17 +1,17 @@
-package com.aprendizagem.manu.estudobancodedados.database;
+package com.aprendizagem.manu.boaviagemapp.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
-import com.aprendizagem.manu.estudobancodedados.database.Contract.GastoEntry;
+import com.aprendizagem.manu.boaviagemapp.database.Contract.GastoEntry;
+import com.aprendizagem.manu.boaviagemapp.database.Contract.ViagemEntry;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "boaviagem.db";
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

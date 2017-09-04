@@ -1,6 +1,4 @@
-package com.aprendizagem.manu.estudobancodedados.modelo;
-
-import java.util.Date;
+package com.aprendizagem.manu.boaviagemapp.modelo;
 
 public class Viagem{
 

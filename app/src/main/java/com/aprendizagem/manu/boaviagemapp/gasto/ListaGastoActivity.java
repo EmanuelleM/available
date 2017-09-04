@@ -1,4 +1,4 @@
-package com.aprendizagem.manu.estudobancodedados.gasto;
+package com.aprendizagem.manu.boaviagemapp.gasto;
 
 import android.app.LoaderManager;
 import android.content.ContentValues;
@@ -16,12 +16,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
-import com.aprendizagem.manu.estudobancodedados.Constantes;
-import com.aprendizagem.manu.estudobancodedados.R;
-import com.aprendizagem.manu.estudobancodedados.adapter.GastoAdapter;
-import com.aprendizagem.manu.estudobancodedados.database.Contract.GastoEntry;
-import com.aprendizagem.manu.estudobancodedados.database.Contract.ViagemEntry;
-import com.aprendizagem.manu.estudobancodedados.database.DatabaseHelper;
+import com.aprendizagem.manu.boaviagemapp.Constantes;
+import com.aprendizagem.manu.boaviagemapp.R;
+import com.aprendizagem.manu.boaviagemapp.adapter.GastoAdapter;
+import com.aprendizagem.manu.boaviagemapp.database.Contract.GastoEntry;
+import com.aprendizagem.manu.boaviagemapp.database.Contract.ViagemEntry;
+import com.aprendizagem.manu.boaviagemapp.database.DatabaseHelper;
 
 public class ListaGastoActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
