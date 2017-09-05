@@ -1,6 +1,5 @@
 package com.aprendizagem.manu.boaviagemapp.login;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,7 +17,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -37,7 +35,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     private FirebaseAuth mFirebaseAuth;
 
     ProgressBar progressLogin;
-//    ProgressDialog progressLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +57,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
-//        progressLogin = new ProgressDialog(this);
     }
 
     @Override
@@ -85,7 +81,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 GoogleSignInAccount account = result.getSignInAccount();
-//                progressLogin.show();
                 progressLogin.setVisibility(View.VISIBLE);
                 firebaseAuthWithGoogle(account);
             } else {

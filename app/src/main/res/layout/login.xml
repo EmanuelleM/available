@@ -27,18 +27,17 @@
         android:id="@+id/text_view_entre_com"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/geral_8dp"
+        android:layout_marginBottom="6dp"
         android:layout_marginEnd="@dimen/geral_8dp"
         android:layout_marginLeft="@dimen/geral_8dp"
         android:layout_marginRight="@dimen/geral_8dp"
         android:layout_marginStart="@dimen/geral_8dp"
-        android:layout_marginTop="@dimen/geral_8dp"
         android:text="@string/entre_com"
         android:textSize="@dimen/text_size_16sp"
         app:layout_constraintBottom_toTopOf="@+id/button_google_sign_in"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintVertical_bias="0.771" />
+        app:layout_constraintHorizontal_bias="0.501"/>
 
     <ProgressBar
         android:id="@+id/progress_bar_login"
@@ -60,7 +59,7 @@
         android:id="@+id/button_google_sign_in"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="102dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:background="@color/colorPrimary"
