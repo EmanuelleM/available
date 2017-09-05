@@ -45,8 +45,6 @@ public class DetalhesViagem extends AppCompatActivity implements LoaderManager.L
         txtLocalHospedagem = (TextView) findViewById(R.id.text_view_hospedagem);
         txtValorGasto = (TextView) findViewById(R.id.text_view_valor_gasto);
 
-        txtDestino.setText("belo");
-
         adiconarImagem = (ImageButton) findViewById(R.id.image_button_adiciona_viagem);
 
         getLoaderManager().initLoader(EXISTING_VIAGEM_LOADER, null, this);
