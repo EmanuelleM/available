@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "656022970166-7c013jaiusfctfqnhd4r9fa1favrji2m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aprendizagem.manu.boaviagem",
+            "certificate_hash": "ae270236ff27aea5d1d5fecefe8193fb679494fd"
+          }
+        },
+        {
           "client_id": "656022970166-doq928q1k7m99d73iebc282fb3fosrfp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.aprendizagem.manu.boaviagemapp.R;
@@ -30,21 +32,22 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
 
     private static final String TAG = "Login";
     private static final int RC_SIGN_IN = 9001;
-    private SignInButton mSignInButton;
 
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mFirebaseAuth;
 
-    ProgressDialog progressLogin;
+    ProgressBar progressLogin;
+//    ProgressDialog progressLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
-        mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        Button buttonSignIn = (Button) findViewById(R.id.button_google_sign_in);
+        progressLogin = (ProgressBar) findViewById(R.id.progress_bar_login);
 
-        mSignInButton.setOnClickListener(this);
+        buttonSignIn.setOnClickListener(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -57,13 +60,13 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
-        progressLogin = new ProgressDialog(this);
+//        progressLogin = new ProgressDialog(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.sign_in_button:
+            case R.id.button_google_sign_in:
                 signInGoogle();
                 break;
         }
@@ -82,11 +85,12 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 GoogleSignInAccount account = result.getSignInAccount();
-                progressLogin.show();
+//                progressLogin.show();
+                progressLogin.setVisibility(View.VISIBLE);
                 firebaseAuthWithGoogle(account);
             } else {
                 Log.e(TAG, "Google Sign In failed.");
-                progressLogin.dismiss();
+                progressLogin.setVisibility(View.GONE);
             }
         }
     }
@@ -104,7 +108,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                             Toast.makeText(Login.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            progressLogin.dismiss();
+                            progressLogin.setVisibility(View.GONE);
                             startActivity(new Intent(Login.this, ListaViagemActivity.class));
                             finish();
                         }
