@@ -10,10 +10,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aprendizagem.manu.boaviagemapp.R;
+import com.aprendizagem.manu.boaviagemapp.adapter.GaleriaImagensAdapter;
 import com.aprendizagem.manu.boaviagemapp.database.Contract;
 
 public class DetalhesViagem extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
@@ -30,6 +34,7 @@ public class DetalhesViagem extends AppCompatActivity implements LoaderManager.L
     ImageButton adiconarImagem;
 
     private Uri mCurrentViagemUri;
+    private int PICK_IMAGE_REQUEST = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,6 +51,27 @@ public class DetalhesViagem extends AppCompatActivity implements LoaderManager.L
         txtValorGasto = (TextView) findViewById(R.id.text_view_valor_gasto);
 
         adiconarImagem = (ImageButton) findViewById(R.id.image_button_adiciona_viagem);
+
+        adiconarImagem.setOnClickListener(new View.OnClickListener() {
+                                              @Override
+                                              public void onClick(View view) {
+                                                  Intent intent = new Intent();
+                                                  intent.setType("image/*");
+                                                  intent.setAction(Intent.ACTION_GET_CONTENT);
+                                                  startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+                                              }
+                                          }
+        );
+
+        GridView gridview = (GridView) findViewById(R.id.grid_view_imagem);
+        gridview.setAdapter(new GaleriaImagensAdapter(this));
+
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+
+            }
+        });
 
         getLoaderManager().initLoader(EXISTING_VIAGEM_LOADER, null, this);
     }

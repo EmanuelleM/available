@@ -79,4 +79,5 @@
     <string name="sua_viagem_termina">Sua viagem terminará, se já não terminou, dia </string>
     <string name="gasto_atual_da_viagem">O gasto atual da sua viagem é de </string>
     <string name="login_com_google">Login com Google</string>
+    <string name="adicionar_imagem_viagem">Adicionar uma imagem à galeria da viagem.</string>
 </resources>

@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -295,7 +294,7 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
             if (uri != null) {
 
                 Toast.makeText(NovaViagemActivity.this, getString(R.string
-                                .gasto_salvo),
+                                .viagem_salva),
                         Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(NovaViagemActivity.this, ListaViagemActivity
@@ -305,7 +304,7 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
 
             } else {
                 Toast.makeText(NovaViagemActivity.this, getString(R.string
-                                .erro_salvar_gasto),
+                                .erro_salvar_viagem),
                         Toast.LENGTH_SHORT).show();
 
             }

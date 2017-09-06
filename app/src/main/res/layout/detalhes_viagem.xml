@@ -79,18 +79,18 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/geral_8dp"
         android:src="@drawable/ic_add_24dp"
-        android:text="@string/string_adicione_uma_imagem"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_valor_gasto"
         tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintTop_creator="1" />
+        tools:layout_constraintTop_creator="1"
+        android:contentDescription="@string/adicionar_imagem_viagem"/>
 
     <GridView
         android:id="@+id/grid_view_imagem"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="0dp"
