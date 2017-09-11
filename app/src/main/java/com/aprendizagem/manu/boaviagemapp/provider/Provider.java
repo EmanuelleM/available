@@ -1,4 +1,4 @@
-package com.aprendizagem.manu.boaviagemapp.database;
+package com.aprendizagem.manu.boaviagemapp.provider;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -9,8 +9,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
+import com.aprendizagem.manu.boaviagemapp.database.Contract;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.GastoEntry;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.ViagemEntry;
+import com.aprendizagem.manu.boaviagemapp.database.DatabaseHelper;
 
 public class Provider extends ContentProvider {
 

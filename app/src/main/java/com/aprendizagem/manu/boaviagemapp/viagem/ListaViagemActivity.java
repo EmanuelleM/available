@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.aprendizagem.manu.boaviagemapp.BuildConfig;
 import com.aprendizagem.manu.boaviagemapp.Constantes;
 import com.aprendizagem.manu.boaviagemapp.R;
 import com.aprendizagem.manu.boaviagemapp.adapter.ViagemAdapter;
@@ -30,7 +31,7 @@ import com.aprendizagem.manu.boaviagemapp.database.Contract.ViagemEntry;
 import com.aprendizagem.manu.boaviagemapp.gasto.ListaGastoActivity;
 import com.aprendizagem.manu.boaviagemapp.gasto.NovoGastoActivity;
 import com.aprendizagem.manu.boaviagemapp.login.Login;
-import com.facebook.stetho.Stetho;
+//import com.facebook.stetho.Stetho;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -56,7 +57,8 @@ public class ListaViagemActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Stetho.initializeWithDefaults(this);
+//        if (BuildConfig.DEBUG){
+//        Stetho.initializeWithDefaults(this);}
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
@@ -215,18 +217,12 @@ public class ListaViagemActivity extends AppCompatActivity implements
                 Uri currentUri = ContentUris.withAppendedId(ViagemEntry.CONTENT_URI, position);
                 switch (item) {
                     case 0:
-                        intent = new Intent(ListaViagemActivity.this, DetalhesViagem.class);
-                        intent.setData(currentUri);
-                        Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
-                        startActivity(intent);
-                        break;
-                    case 1:
                         intent = new Intent(ListaViagemActivity.this, ListaGastoActivity.class);
                         Constantes.setIdViagemSelecionada(position);
                         Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
                         startActivity(intent);
                         break;
-                    case 2:
+                    case 1:
                         intent = new Intent(ListaViagemActivity.this, NovoGastoActivity.class);
                         Constantes.setIdViagemSelecionada(position);
                         Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);

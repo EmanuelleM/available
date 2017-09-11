@@ -55,7 +55,7 @@
         </activity>
 
         <provider
-            android:name="com.aprendizagem.manu.boaviagemapp.database.Provider"
+            android:name="com.aprendizagem.manu.boaviagemapp.provider.Provider"
             android:authorities="com.aprendizagem.manu.boaviagemapp"
             android:exported="false" />
 
