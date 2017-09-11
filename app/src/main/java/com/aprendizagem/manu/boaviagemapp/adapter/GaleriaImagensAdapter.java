@@ -32,6 +32,9 @@ public class GaleriaImagensAdapter extends BaseAdapter {
     // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
+        View view = convertView;
+        ViewHolder viewHolder;
+
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
@@ -43,12 +46,13 @@ public class GaleriaImagensAdapter extends BaseAdapter {
         }
 
         imageView.setImageResource(mThumbIds[position]);
-        return imageView;
 
-        Picasso.with(mContext).load(mThumbIds)
+        Picasso.with(mContext).load(mThumbIds[position])
                 .into(viewHolder.imageView);
-    }
 
+        return view;
+
+    }
 
 
     // references to our images
@@ -64,8 +68,9 @@ public class GaleriaImagensAdapter extends BaseAdapter {
 
 
         public ViewHolder(View view) {
-            imageView = (ImageView) view.findViewById(R.id.grid_item_image);
+            imageView = view.findViewById(R.id.grid_item_image);
 
 
         }
+    }
 }
