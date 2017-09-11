@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'key_capstone'
             keyPassword '356824'
-            storeFile file('/Applications/Android Studio.app/Contents/bin/projeto_capstone')
+            storeFile file('/Users/emanuellemenali/Desktop/projetos_udacity/capstone/projeto_capstone')
             storePassword '356824'
         }
     }
