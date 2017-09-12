@@ -1,6 +1,9 @@
 package com.aprendizagem.manu.boaviagemapp.login;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -25,16 +28,16 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class Login extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
+public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
 
-    private static final String TAG = "Login";
+    private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN = 9001;
 
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mFirebaseAuth;
 
-    ProgressBar progressLogin;
+    ProgressBar mProgressLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +45,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         setContentView(R.layout.login);
 
         Button buttonSignIn = (Button) findViewById(R.id.button_google_sign_in);
-        progressLogin = (ProgressBar) findViewById(R.id.progress_bar_login);
+        mProgressLogin = (ProgressBar) findViewById(R.id.progress_bar_login);
 
         buttonSignIn.setOnClickListener(this);
 
@@ -63,7 +66,11 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_google_sign_in:
-                signInGoogle();
+               if (getNetworkStatus(this)){
+                signInGoogle();}
+                else{
+                   Toast.makeText(this, R.string.nao_ha_conexao_de_rede, Toast.LENGTH_SHORT).show();
+               }
                 break;
         }
     }
@@ -81,11 +88,11 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 GoogleSignInAccount account = result.getSignInAccount();
-                progressLogin.setVisibility(View.VISIBLE);
+                mProgressLogin.setVisibility(View.VISIBLE);
                 firebaseAuthWithGoogle(account);
             } else {
                 Log.e(TAG, "Google Sign In failed.");
-                progressLogin.setVisibility(View.GONE);
+                mProgressLogin.setVisibility(View.GONE);
             }
         }
     }
@@ -100,11 +107,12 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(Login.this, "Authentication failed.",
+                            mProgressLogin.setVisibility(View.GONE);
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            progressLogin.setVisibility(View.GONE);
-                            startActivity(new Intent(Login.this, ListaViagemActivity.class));
+                            mProgressLogin.setVisibility(View.GONE);
+                            startActivity(new Intent(LoginActivity.this, ListaViagemActivity.class));
                             finish();
                         }
                     }
@@ -115,5 +123,16 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
+    }
+
+    public static boolean getNetworkStatus(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+            return true;
+        }
+        return false;
     }
 }

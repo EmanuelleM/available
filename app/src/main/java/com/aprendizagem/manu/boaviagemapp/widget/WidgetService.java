@@ -35,7 +35,7 @@ public class WidgetService extends IntentService {
 
             if (contador > 0) {
                 int deslocamento = (int) (contador * Math.random());
-                String args[] = {String.valueOf(1)};
+                String args[] = {String.valueOf(deslocamento)};
                 c = gerenciador.getReadableDatabase().rawQuery("SELECT destino, gasto_total, data_chegada, data_saida FROM viagens LIMIT 1 OFFSET ?", args);
                 c.moveToFirst();
 
@@ -44,21 +44,24 @@ public class WidgetService extends IntentService {
                 remoteViews.setTextViewText(R.id.text_view_nome_viagem, destino);
 
                 final int dataChegadaColumnIndex = c.getColumnIndex(Contract.ViagemEntry.COLUMN_DATA_CHEGADA);
-                final String dataChegada= c.getString(dataChegadaColumnIndex);
+                final String dataChegada = c.getString(dataChegadaColumnIndex);
                 remoteViews.setTextViewText(R.id.text_view_data_chegada, dataChegada);
 
                 final int dataSaidaColumnIndex = c.getColumnIndex(Contract.ViagemEntry.COLUMN_DATA_PARTIDA);
-                final String dataSaida= c.getString(dataSaidaColumnIndex);
+                final String dataSaida = c.getString(dataSaidaColumnIndex);
                 remoteViews.setTextViewText(R.id.text_view_data_saida, dataSaida);
 
                 final int valorGastoColumnIndex = c.getColumnIndex(Contract.ViagemEntry.COLUMN_GASTO_TOTAL);
+
                 final double gastoTotal = c.getDouble(valorGastoColumnIndex);
                 String valorFormatado = String.format(Locale.getDefault(), "%.2f", gastoTotal);
                 remoteViews.setTextViewText(R.id.text_view_gasto_viagem, "R$" + valorFormatado.replace(".", ","));
-
+                
                 c.close();
             } else {
                 remoteViews.setTextViewText(R.id.text_view_nome_viagem, getString(R.string.sem_viagens_na_lista));
+                remoteViews.setTextViewText(R.id.text_view_texto_valor_gasto, " ");
+                remoteViews.setTextViewText(R.id.text_view_gasto_viagem, " ");
             }
         } finally {
             gerenciador.close();

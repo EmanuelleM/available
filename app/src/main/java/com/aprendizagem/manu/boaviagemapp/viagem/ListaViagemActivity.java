@@ -23,15 +23,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.aprendizagem.manu.boaviagemapp.BuildConfig;
 import com.aprendizagem.manu.boaviagemapp.Constantes;
 import com.aprendizagem.manu.boaviagemapp.R;
 import com.aprendizagem.manu.boaviagemapp.adapter.ViagemAdapter;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.ViagemEntry;
 import com.aprendizagem.manu.boaviagemapp.gasto.ListaGastoActivity;
 import com.aprendizagem.manu.boaviagemapp.gasto.NovoGastoActivity;
-import com.aprendizagem.manu.boaviagemapp.login.Login;
-//import com.facebook.stetho.Stetho;
+import com.aprendizagem.manu.boaviagemapp.login.LoginActivity;
+import com.facebook.stetho.Stetho;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -57,8 +56,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        if (BuildConfig.DEBUG){
-//        Stetho.initializeWithDefaults(this);}
+        Stetho.initializeWithDefaults(this);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
@@ -82,7 +80,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
             getLoaderManager().initLoader(VIAGEM_LOADER, null, this);
 
         } else {
-            startActivity(new Intent(this, Login.class));
+            startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
         }
@@ -175,7 +173,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
                 mFirebaseAuth.signOut();
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                 mFirebaseUser = null;
-                startActivity(new Intent(this, Login.class));
+                startActivity(new Intent(this, LoginActivity.class));
                 finish();
                 return true;
 
@@ -228,13 +226,13 @@ public class ListaViagemActivity extends AppCompatActivity implements
                         Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
                         startActivity(intent);
                         break;
-                    case 3:
+                    case 2:
                         intent = new Intent(ListaViagemActivity.this, NovaViagemActivity.class);
                         intent.setData(currentUri);
                         Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
                         startActivity(intent);
                         break;
-                    case 4:
+                    case 3:
                         deletarViagem(position);
                         break;
                 }

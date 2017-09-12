@@ -30,6 +30,8 @@ public class ViagemAdapter extends
 
     @Override
     public ViagemAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, final int viewType) {
+
+
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_lista_viagem, parent, false);
 

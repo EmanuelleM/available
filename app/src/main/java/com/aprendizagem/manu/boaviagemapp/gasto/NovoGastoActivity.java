@@ -39,9 +39,9 @@ public class NovoGastoActivity extends AppCompatActivity implements
 
     private Uri mCurrentGastoUri;
 
-    private EditText textDescricaoGasto;
-    private EditText textValorGasto;
-    private EditText textMetodoPagamento;
+    private EditText editTextDescricaoGasto;
+    private EditText editTextValorGasto;
+    private EditText editTextMetodoPagamento;
 
     private Button buttonDataChegada;
 
@@ -61,9 +61,9 @@ public class NovoGastoActivity extends AppCompatActivity implements
         setTitle(getString(R.string.novo_gasto));
         invalidateOptionsMenu();
 
-        textDescricaoGasto = (EditText) findViewById(R.id.edit_text_descricao_gasto);
-        textValorGasto = (EditText) findViewById(R.id.edit_text_valor_gasto);
-        textMetodoPagamento = (EditText) findViewById(R.id.edit_text_metodo_pagamento);
+        editTextDescricaoGasto = (EditText) findViewById(R.id.edit_text_descricao_gasto);
+        editTextValorGasto = (EditText) findViewById(R.id.edit_text_valor_gasto);
+        editTextMetodoPagamento = (EditText) findViewById(R.id.edit_text_metodo_pagamento);
 
         buttonDataChegada = (Button) findViewById(R.id.button_pega_data_gasto);
         buttonDataChegada.setOnClickListener(this);
@@ -81,9 +81,15 @@ public class NovoGastoActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.salvar:
-                salvarGasto();
-                startActivity(new Intent(this, ListaViagemActivity.class));
-                finish();
+                if (editTextDescricaoGasto.getText().toString().trim().isEmpty() ||
+                        editTextValorGasto.getText().toString().trim().isEmpty()) {
+                    Toast.makeText(this, "É necessário informar a descrição e o valor do gasto",
+                            Toast
+                                    .LENGTH_SHORT)
+                            .show();
+                } else {
+                    salvarGasto();
+                }
                 return true;
 
             default:
@@ -113,9 +119,10 @@ public class NovoGastoActivity extends AppCompatActivity implements
         );
         double gastoTotal = 0;
 
-        if (cursor.moveToFirst()){
-        gastoTotal = cursor.getDouble(0);
-        cursor.close();}
+        if (cursor.moveToFirst()) {
+            gastoTotal = cursor.getDouble(0);
+            cursor.close();
+        }
         return gastoTotal;
     }
 
@@ -123,7 +130,7 @@ public class NovoGastoActivity extends AppCompatActivity implements
 
         double antigoGastoTotal = getGastoTotal(idUsuario);
         double valorAdicionadoUsuario = 0;
-        String value = textValorGasto.getText().toString().trim().replace(",", ".");
+        String value = editTextValorGasto.getText().toString().trim().replace(",", ".");
 
         if (!value.isEmpty())
             try {
@@ -139,7 +146,7 @@ public class NovoGastoActivity extends AppCompatActivity implements
         ContentValues values = new ContentValues();
         values.put(Contract.ViagemEntry.COLUMN_GASTO_TOTAL, novoValorGastoTotal);
 
-        String selection = Contract.ViagemEntry._ID + " = '" + idViagem  + "' AND " +
+        String selection = Contract.ViagemEntry._ID + " = '" + idViagem + "' AND " +
                 Contract.ViagemEntry.COLUMN_ID_USUARIO + "= '" + idUsuario + "'";
 
         db.update(
@@ -191,21 +198,18 @@ public class NovoGastoActivity extends AppCompatActivity implements
         }
     }
 
-    private void salvarGasto(){
+    private void salvarGasto() {
         novoGastoTotal();
 
-        final String descricaoGasto = textDescricaoGasto.getText().toString().trim();
-        final String valorGasto = textValorGasto.getText().toString().trim();
-        final String metodoPagamento = textMetodoPagamento.getText().toString().trim();
+        final String descricaoGasto = editTextDescricaoGasto.getText().toString().trim();
+        final String valorGasto = editTextValorGasto.getText().toString().trim();
+        final String metodoPagamento = editTextMetodoPagamento.getText().toString().trim();
 
         if (mCurrentGastoUri == null && TextUtils.isEmpty(descricaoGasto) && TextUtils.isEmpty(valorGasto)) {
             return;
         }
 
-        if (descricaoGasto.isEmpty() && valorGasto.isEmpty() && metodoPagamento.isEmpty()){
-            Toast.makeText(this, getResources().getText(R.string.preencha_os_campos), Toast.LENGTH_SHORT).show();
-        } else{
-            new TaskSalvaGastos(descricaoGasto, valorGasto, metodoPagamento).execute();}
+        new TaskSalvaGastos(descricaoGasto, valorGasto, metodoPagamento).execute();
     }
 
 
