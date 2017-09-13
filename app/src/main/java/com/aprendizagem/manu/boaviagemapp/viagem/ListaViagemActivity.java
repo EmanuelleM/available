@@ -75,7 +75,6 @@ public class ListaViagemActivity extends AppCompatActivity implements
             exibeFloatActionButton();
             exibeMenu();
             exibeListaDeViagens();
-            configuraSwipe();
 
             getLoaderManager().initLoader(VIAGEM_LOADER, null, this);
 
@@ -286,30 +285,6 @@ public class ListaViagemActivity extends AppCompatActivity implements
 
         AlertDialog dialog = builder.create();
         dialog.show();
-    }
-
-    private void configuraSwipe() {
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(
-                0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
-                                  RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                final int x = viewHolder.getLayoutPosition();
-                Cursor cursor = mCursorAdapter.getCursor();
-                cursor.moveToPosition(x);
-                final long id = cursor.getLong(cursor.getColumnIndex(ViagemEntry._ID));
-                getContentResolver().delete(
-                        Uri.withAppendedPath(ViagemEntry.CONTENT_URI, String.valueOf(id)),
-                        null, null);
-            }
-        };
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerViewViagem);
     }
 }
 
