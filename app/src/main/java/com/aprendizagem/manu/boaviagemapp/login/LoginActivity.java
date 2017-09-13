@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mFirebaseAuth;
 
-    ProgressBar mProgressLogin;
+    private ProgressBar mProgressLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +93,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             } else {
                 Log.e(TAG, "Google Sign In failed.");
                 mProgressLogin.setVisibility(View.GONE);
+                Toast.makeText(this, R.string.falha_tentativa_login, Toast.LENGTH_SHORT).show();
             }
         }
     }

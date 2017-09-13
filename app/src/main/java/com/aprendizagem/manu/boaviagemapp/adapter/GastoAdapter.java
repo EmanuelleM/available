@@ -6,13 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.aprendizagem.manu.boaviagemapp.R;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.GastoEntry;
 
 public class GastoAdapter extends
-        RecyclerView.Adapter<GastoAdapter.ViewHolder> {
+        RecyclerView.Adapter<ViewHolderGasto> {
 
     private Context mContext;
     private Cursor cursor;
@@ -24,11 +23,11 @@ public class GastoAdapter extends
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, final int viewType) {
+    public ViewHolderGasto onCreateViewHolder(ViewGroup parent, final int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_lista_gasto, parent, false);
 
-        final ViewHolder vh = new ViewHolder(v);
+        final ViewHolderGasto vh = new ViewHolderGasto(v);
 
         v.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,7 +42,7 @@ public class GastoAdapter extends
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolderGasto holder, final int position) {
         cursor.moveToPosition(position);
 
         int descricaoGastoColumnIndex = cursor.getColumnIndex(GastoEntry.COLUMN_DESCRICAO_GASTO);
@@ -89,21 +88,5 @@ public class GastoAdapter extends
 
     public interface ItemClickListenerAdapter {
         void itemFoiClicado(Cursor cursor);
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txtDescricaoGasto;
-        TextView txtValorGasto;
-        TextView txtDataGasto;
-        TextView metodoPagamentoGasto;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            txtDescricaoGasto = itemView.findViewById(R.id.text_view_descricao_gasto);
-            txtValorGasto = itemView.findViewById(R.id.text_view_valor_gasto);
-            txtDataGasto = itemView.findViewById(R.id.text_view_data_gasto);
-            metodoPagamentoGasto = itemView.findViewById(R.id.edit_text_metodo_pagamento);
-
-        }
     }
 }

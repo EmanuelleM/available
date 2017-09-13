@@ -313,8 +313,18 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
 
             editTextDestino.setText(destino);
             editLocalHospedagem.setText(localHospedagem);
-            buttonDataChegada.setText(dataChegada);
-            buttonDataPartida.setText(dataPartida);
+
+            if (dataChegada == null) {
+                buttonDataChegada.setText(R.string.data_da_chegada);
+            } else {
+                buttonDataChegada.setText(dataChegada);
+            }
+
+            if (dataPartida == null) {
+                buttonDataPartida.setText(R.string.data_da_partida);
+            } else {
+                buttonDataPartida.setText(dataPartida);
+            }
 
         }
     }

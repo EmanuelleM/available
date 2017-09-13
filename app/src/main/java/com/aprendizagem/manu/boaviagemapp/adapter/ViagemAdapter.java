@@ -6,8 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.aprendizagem.manu.boaviagemapp.R;
 import com.aprendizagem.manu.boaviagemapp.database.Contract;
@@ -15,7 +13,7 @@ import com.aprendizagem.manu.boaviagemapp.database.Contract;
 import java.util.Locale;
 
 public class ViagemAdapter extends
-        RecyclerView.Adapter<ViagemAdapter.ViewHolder> {
+        RecyclerView.Adapter<ViewHolderViagem> {
 
     private Context mContext;
     private Cursor cursor;
@@ -29,13 +27,13 @@ public class ViagemAdapter extends
     }
 
     @Override
-    public ViagemAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, final int viewType) {
+    public ViewHolderViagem onCreateViewHolder(ViewGroup parent, final int viewType) {
 
 
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_lista_viagem, parent, false);
 
-        final ViagemAdapter.ViewHolder vh = new ViagemAdapter.ViewHolder(v);
+        final ViewHolderViagem vh = new ViewHolderViagem(v);
 
         v.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,7 +48,7 @@ public class ViagemAdapter extends
     }
 
     @Override
-    public void onBindViewHolder(final ViagemAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolderViagem holder, final int position) {
         cursor.moveToPosition(position);
 
         int destinoColumnIndex = cursor.getColumnIndex(Contract.ViagemEntry.COLUMN_DESTINO);
@@ -114,23 +112,23 @@ public class ViagemAdapter extends
         void itemFoiClicado(Cursor cursor);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView campoDestinoViagem;
-        TextView campoValorTotalGastoViagem;
-        TextView campoRazaoViagem;
-        TextView campoDataChegada;
-        TextView campoDataPartida;
-        ImageView acionarManu;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            campoDestinoViagem = itemView.findViewById(R.id.text_view_destino_viagem);
-            campoValorTotalGastoViagem = itemView.findViewById(R.id.text_view_total_viagem);
-            campoRazaoViagem = itemView.findViewById(R.id.text_view_razao_viagem);
-            campoDataChegada = itemView.findViewById(R.id.text_view_data_chegada);
-            campoDataPartida = itemView.findViewById(R.id.text_view_data_partida);
-            acionarManu = itemView.findViewById(R.id.image_view_arrow);
-        }
-    }
+//    public static class ViewHolderViagem extends RecyclerView.ViewHolderViagem {
+//        TextView campoDestinoViagem;
+//        TextView campoValorTotalGastoViagem;
+//        TextView campoRazaoViagem;
+//        TextView campoDataChegada;
+//        TextView campoDataPartida;
+//        ImageView acionarManu;
+//
+//        public ViewHolderViagem(View itemView) {
+//            super(itemView);
+//            campoDestinoViagem = itemView.findViewById(R.id.text_view_destino_viagem);
+//            campoValorTotalGastoViagem = itemView.findViewById(R.id.text_view_total_viagem);
+//            campoRazaoViagem = itemView.findViewById(R.id.text_view_razao_viagem);
+//            campoDataChegada = itemView.findViewById(R.id.text_view_data_chegada);
+//            campoDataPartida = itemView.findViewById(R.id.text_view_data_partida);
+//            acionarManu = itemView.findViewById(R.id.image_view_arrow);
+//        }
+//    }
 }
 

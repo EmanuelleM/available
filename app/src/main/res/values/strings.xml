@@ -41,11 +41,9 @@
     <string name="erro_salvar_gasto">Erro ao salvar gasto</string>
     <string name="_00_00">00,00</string>
     <string name="mock_data">27/10/2017</string>
-    <string name="id_app_admob">ca-app-pub-3940256099942544/2177258514</string>
-    <string name="API_KEY_CALENDAR">AIzaSyD7kbECpHuK6IYW1I4wICDoEnmZXkXjHIo</string>
     <string name="selecione">selecione</string>
     <string name="data_da_chegada">Data chegada</string>
-    <string name="data_da_saida">Data saida</string>
+    <string name="data_da_partida">Data saida</string>
     <string name="exibe_lista_de_gastos">Lista de gastos</string>
     <string name="adicionar_viagem_ao_calendario">Adicionar viagem ao calendário</string>
     <string name="falha_login">Falha no login</string>
@@ -56,11 +54,6 @@
     <string name="falha_criacao_conta">Falha ao criar conta, talvez a conta já esteja registrada</string>
     <string name="criar_conta">Criar conta</string>
     <string name="seu_nome_de_usuario">Seu nome</string>
-    <string name="buscar">Buscar</string>
-    <string name="fazendo_login">Fazendo Login</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
-    <string name="configure">configure</string>
     <string name="duracao_da_viagem">Duração da viagem</string>
     <string name="falha_de_conexao">Falha de conexão</string>
     <string name="editar">Editar</string>
@@ -82,6 +75,7 @@
     <string name="adicionar_imagem_viagem">Adicionar uma imagem à galeria da viagem.</string>
     <string name="nao_ha_gastos">Não há gastos nessa viagem</string>
     <string name="nao_ha_conexao_de_rede">Não há conexão de rede</string>
+    <string name="falha_tentativa_login">Houve alguma falha, tente novamente</string>
     <string name="informe_o_destino">É preciso informar o destino da viagem.</string>
     <string name="pega_localizacao">botão para pegar a localização</string>
 </resources>
