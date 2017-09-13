@@ -7,10 +7,12 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.aprendizagem.manu.boaviagemapp.database.Contract;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.GastoEntry;
+import com.aprendizagem.manu.boaviagemapp.database.Contract.ImagemGaleriaEntry;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.ViagemEntry;
 import com.aprendizagem.manu.boaviagemapp.database.DatabaseHelper;
 
@@ -25,6 +27,12 @@ public class Provider extends ContentProvider {
     private static final int GASTO_ID = 103;
     private static final int GASTOS_VIAGEM_ID = 104;
 
+    private static final int IMAGEM = 105;
+    private static final int IMAGEM_ID = 106;
+
+    String textoFalhaInsercao = "Falha ao inserir linha";
+    String textoUriDesconhecida = "URI desconhecida ";
+
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
@@ -33,6 +41,9 @@ public class Provider extends ContentProvider {
 
         sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, Contract.PATH_GASTOS, GASTO);
         sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, Contract.PATH_GASTOS + "/#", GASTO_ID);
+
+        sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, Contract.PATH_IMAGENS, IMAGEM);
+        sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, Contract.PATH_IMAGENS + "/#", IMAGEM_ID);
     }
 
     private DatabaseHelper mDbHelper;
@@ -94,8 +105,31 @@ public class Provider extends ContentProvider {
                         sortOrder);
                 break;
 
+            case IMAGEM:
+                cursor = database.query(
+                        ImagemGaleriaEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            case IMAGEM_ID:
+                selection = ImagemGaleriaEntry.COLUMN_VIAGEM_ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                cursor = database.query(
+                        ImagemGaleriaEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+
             default:
-                throw new IllegalArgumentException("Cannot query unknown URI " + uri);
+                throw new IllegalArgumentException( textoUriDesconhecida + uri);
         }
 
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
@@ -104,16 +138,42 @@ public class Provider extends ContentProvider {
     }
 
     @Override
-    public Uri insert(Uri uri, ContentValues contentValues) {
+    public Uri insert(@NonNull Uri uri, ContentValues contentValues) {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case VIAGEM:
                 return insertViagem(uri, contentValues);
             case GASTO:
                 return insertGasto(uri, contentValues);
+            case IMAGEM:
+                return insertImagem(uri, contentValues);
             default:
-                throw new IllegalArgumentException("Insertion is not supported for " + uri);
+                throw new IllegalArgumentException("Inserção não suportada" + uri);
         }
+    }
+
+    private Uri insertImagem(Uri uri, ContentValues values) {
+        int idViagem = values.getAsInteger(ImagemGaleriaEntry.COLUMN_VIAGEM_ID);
+        if (idViagem == 0){
+            throw new IllegalArgumentException("Necessário informar o id da viagem");
+
+        }
+
+        String caminho = values.getAsString(ImagemGaleriaEntry.COLUMN_CAMINHO_IMAGEM);
+        if (caminho == null) {
+            throw new IllegalArgumentException("Necessário informar um caminho");
+        }
+
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        long id = database.insert(ImagemGaleriaEntry.TABLE_NAME, null, values);
+        if (id == -1) {
+            Log.e(LOG_TAG, textoFalhaInsercao + uri);
+            return null;
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        return ContentUris.withAppendedId(uri, id);
     }
 
     private Uri insertGasto(Uri uri, ContentValues values) {
@@ -125,7 +185,7 @@ public class Provider extends ContentProvider {
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
         long id = database.insert(GastoEntry.TABLE_NAME, null, values);
         if (id == -1) {
-            Log.e(LOG_TAG, "Failed to insert row for " + uri);
+            Log.e(LOG_TAG, textoFalhaInsercao + uri);
             return null;
         }
         getContext().getContentResolver().notifyChange(uri, null);
@@ -145,7 +205,7 @@ public class Provider extends ContentProvider {
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
         long id = database.insert(ViagemEntry.TABLE_NAME, null, values);
         if (id == -1) {
-            Log.e(LOG_TAG, "Failed to insert row for " + uri);
+            Log.e(LOG_TAG, textoFalhaInsercao + uri);
             return null;
         }
         getContext().getContentResolver().notifyChange(uri, null);
@@ -165,7 +225,8 @@ public class Provider extends ContentProvider {
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updateViagem(uri, contentValues, selection, selectionArgs);
             default:
-                throw new IllegalArgumentException("Update is not supported for " + uri);
+                throw new IllegalArgumentException("Atualização não é permitida para o item " +
+                        uri);
         }
     }
 
@@ -211,21 +272,35 @@ public class Provider extends ContentProvider {
             case VIAGEM:
                 rowsDeleted = database.delete(ViagemEntry.TABLE_NAME, selection, selectionArgs);
                 break;
+
             case VIAGEM_ID:
                 selection = ViagemEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 rowsDeleted = database.delete(ViagemEntry.TABLE_NAME, selection, selectionArgs);
                 break;
+
             case GASTO:
                 rowsDeleted = database.delete(GastoEntry.TABLE_NAME, selection, selectionArgs);
                 break;
+
             case GASTO_ID:
                 selection = GastoEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 rowsDeleted = database.delete(GastoEntry.TABLE_NAME, selection, selectionArgs);
                 break;
+
+            case IMAGEM:
+                rowsDeleted = database.delete(ImagemGaleriaEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+
+            case IMAGEM_ID:
+                selection = ImagemGaleriaEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                rowsDeleted = database.delete(ImagemGaleriaEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+
             default:
-                throw new IllegalArgumentException("Deletion is not supported for " + uri);
+                throw new IllegalArgumentException("Não é possivel deletar esse item " + uri);
         }
 
         if (rowsDeleted != 0) {
@@ -253,8 +328,16 @@ public class Provider extends ContentProvider {
 
             case GASTOS_VIAGEM_ID:
                 return GastoEntry.CONTENT_ITEM_TYPE;
+
+            case IMAGEM:
+                return ImagemGaleriaEntry.CONTENT_ITEM_TYPE;
+
+            case IMAGEM_ID:
+                return ImagemGaleriaEntry.CONTENT_ITEM_TYPE;
+
             default:
-                throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
+                throw new IllegalStateException(textoUriDesconhecida + uri + " para o item " +
+                        match);
         }
     }
 }

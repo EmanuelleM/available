@@ -205,23 +205,23 @@ public class ListaViagemActivity extends AppCompatActivity implements
                 null);
     }
 
-    private void opcoesParaCliqueDaViagem(final int position) {
+    private void opcoesParaCliqueDaViagem(final int idViagem) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(ListaViagemActivity.this);
         builder.setItems(R.array.opcoes_item_viagem, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 Intent intent;
-                Uri currentUri = ContentUris.withAppendedId(ViagemEntry.CONTENT_URI, position);
+                Uri currentUri = ContentUris.withAppendedId(ViagemEntry.CONTENT_URI, idViagem);
                 switch (item) {
                     case 0:
                         intent = new Intent(ListaViagemActivity.this, ListaGastoActivity.class);
-                        Constantes.setIdViagemSelecionada(position);
+                        Constantes.setIdViagemSelecionada(idViagem);
                         Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
                         startActivity(intent);
                         break;
                     case 1:
                         intent = new Intent(ListaViagemActivity.this, NovoGastoActivity.class);
-                        Constantes.setIdViagemSelecionada(position);
+                        Constantes.setIdViagemSelecionada(idViagem);
                         Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
                         startActivity(intent);
                         break;
@@ -232,7 +232,13 @@ public class ListaViagemActivity extends AppCompatActivity implements
                         startActivity(intent);
                         break;
                     case 3:
-                        deletarViagem(position);
+                        deletarViagem(idViagem);
+                        break;
+                    case 4:
+                        intent = new Intent(ListaViagemActivity.this, DetalhesViagem.class);
+                        intent.setData(currentUri);
+                        Constantes.setIdViagemSelecionada(idViagem);
+                        startActivity(intent);
                         break;
                 }
             }

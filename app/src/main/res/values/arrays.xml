@@ -5,6 +5,7 @@
         <item>@string/novo_gasto</item>
         <item>@string/editar</item>
         <item>@string/excluir_viagem</item>
+        <item>@string/exibe_detalhes_viagem</item>
     </string-array>
     <string-array name="opcoes_item_gasto" >
         <item>@string/excluir_gasto</item>

@@ -7,11 +7,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.GastoEntry;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.ViagemEntry;
 
+import static com.aprendizagem.manu.boaviagemapp.database.Contract.*;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "boaviagem.db";
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -39,14 +41,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + GastoEntry.COLUMN_DATA_GASTO + " TEXT, "
                 + GastoEntry.COLUMN_ID_USUARIO + " TEXT);";
 
+        String SQL_CREATE_IMAGEM_TABLE = "CREATE TABLE " + ImagemGaleriaEntry.TABLE_NAME + " ("
+                + ImagemGaleriaEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + ImagemGaleriaEntry.COLUMN_VIAGEM_ID+ " TEXT NOT NULL, "
+                + ImagemGaleriaEntry.COLUMN_CAMINHO_IMAGEM + " TEXT NOT NULL);";
+
         db.execSQL(SQL_CREATE_VIAGEM_TABLE);
         db.execSQL(SQL_CREATE_GASTO_TABLE);
+        db.execSQL(SQL_CREATE_IMAGEM_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + ViagemEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + GastoEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + ImagemGaleriaEntry.TABLE_NAME);
         onCreate(db);
 
     }

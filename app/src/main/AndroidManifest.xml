@@ -48,6 +48,8 @@
                 android:value="com.aprendizagem.manu.boaviagemapp.viagem.ListaViagemActivity" />
         </activity>
 
+        <activity android:name=".viagem.DetalhesViagem"/>
+
         <provider
             android:name="com.aprendizagem.manu.boaviagemapp.provider.Provider"
             android:authorities="com.aprendizagem.manu.boaviagemapp"

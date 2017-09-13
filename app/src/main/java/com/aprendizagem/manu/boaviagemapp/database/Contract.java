@@ -15,6 +15,7 @@ public final class Contract {
 
     public static final String PATH_VIAGENS = "viagens";
     public static final String PATH_GASTOS = "gastos";
+    public static final String PATH_IMAGENS = "imagens";
 
     public static final class ViagemEntry implements BaseColumns {
 
@@ -70,6 +71,24 @@ public final class Contract {
         public final static String COLUMN_METODO_PAGAMENTO = "metodo_pagamento";
         public final static String COLUMN_DATA_GASTO = "data_gasto";
         public final static String COLUMN_ID_USUARIO = "id_usuario";
+    }
+
+    public static final class ImagemGaleriaEntry implements BaseColumns {
+
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_IMAGENS);
+
+        public static final String CONTENT_LIST_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_IMAGENS;
+
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_IMAGENS;
+
+        public final static String TABLE_NAME = "imagens";
+
+        public final static String _ID = BaseColumns._ID;
+        public static final String COLUMN_VIAGEM_ID = "viagem_id";
+        public final static String COLUMN_CAMINHO_IMAGEM = "caminho_imagem";
+
     }
 }
 
