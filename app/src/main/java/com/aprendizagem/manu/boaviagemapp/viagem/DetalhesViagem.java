@@ -93,7 +93,6 @@ public class DetalhesViagem extends AppCompatActivity implements LoaderManager.L
 
       exibeImagemTeste();
 
-
         getLoaderManager().initLoader(EXISTING_VIAGEM_LOADER, null, this);
     }
 
