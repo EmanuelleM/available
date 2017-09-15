@@ -149,7 +149,6 @@ public class DetalhesViagem extends AppCompatActivity implements LoaderManager.L
                 .imageEngine(new GlideEngine())
                 .forResult(REQUEST_CODE_CHOOSE);
 
-
     }
 
     List<Uri> caminhoDaImagem;

@@ -58,7 +58,7 @@ public class GaleriaImagensAdapter extends BaseAdapter {
 
     // references to our images
     private Integer[] mThumbIds = {
-            R.drawable.example_appwidget_preview, R.drawable.ic_add_24dp,
+            R.drawable.ic_add_24dp, R.drawable.ic_add_24dp,
             R.drawable.ic_done_black, R.drawable.ic_google_icon
 
     };
