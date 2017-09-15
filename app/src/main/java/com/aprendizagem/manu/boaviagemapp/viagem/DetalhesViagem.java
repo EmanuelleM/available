@@ -1,16 +1,19 @@
 package com.aprendizagem.manu.boaviagemapp.viagem;
 
+import android.Manifest;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,7 +26,6 @@ import android.widget.Toast;
 
 import com.aprendizagem.manu.boaviagemapp.Constantes;
 import com.aprendizagem.manu.boaviagemapp.R;
-import com.aprendizagem.manu.boaviagemapp.database.Contract;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.ImagemGaleriaEntry;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.ViagemEntry;
 import com.aprendizagem.manu.boaviagemapp.database.DatabaseHelper;
@@ -31,6 +33,7 @@ import com.bumptech.glide.Glide;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
+import com.zhihu.matisse.engine.impl.PicassoEngine;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -41,8 +44,6 @@ import javax.annotation.Nullable;
 public class DetalhesViagem extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
         View.OnClickListener {
 
-    private static final int EXISTING_VIAGEM_LOADER = 0;
-
     TextView txtDestino;
     TextView txtDataChegada;
     TextView txtDataPartida;
@@ -51,12 +52,18 @@ public class DetalhesViagem extends AppCompatActivity implements LoaderManager.L
 
     ImageButton adiconarImagem;
 
-    private Uri mCurrentViagemUri;
-    private int PICK_IMAGE_REQUEST = 1;
-    UriAdapter uriAdapter;
-
     DatabaseHelper helper = new DatabaseHelper(this);
 
+    List<Uri> caminhoDaImagem;
+
+    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 0;
+    public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 102;
+
+    private static final int EXISTING_VIAGEM_LOADER = 0;
+    private Uri privateCurrentUri;
+    private static final int REQUEST_CODE_CHOOSE = 23;
+
+    public static final int REQUEST_PERMISSIONS_CODE = 128;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,41 +71,90 @@ public class DetalhesViagem extends AppCompatActivity implements LoaderManager.L
         setContentView(R.layout.detalhes_viagem);
 
         Intent intent = getIntent();
-        mCurrentViagemUri = intent.getData();
+        privateCurrentUri = intent.getData();
 
-        txtDestino = (TextView) findViewById(R.id.text_view_destino);
-        txtDataChegada = (TextView) findViewById(R.id.text_view_data_chegada);
-        txtDataPartida = (TextView) findViewById(R.id.text_view_data_partida);
-        txtLocalHospedagem = (TextView) findViewById(R.id.text_view_hospedagem);
-        txtValorGasto = (TextView) findViewById(R.id.text_view_valor_gasto);
+        txtDestino = findViewById(R.id.text_view_destino);
+        txtDataChegada = findViewById(R.id.text_view_data_chegada);
+        txtDataPartida = findViewById(R.id.text_view_data_partida);
+        txtLocalHospedagem = findViewById(R.id.text_view_hospedagem);
+        txtValorGasto = findViewById(R.id.text_view_valor_gasto);
 
-        adiconarImagem = (ImageButton) findViewById(R.id.image_button_adiciona_viagem);
+        adiconarImagem = findViewById(R.id.image_button_adiciona_viagem);
 
         adiconarImagem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adicionaImagem(view);
+
+                if (verificaPermissaoLeitura()) {
+                    adicionaImagem();
+                 }else{
+                    solicitaPermissaoLeitura();
+                }
             }
         });
 
-//        GridView gridview = (GridView) findViewById(R.id.grid_view_imagem);
-//        gridview.setAdapter(new GaleriaImagensAdapter(this));
-//
-//        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            public void onItemClick(AdapterView<?> parent, View v,
-//                                    int position, long id) {
-//
-//            }
-//        });
-
-      exibeImagemTeste();
+        exibeImagemTeste();
 
         getLoaderManager().initLoader(EXISTING_VIAGEM_LOADER, null, this);
     }
 
-    public void exibeImagemTeste(){
+    public boolean verificaPermissaoLeitura() {
+        //verifica se as permissoes foram concedida
 
-        ImageView imageView = (ImageView) findViewById(R.id.my_image_view);
+        boolean acessoConcedido = false;
+
+        int checaPermissaoDeLeitura = ContextCompat.checkSelfPermission(DetalhesViagem.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        int checaPermissaoDeEscrita = ContextCompat.checkSelfPermission(DetalhesViagem.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        if (checaPermissaoDeLeitura == PackageManager.PERMISSION_GRANTED &&
+                checaPermissaoDeEscrita == PackageManager.PERMISSION_GRANTED) {
+            acessoConcedido = true;
+        }
+
+        return acessoConcedido;
+    }
+
+    public void solicitaPermissaoLeitura() {
+
+        ActivityCompat.requestPermissions(DetalhesViagem.this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+
+    }
+
+    public void solicitaPermissaoEscrita(){
+        ActivityCompat.requestPermissions(DetalhesViagem.this,
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch( requestCode ){
+            case REQUEST_PERMISSIONS_CODE:
+                for( int i = 0; i < permissions.length; i++ ){
+
+
+                    if( permissions[i].equalsIgnoreCase( Manifest.permission.READ_EXTERNAL_STORAGE )
+                            && grantResults[i] == PackageManager.PERMISSION_GRANTED ){
+
+                        adicionaImagem();
+                    }
+//                    else if( permissions[i].equalsIgnoreCase( Manifest.permission.READ_EXTERNAL_STORAGE )
+//                            && grantResults[i] == PackageManager.PERMISSION_GRANTED ){
+//
+//                        readFile(Environment.getExternalStorageDirectory().toString() + "/myFolder");
+//                    }
+                }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    public void exibeImagemTeste() {
+
+        ImageView imageView = findViewById(R.id.my_image_view);
 
         Glide.with(this).load(getCaminhoImagem()).into(imageView);
     }
@@ -132,26 +188,16 @@ public class DetalhesViagem extends AppCompatActivity implements LoaderManager.L
         return caminhoImagem;
     }
 
-    private static final int REQUEST_CODE_CHOOSE = 23;
-
-
-    public static Set<MimeType> ofImage() {
-        return EnumSet.of(MimeType.JPEG, MimeType.PNG, MimeType.GIF, MimeType.GIF);
-    }
-
-    public void adicionaImagem(final View view) {
+    public void adicionaImagem() {
 
         Matisse.from(DetalhesViagem.this)
-                .choose(ofImage())
+                .choose(MimeType.allOf())
                 .theme(R.style.Matisse_Dracula)
                 .countable(true)
                 .maxSelectable(1)
-                .imageEngine(new GlideEngine())
+                .imageEngine(new PicassoEngine())
                 .forResult(REQUEST_CODE_CHOOSE);
-
     }
-
-    List<Uri> caminhoDaImagem;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -175,7 +221,6 @@ public class DetalhesViagem extends AppCompatActivity implements LoaderManager.L
     public void onClick(View v) {
     }
 
-
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         String[] projection = {
@@ -189,7 +234,7 @@ public class DetalhesViagem extends AppCompatActivity implements LoaderManager.L
         };
 
         return new CursorLoader(this,
-                mCurrentViagemUri,
+                privateCurrentUri,
                 projection,
                 null,
                 null,
