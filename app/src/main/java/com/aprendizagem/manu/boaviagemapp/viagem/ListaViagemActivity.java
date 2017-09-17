@@ -236,7 +236,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
                         break;
                     case 4:
                         intent = new Intent(ListaViagemActivity.this, DetalhesViagem.class);
-                        intent.setData(currentUri);
+//                        intent.setData(currentUri);
                         Constantes.setIdViagemSelecionada(idViagem);
                         startActivity(intent);
                         break;

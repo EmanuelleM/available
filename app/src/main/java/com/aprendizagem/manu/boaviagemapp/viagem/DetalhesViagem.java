@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,18 +27,16 @@ import android.widget.Toast;
 
 import com.aprendizagem.manu.boaviagemapp.Constantes;
 import com.aprendizagem.manu.boaviagemapp.R;
+import com.aprendizagem.manu.boaviagemapp.adapter.GaleriaImagensAdapter;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.ImagemGaleriaEntry;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.ViagemEntry;
 import com.aprendizagem.manu.boaviagemapp.database.DatabaseHelper;
 import com.bumptech.glide.Glide;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
-import com.zhihu.matisse.engine.impl.GlideEngine;
 import com.zhihu.matisse.engine.impl.PicassoEngine;
 
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -65,10 +64,16 @@ public class DetalhesViagem extends AppCompatActivity implements LoaderManager.L
 
     public static final int REQUEST_PERMISSIONS_CODE = 128;
 
+    GaleriaImagensAdapter galeriaImagemAdapter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detalhes_viagem);
+
+        if (!verificaPermissaoLeitura()) {
+            solicitaPermissaoLeitura();
+        }
 
         Intent intent = getIntent();
         privateCurrentUri = intent.getData();
@@ -84,16 +89,27 @@ public class DetalhesViagem extends AppCompatActivity implements LoaderManager.L
         adiconarImagem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (verificaPermissaoLeitura()) {
-                    adicionaImagem();
-                 }else{
-                    solicitaPermissaoLeitura();
-                }
+                adicionaImagem();
             }
         });
 
-        exibeImagemTeste();
+//        exibeImagemTeste();
+
+        galeriaImagemAdapter = new GaleriaImagensAdapter(new GaleriaImagensAdapter.ItemClickListenerAdapter() {
+            @Override
+            public void itemFoiClicado(Cursor cursor) {
+                cursor.getInt(cursor.getColumnIndex(ImagemGaleriaEntry._ID));
+
+            }
+        }, this);
+
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
+
+        RecyclerView recyclerView = findViewById(R.id.recycler_view_galeria);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(galeriaImagemAdapter);
 
         getLoaderManager().initLoader(EXISTING_VIAGEM_LOADER, null, this);
     }
@@ -125,20 +141,20 @@ public class DetalhesViagem extends AppCompatActivity implements LoaderManager.L
 
     }
 
-    public void solicitaPermissaoEscrita(){
+    public void solicitaPermissaoEscrita() {
         ActivityCompat.requestPermissions(DetalhesViagem.this,
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
     }
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch( requestCode ){
+        switch (requestCode) {
             case REQUEST_PERMISSIONS_CODE:
-                for( int i = 0; i < permissions.length; i++ ){
+                for (int i = 0; i < permissions.length; i++) {
 
 
-                    if( permissions[i].equalsIgnoreCase( Manifest.permission.READ_EXTERNAL_STORAGE )
-                            && grantResults[i] == PackageManager.PERMISSION_GRANTED ){
+                    if (permissions[i].equalsIgnoreCase(Manifest.permission.READ_EXTERNAL_STORAGE)
+                            && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
 
                         adicionaImagem();
                     }
@@ -152,41 +168,41 @@ public class DetalhesViagem extends AppCompatActivity implements LoaderManager.L
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    public void exibeImagemTeste() {
+//    public void exibeImagemTeste() {
+//
+//        ImageView imageView = findViewById(R.id.my_image_view);
+//
+//        Glide.with(this).load(getCaminhoImagem()).into(imageView);
+//    }
 
-        ImageView imageView = findViewById(R.id.my_image_view);
-
-        Glide.with(this).load(getCaminhoImagem()).into(imageView);
-    }
-
-    private String getCaminhoImagem() {
-
-        SQLiteDatabase db = helper.getReadableDatabase();
-
-        String[] projection = {
-                ImagemGaleriaEntry.COLUMN_CAMINHO_IMAGEM
-        };
-
-        String selection = ImagemGaleriaEntry.COLUMN_VIAGEM_ID + " = '" + Constantes
-                .getIdViagemSelecionada() + "'";
-
-        Cursor cursor = db.query(
-                ImagemGaleriaEntry.TABLE_NAME,
-                projection,
-                selection,
-                null,
-                null,
-                null,
-                null
-        );
-        String caminhoImagem = "";
-
-        if (cursor.moveToFirst()) {
-            caminhoImagem = cursor.getString(0);
-            cursor.close();
-        }
-        return caminhoImagem;
-    }
+//    private String getCaminhoImagem() {
+//
+//        SQLiteDatabase db = helper.getReadableDatabase();
+//
+//        String[] projection = {
+//                ImagemGaleriaEntry.COLUMN_CAMINHO_IMAGEM
+//        };
+//
+//        String selection = ImagemGaleriaEntry.COLUMN_VIAGEM_ID + " = '" + Constantes
+//                .getIdViagemSelecionada() + "'";
+//
+//        Cursor cursor = db.query(
+//                ImagemGaleriaEntry.TABLE_NAME,
+//                projection,
+//                selection,
+//                null,
+//                null,
+//                null,
+//                null
+//        );
+//        String caminhoImagem = "";
+//
+//        if (cursor.moveToFirst()) {
+//            caminhoImagem = cursor.getString(0);
+//            cursor.close();
+//        }
+//        return caminhoImagem;
+//    }
 
     public void adicionaImagem() {
 
@@ -223,7 +239,7 @@ public class DetalhesViagem extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        String[] projection = {
+     /*   String[] projection = {
                 ViagemEntry._ID,
                 ViagemEntry.COLUMN_DESTINO,
                 ViagemEntry.COLUMN_LOCAL_ACOMODACAO,
@@ -238,26 +254,42 @@ public class DetalhesViagem extends AppCompatActivity implements LoaderManager.L
                 projection,
                 null,
                 null,
+                null);*/
+
+        String[] projection = {
+                ImagemGaleriaEntry._ID,
+                ImagemGaleriaEntry.COLUMN_VIAGEM_ID,
+                ImagemGaleriaEntry.COLUMN_CAMINHO_IMAGEM,
+
+        };
+
+        return new CursorLoader(this,
+                ImagemGaleriaEntry.CONTENT_URI,
+                projection,
+                null,
+                null,
                 null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        cursor.moveToFirst();
+//        cursor.moveToFirst();
 
-        int destinoColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DESTINO);
+        galeriaImagemAdapter.setCursor(cursor);
+
+      /*  int destinoColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DESTINO);
         int localHospedagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_LOCAL_ACOMODACAO);
         int dataChegadaViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DATA_CHEGADA);
         int dataPartidaViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_DATA_PARTIDA);
         int valorGastoViagemColumnIndex = cursor.getColumnIndex(ViagemEntry.COLUMN_GASTO_TOTAL);
 
-        txtDestino.setText(getString(R.string.voce_esta_viajando_para) + " " + cursor.getString(destinoColumnIndex));
-        txtLocalHospedagem.setText(getString(R.string.voce_esta_hospedado) + " " + cursor.getString(localHospedagemColumnIndex));
-        txtDataChegada.setText(getString(R.string.sua_viagem_comecou) + " " + cursor.getString(dataChegadaViagemColumnIndex));
-        txtDataPartida.setText(getString(R.string.sua_viagem_termina) + " " + cursor.getString(dataPartidaViagemColumnIndex));
+        txtDestino.setText(String.format("%s %s", getString(R.string.voce_esta_viajando_para), cursor.getString(destinoColumnIndex)));
+        txtLocalHospedagem.setText(String.format("%s %s", getString(R.string.voce_esta_hospedado), cursor.getString(localHospedagemColumnIndex)));
+        txtDataChegada.setText(String.format("%s %s", getString(R.string.sua_viagem_comecou), cursor.getString(dataChegadaViagemColumnIndex)));
+        txtDataPartida.setText(String.format("%s %s", getString(R.string.sua_viagem_termina), cursor.getString(dataPartidaViagemColumnIndex)));
 
-        txtValorGasto.setText(getString(R.string.gasto_atual_da_viagem) + " " + cursor.getDouble(valorGastoViagemColumnIndex));
-
+        txtValorGasto.setText(String.format("%s %s", getString(R.string.gasto_atual_da_viagem), cursor.getDouble(valorGastoViagemColumnIndex)));
+*/
     }
 
     @Override
@@ -265,47 +297,4 @@ public class DetalhesViagem extends AppCompatActivity implements LoaderManager.L
 
     }
 
-    private static class UriAdapter extends RecyclerView.Adapter<UriAdapter.UriViewHolder> {
-
-        private List<Uri> mUris;
-        private List<String> mPaths;
-
-        void setData(List<Uri> uris, List<String> paths) {
-            mUris = uris;
-            mPaths = paths;
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public UriViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new UriViewHolder(
-                    LayoutInflater.from(parent.getContext()).inflate(R.layout.uri_item, parent, false));
-        }
-
-        @Override
-        public void onBindViewHolder(UriViewHolder holder, int position) {
-            holder.mUri.setText(mUris.get(position).toString());
-            holder.mPath.setText(mPaths.get(position));
-
-            holder.mUri.setAlpha(position % 2 == 0 ? 1.0f : 0.54f);
-            holder.mPath.setAlpha(position % 2 == 0 ? 1.0f : 0.54f);
-        }
-
-        @Override
-        public int getItemCount() {
-            return mUris == null ? 0 : mUris.size();
-        }
-
-        static class UriViewHolder extends RecyclerView.ViewHolder {
-
-            private TextView mUri;
-            private TextView mPath;
-
-            UriViewHolder(View contentView) {
-                super(contentView);
-                mUri = (TextView) contentView.findViewById(R.id.uri);
-                mPath = (TextView) contentView.findViewById(R.id.path);
-            }
-        }
-    }
 }
