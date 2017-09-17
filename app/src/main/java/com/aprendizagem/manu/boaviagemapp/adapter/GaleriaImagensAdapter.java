@@ -1,77 +1,91 @@
 package com.aprendizagem.manu.boaviagemapp.adapter;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import com.aprendizagem.manu.boaviagemapp.R;
+public class GaleriaImagensAdapter extends RecyclerView.Adapter<ViewHolderGasto> {
 
-public class GaleriaImagensAdapter extends BaseAdapter {
-    private Context mContext;
+private Context mContext;
+private Cursor cursor;
+private ItemClickListenerAdapter mListener;
 
-    public GaleriaImagensAdapter(Context c) {
-        mContext = c;
-    }
+public GaleriaImagensAdapter(ItemClickListenerAdapter aoClicarNoItem, Context applicationContext) {
+        mListener = aoClicarNoItem;
+        mContext = applicationContext;
+        }
 
-    public int getCount() {
-        return mThumbIds.length;
-    }
+@Override
+public ViewHolderGasto onCreateViewHolder(ViewGroup parent, final int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
+        .inflate(R.layout., parent, false);
 
-    public Object getItem(int position) {
-        return null;
-    }
+final ViewHolderGasto vh = new ViewHolderGasto(v);
 
-    public long getItemId(int position) {
-        return 0;
-    }
+        v.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View v) {
+        int position = vh.getAdapterPosition();
+        cursor.moveToPosition(position);
+        if (mListener != null) mListener.itemFoiClicado(cursor);
+        }
+        });
 
-    // create a new ImageView for each item referenced by the Adapter
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ImageView imageView;
-        View view = convertView;
-        ViewHolder viewHolder ;
+        return vh;
+        }
 
-        if (convertView == null) {
-            // if it's not recycled, initialize some attributes
-            imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(8, 8, 8, 8);
+@Override
+public void onBindViewHolder(final ViewHolderGasto holder, final int position) {
+        cursor.moveToPosition(position);
+
+        int descricaoGastoColumnIndex = cursor.getColumnIndex(GastoEntry.COLUMN_DESCRICAO_GASTO);
+        int valorGastoColumnIndex = cursor.getColumnIndex(GastoEntry.COLUMN_VALOR_GASTO);
+        int dataGastoColumnIndex = cursor.getColumnIndex(GastoEntry.COLUMN_DATA_GASTO);
+
+final String descricaoGasto = cursor.getString(descricaoGastoColumnIndex);
+        String valorGasto = cursor.getString(valorGastoColumnIndex);
+        String dataGasto = cursor.getString(dataGastoColumnIndex);
+
+        holder.txtDescricaoGasto.setText(descricaoGasto);
+        holder.txtValorGasto.setText(valorGasto);
+        holder.txtDataGasto.setText(dataGasto);
+        }
+
+@Override
+public int getItemCount() {
+        return (cursor != null) ? cursor.getCount() : 0;
+        }
+
+@Override
+public long getItemId(int position) {
+        if (cursor != null) {
+        if (cursor.moveToPosition(position)) {
+        int idx_id = cursor.getColumnIndex(GastoEntry._ID);
+        return cursor.getLong(idx_id);
         } else {
-            imageView = (ImageView) convertView;
+        return 0;
+        }
+        } else {
+        return 0;
+        }
         }
 
-        imageView.setImageResource(mThumbIds[position]);
-
-//        viewHolder = (ViewHolder) view.getTag();
-
-//        Glide.with(mContext).load(mThumbIds[position])
-//                .into(viewHolder.imageView);
-
-        return view;
-
-    }
-
-
-    // references to our images
-    private Integer[] mThumbIds = {
-            R.drawable.example_appwidget_preview, R.drawable.ic_add_24dp,
-            R.drawable.ic_done_black, R.drawable.ic_google_icon
-
-    };
-
-
-    public static class ViewHolder {
-        public final ImageView imageView;
-
-
-        public ViewHolder(View view) {
-            imageView = view.findViewById(R.id.grid_item_image);
-
-
+public Cursor getCursor() {
+        return cursor;
         }
-    }
+
+public void setCursor(Cursor newCursor) {
+        cursor = newCursor;
+        notifyDataSetChanged();
+        }
+
+public interface ItemClickListenerAdapter {
+    void itemFoiClicado(Cursor cursor);
+}
 }
