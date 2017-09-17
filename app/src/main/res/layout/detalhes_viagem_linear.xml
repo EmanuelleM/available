@@ -10,12 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:layout_collapseMode="pin"
         android:background="@color/colorPrimary"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_collapseMode="pin"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <TextView
             android:id="@+id/titulo_pagina"
@@ -48,6 +48,29 @@
         android:layout_margin="@dimen/geral_8dp"
         android:contentDescription="@string/adicionar_imagem_viagem"
         android:src="@drawable/ic_add" />
+
+        <LinearLayout
+            android:id="@+id/linear_layout_galeria_vazia"
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                style="@style/text_view_style"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/galeria_vazia"
+                android:layout_gravity="center"/>
+
+            <ImageView
+                android:src="@drawable/ic_sentiment_dissatisfied"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_galeria"

@@ -15,15 +15,15 @@ import java.util.Locale;
 public class ViagemAdapter extends
         RecyclerView.Adapter<ViewHolderViagem> {
 
-    private Context mContext;
-    private Cursor cursor;
-    private ViagemAdapter.ItemClickListenerAdapter mListener;
+    private Context privateContext;
+    private Cursor privateCursor;
+    private ItemClickListenerAdapter privateListener;
 
     int index_id;
 
-    public ViagemAdapter(ViagemAdapter.ItemClickListenerAdapter aoClicarNoItem, Context applicationContext) {
-        mListener = aoClicarNoItem;
-        mContext = applicationContext;
+    public ViagemAdapter(ItemClickListenerAdapter aoClicarNoItem, Context applicationContext) {
+        privateListener = aoClicarNoItem;
+        privateContext = applicationContext;
     }
 
     @Override
@@ -39,8 +39,8 @@ public class ViagemAdapter extends
             @Override
             public void onClick(View v) {
                 int position = vh.getAdapterPosition();
-                cursor.moveToPosition(position);
-                if (mListener != null) mListener.itemFoiClicado(cursor);
+                privateCursor.moveToPosition(position);
+                if (privateListener != null) privateListener.itemFoiClicado(privateCursor);
             }
         });
 
@@ -49,20 +49,20 @@ public class ViagemAdapter extends
 
     @Override
     public void onBindViewHolder(ViewHolderViagem holder, final int position) {
-        cursor.moveToPosition(position);
+        privateCursor.moveToPosition(position);
 
-        int destinoColumnIndex = cursor.getColumnIndex(Contract.ViagemEntry.COLUMN_DESTINO);
-        int razaoViagemColumnIndex = cursor.getColumnIndex(Contract.ViagemEntry.COLUMN_RAZAO);
-        int gastoViagemColumnIndex = cursor.getColumnIndex(Contract.ViagemEntry.COLUMN_GASTO_TOTAL);
-        int dataChegadaViagemColumnIndex = cursor.getColumnIndex(Contract.ViagemEntry.COLUMN_DATA_CHEGADA);
-        int dataPartidaViagemColumnIndex = cursor.getColumnIndex(Contract.ViagemEntry.COLUMN_DATA_PARTIDA);
+        int destinoColumnIndex = privateCursor.getColumnIndex(Contract.ViagemEntry.COLUMN_DESTINO);
+        int razaoViagemColumnIndex = privateCursor.getColumnIndex(Contract.ViagemEntry.COLUMN_RAZAO);
+        int gastoViagemColumnIndex = privateCursor.getColumnIndex(Contract.ViagemEntry.COLUMN_GASTO_TOTAL);
+        int dataChegadaViagemColumnIndex = privateCursor.getColumnIndex(Contract.ViagemEntry.COLUMN_DATA_CHEGADA);
+        int dataPartidaViagemColumnIndex = privateCursor.getColumnIndex(Contract.ViagemEntry.COLUMN_DATA_PARTIDA);
 
-        final String destino = cursor.getString(destinoColumnIndex);
-        double gastoViagem = cursor.getDouble(gastoViagemColumnIndex);
-        String dataChegada = cursor.getString(dataChegadaViagemColumnIndex);
-        String dataPartida = cursor.getString(dataPartidaViagemColumnIndex);
+        final String destino = privateCursor.getString(destinoColumnIndex);
+        double gastoViagem = privateCursor.getDouble(gastoViagemColumnIndex);
+        String dataChegada = privateCursor.getString(dataChegadaViagemColumnIndex);
+        String dataPartida = privateCursor.getString(dataPartidaViagemColumnIndex);
 
-        int razaoViagem = cursor.getInt(razaoViagemColumnIndex);
+        int razaoViagem = privateCursor.getInt(razaoViagemColumnIndex);
 
         if (razaoViagem == 1) {
             holder.campoRazaoViagem.setText(R.string.razao_lazer);
@@ -82,15 +82,15 @@ public class ViagemAdapter extends
 
     @Override
     public int getItemCount() {
-        return (cursor != null) ? cursor.getCount() : 0;
+        return (privateCursor != null) ? privateCursor.getCount() : 0;
     }
 
     @Override
     public long getItemId(int position) {
-        if (cursor != null) {
-            if (cursor.moveToPosition(position)) {
-                index_id = cursor.getColumnIndex(Contract.ViagemEntry._ID);
-                return cursor.getLong(index_id);
+        if (privateCursor != null) {
+            if (privateCursor.moveToPosition(position)) {
+                index_id = privateCursor.getColumnIndex(Contract.ViagemEntry._ID);
+                return privateCursor.getLong(index_id);
             } else {
                 return 0;
             }
@@ -99,36 +99,14 @@ public class ViagemAdapter extends
         }
     }
 
-    public void setCursor(Cursor newCursor) {
-        cursor = newCursor;
+    public void setPrivateCursor(Cursor newCursor) {
+        privateCursor = newCursor;
         notifyDataSetChanged();
     }
 
-    public Cursor getCursor() {
-        return cursor;
+    public Cursor getPrivateCursor() {
+        return privateCursor;
     }
 
-    public interface ItemClickListenerAdapter {
-        void itemFoiClicado(Cursor cursor);
-    }
-
-//    public static class ViewHolderViagem extends RecyclerView.ViewHolderViagem {
-//        TextView campoDestinoViagem;
-//        TextView campoValorTotalGastoViagem;
-//        TextView campoRazaoViagem;
-//        TextView campoDataChegada;
-//        TextView campoDataPartida;
-//        ImageView acionarManu;
-//
-//        public ViewHolderViagem(View itemView) {
-//            super(itemView);
-//            campoDestinoViagem = itemView.findViewById(R.id.text_view_destino_viagem);
-//            campoValorTotalGastoViagem = itemView.findViewById(R.id.text_view_total_viagem);
-//            campoRazaoViagem = itemView.findViewById(R.id.text_view_razao_viagem);
-//            campoDataChegada = itemView.findViewById(R.id.text_view_data_chegada);
-//            campoDataPartida = itemView.findViewById(R.id.text_view_data_partida);
-//            acionarManu = itemView.findViewById(R.id.image_view_arrow);
-//        }
-//    }
 }
 

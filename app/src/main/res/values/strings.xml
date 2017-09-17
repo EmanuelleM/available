@@ -45,7 +45,7 @@
     <string name="informe_o_destino">É preciso informar o destino da viagem.</string>
     <string name="pega_localizacao">botão para pegar a localização</string>
     <string name="confirmar_exclusao_viagem">Você deseja excluir essa viagem?</string>
-
+    <string name="lista_viagem_vazia">Lista de viagens vazia</string>
 
     // gasto
     <string name="novo_gasto">Novo gasto</string>
@@ -63,11 +63,13 @@
     <string name="sem_gasto_na_lista">Nenhum salvo gasto ainda.</string>
     <string name="excluir_gasto">Excluir gasto</string>
     <string name="confirmar_exclusao_gasto">Você deseja excluir esse gasto?</string>
+    <string name="lista_gasto_vazia">Lista de gasto vazia</string>
 
     //galeria
     <string name="confirmar_exclusao_imagem">Você deseja excluir essa imagem?</string>
     <string name="adicionar_imagem_viagem">Adicionar uma imagem</string>
     <string name="tela_galeria">Galeria</string>
+    <string name="galeria_vazia">Galeria vazia</string>
 
     //widget
     <string name="sem_viagens_na_lista">Você não tem nenhuma viagem salva</string>

@@ -11,13 +11,14 @@ import com.aprendizagem.manu.boaviagemapp.database.Contract.ImagemGaleriaEntry;
 import com.squareup.picasso.Picasso;
 
 public class GaleriaImagensAdapter extends RecyclerView.Adapter<ViewHolderImagem> {
-    private Context mContext;
-    private Cursor cursor;
-    private GaleriaImagensAdapter.ItemClickListenerAdapter mListener;
 
-    public GaleriaImagensAdapter(GaleriaImagensAdapter.ItemClickListenerAdapter aoClicarNoItem, Context applicationContext) {
-        mListener = aoClicarNoItem;
-        mContext = applicationContext;
+    private Context privateContext;
+    private Cursor privateCursor;
+    private ItemClickListenerAdapter privateListener;
+
+    public GaleriaImagensAdapter(ItemClickListenerAdapter aoClicarNoItem, Context applicationContext) {
+        privateListener = aoClicarNoItem;
+        privateContext = applicationContext;
     }
 
     @Override
@@ -31,8 +32,8 @@ public class GaleriaImagensAdapter extends RecyclerView.Adapter<ViewHolderImagem
             @Override
             public void onClick(View v) {
                 int position = vh.getAdapterPosition();
-                cursor.moveToPosition(position);
-                if (mListener != null) mListener.itemFoiClicado(cursor);
+                privateCursor.moveToPosition(position);
+                if (privateListener != null) privateListener.itemFoiClicado(privateCursor);
             }
         });
 
@@ -41,13 +42,13 @@ public class GaleriaImagensAdapter extends RecyclerView.Adapter<ViewHolderImagem
 
     @Override
     public void onBindViewHolder(final ViewHolderImagem holder, final int position) {
-        cursor.moveToPosition(position);
+        privateCursor.moveToPosition(position);
 
-        int caminhoImagem = cursor.getColumnIndex(ImagemGaleriaEntry.COLUMN_CAMINHO_IMAGEM);
+        int caminhoImagem = privateCursor.getColumnIndex(ImagemGaleriaEntry.COLUMN_CAMINHO_IMAGEM);
 
-        String stringCaminhoImagem = cursor.getString(caminhoImagem);
+        String stringCaminhoImagem = privateCursor.getString(caminhoImagem);
 
-        Picasso.with(mContext).
+        Picasso.with(privateContext).
                 load(stringCaminhoImagem)
                 .into(holder.imageViewImagem);
 
@@ -55,15 +56,15 @@ public class GaleriaImagensAdapter extends RecyclerView.Adapter<ViewHolderImagem
 
     @Override
     public int getItemCount() {
-        return (cursor != null) ? cursor.getCount() : 0;
+        return (privateCursor != null) ? privateCursor.getCount() : 0;
     }
 
     @Override
     public long getItemId(int position) {
-        if (cursor != null) {
-            if (cursor.moveToPosition(position)) {
-                int idx_id = cursor.getColumnIndex(ImagemGaleriaEntry._ID);
-                return cursor.getLong(idx_id);
+        if (privateCursor != null) {
+            if (privateCursor.moveToPosition(position)) {
+                int idx_id = privateCursor.getColumnIndex(ImagemGaleriaEntry._ID);
+                return privateCursor.getLong(idx_id);
             } else {
                 return 0;
             }
@@ -72,16 +73,12 @@ public class GaleriaImagensAdapter extends RecyclerView.Adapter<ViewHolderImagem
         }
     }
 
-    public Cursor getCursor() {
-        return cursor;
+    public Cursor getPrivateCursor() {
+        return privateCursor;
     }
 
-    public void setCursor(Cursor newCursor) {
+    public void setPrivateCursor(Cursor newCursor) {
         notifyDataSetChanged();
-        cursor = newCursor;
-    }
-
-    public interface ItemClickListenerAdapter {
-        void itemFoiClicado(Cursor cursor);
+        privateCursor = newCursor;
     }
 }

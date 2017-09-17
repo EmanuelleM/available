@@ -49,17 +49,13 @@
         android:id="@+id/recycler_view_viagem"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="@dimen/geral_8dp"
         android:layout_marginEnd="@dimen/geral_8dp"
         android:layout_marginStart="@dimen/geral_8dp"
         android:layout_marginTop="@dimen/geral_8dp"
         android:scrollbarStyle="outsideOverlay"
-        ads:layout_constraintBottom_toBottomOf="parent"
-        ads:layout_constraintTop_toTopOf="parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        android:visibility="visible"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_nova_viagem"
@@ -68,9 +64,35 @@
         android:layout_margin="12dp"
         android:clickable="true"
         android:contentDescription="@string/adicionar_viagem"
+        android:focusable="true"
         android:src="@drawable/ic_add"
         app:elevation="6dp"
         app:layout_anchor="@id/app_bar_lista_viagem"
         app:layout_anchorGravity="bottom|right|end" />
+
+    <LinearLayout
+        android:id="@+id/linear_layout_lista_viagem_vazia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/geral_8dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <TextView
+            style="@style/text_view_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/lista_viagem_vazia"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_sentiment_dissatisfied" />
+
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

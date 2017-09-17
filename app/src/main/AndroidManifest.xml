@@ -77,6 +77,6 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCnoTeQob34MuFh8xD6m6KDgLMfo1Aly4Y" />
+            android:value="api key google places" />
     </application>
 </manifest>

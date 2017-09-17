@@ -13,13 +13,13 @@ import com.aprendizagem.manu.boaviagemapp.database.Contract.GastoEntry;
 public class GastoAdapter extends
         RecyclerView.Adapter<ViewHolderGasto> {
 
-    private Context mContext;
-    private Cursor cursor;
-    private ItemClickListenerAdapter mListener;
+    private Context privateContext;
+    private Cursor privateCursor;
+    private ItemClickListenerAdapter privateListener;
 
     public GastoAdapter(ItemClickListenerAdapter aoClicarNoItem, Context applicationContext) {
-        mListener = aoClicarNoItem;
-        mContext = applicationContext;
+        privateListener = aoClicarNoItem;
+        privateContext = applicationContext;
     }
 
     @Override
@@ -33,8 +33,8 @@ public class GastoAdapter extends
             @Override
             public void onClick(View v) {
                 int position = vh.getAdapterPosition();
-                cursor.moveToPosition(position);
-                if (mListener != null) mListener.itemFoiClicado(cursor);
+                privateCursor.moveToPosition(position);
+                if (privateListener != null) privateListener.itemFoiClicado(privateCursor);
             }
         });
 
@@ -43,15 +43,15 @@ public class GastoAdapter extends
 
     @Override
     public void onBindViewHolder(final ViewHolderGasto holder, final int position) {
-        cursor.moveToPosition(position);
+        privateCursor.moveToPosition(position);
 
-        int descricaoGastoColumnIndex = cursor.getColumnIndex(GastoEntry.COLUMN_DESCRICAO_GASTO);
-        int valorGastoColumnIndex = cursor.getColumnIndex(GastoEntry.COLUMN_VALOR_GASTO);
-        int dataGastoColumnIndex = cursor.getColumnIndex(GastoEntry.COLUMN_DATA_GASTO);
+        int descricaoGastoColumnIndex = privateCursor.getColumnIndex(GastoEntry.COLUMN_DESCRICAO_GASTO);
+        int valorGastoColumnIndex = privateCursor.getColumnIndex(GastoEntry.COLUMN_VALOR_GASTO);
+        int dataGastoColumnIndex = privateCursor.getColumnIndex(GastoEntry.COLUMN_DATA_GASTO);
 
-        final String descricaoGasto = cursor.getString(descricaoGastoColumnIndex);
-        String valorGasto = cursor.getString(valorGastoColumnIndex);
-        String dataGasto = cursor.getString(dataGastoColumnIndex);
+        final String descricaoGasto = privateCursor.getString(descricaoGastoColumnIndex);
+        String valorGasto = privateCursor.getString(valorGastoColumnIndex);
+        String dataGasto = privateCursor.getString(dataGastoColumnIndex);
 
         holder.txtDescricaoGasto.setText(descricaoGasto);
         holder.txtValorGasto.setText(valorGasto);
@@ -60,15 +60,15 @@ public class GastoAdapter extends
 
     @Override
     public int getItemCount() {
-        return (cursor != null) ? cursor.getCount() : 0;
+        return (privateCursor != null) ? privateCursor.getCount() : 0;
     }
 
     @Override
     public long getItemId(int position) {
-        if (cursor != null) {
-            if (cursor.moveToPosition(position)) {
-                int idx_id = cursor.getColumnIndex(GastoEntry._ID);
-                return cursor.getLong(idx_id);
+        if (privateCursor != null) {
+            if (privateCursor.moveToPosition(position)) {
+                int idx_id = privateCursor.getColumnIndex(GastoEntry._ID);
+                return privateCursor.getLong(idx_id);
             } else {
                 return 0;
             }
@@ -77,16 +77,12 @@ public class GastoAdapter extends
         }
     }
 
-    public Cursor getCursor() {
-        return cursor;
+    public Cursor getPrivateCursor() {
+        return privateCursor;
     }
 
-    public void setCursor(Cursor newCursor) {
-        cursor = newCursor;
+    public void setPrivateCursor(Cursor newCursor) {
+        privateCursor = newCursor;
         notifyDataSetChanged();
-    }
-
-    public interface ItemClickListenerAdapter {
-        void itemFoiClicado(Cursor cursor);
     }
 }

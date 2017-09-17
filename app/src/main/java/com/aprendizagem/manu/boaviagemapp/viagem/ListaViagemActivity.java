@@ -20,16 +20,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.aprendizagem.manu.boaviagemapp.Constantes;
 import com.aprendizagem.manu.boaviagemapp.R;
+import com.aprendizagem.manu.boaviagemapp.adapter.ItemClickListenerAdapter;
 import com.aprendizagem.manu.boaviagemapp.adapter.ViagemAdapter;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.ViagemEntry;
 import com.aprendizagem.manu.boaviagemapp.gasto.ListaGastoActivity;
 import com.aprendizagem.manu.boaviagemapp.gasto.NovoGastoActivity;
 import com.aprendizagem.manu.boaviagemapp.login.LoginActivity;
-//import com.facebook.stetho.Stetho;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -42,6 +43,9 @@ public class ListaViagemActivity extends AppCompatActivity implements
     private static final int VIAGEM_LOADER = 0;
 
     ViagemAdapter viagemAdapter;
+
+    LinearLayout listaViagemVazia;
+
     Toolbar listaGastoToolbar;
 
     RecyclerView recyclerViewViagem;
@@ -55,16 +59,13 @@ public class ListaViagemActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        if (BuildConfig.DEBUG){
-//
-//        Stetho.initializeWithDefaults(this);}
-
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
         if (mFirebaseUser != null) {
 
             setContentView(R.layout.lista_viagem);
+            listaViagemVazia = findViewById(R.id.linear_layout_lista_viagem_vazia);
 
             listaGastoToolbar = (Toolbar) findViewById(R.id.toolbar_lista_viagem);
             setSupportActionBar(listaGastoToolbar);
@@ -95,7 +96,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
         recyclerViewViagem = (RecyclerView) findViewById(R.id.recycler_view_viagem);
         recyclerViewViagem.setHasFixedSize(true);
 
-        viagemAdapter = new ViagemAdapter(new ViagemAdapter.ItemClickListenerAdapter() {
+        viagemAdapter = new ViagemAdapter(new ItemClickListenerAdapter() {
             @Override
             public void itemFoiClicado(Cursor cursor) {
                 opcoesParaCliqueDaViagem(cursor.getInt(cursor.getColumnIndex(ViagemEntry._ID)));
@@ -249,13 +250,21 @@ public class ListaViagemActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        viagemAdapter.setCursor(data);
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
+        if (cursor == null || cursor.getCount() == 0) {
+            recyclerViewViagem.setVisibility(View.GONE);
+            listaViagemVazia.setVisibility(View.VISIBLE);
+        } else {
+            listaViagemVazia.setVisibility(View.GONE);
+            recyclerViewViagem.setVisibility(View.VISIBLE);
+            viagemAdapter.setPrivateCursor(cursor);
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        viagemAdapter.setCursor(null);
+        viagemAdapter.setPrivateCursor(null);
     }
 
     @Override
@@ -275,7 +284,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
             public void onClick(DialogInterface dialog, int id) {
 
                 final int x = 1;
-                Cursor cursor = viagemAdapter.getCursor();
+                Cursor cursor = viagemAdapter.getPrivateCursor();
                 cursor.moveToPosition(x);
                 getContentResolver().delete(
                         Uri.withAppendedPath(ViagemEntry.CONTENT_URI, String.valueOf(position)),

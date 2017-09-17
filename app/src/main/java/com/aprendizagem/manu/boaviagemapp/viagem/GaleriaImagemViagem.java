@@ -22,11 +22,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.aprendizagem.manu.boaviagemapp.Constantes;
 import com.aprendizagem.manu.boaviagemapp.R;
 import com.aprendizagem.manu.boaviagemapp.adapter.GaleriaImagensAdapter;
+import com.aprendizagem.manu.boaviagemapp.adapter.ItemClickListenerAdapter;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.ImagemGaleriaEntry;
 import com.aprendizagem.manu.boaviagemapp.database.DatabaseHelper;
 import com.zhihu.matisse.Matisse;
@@ -45,6 +47,8 @@ public class GaleriaImagemViagem extends AppCompatActivity implements LoaderMana
     ImageButton adiconarImagem;
 
     RecyclerView recyclerView;
+
+    LinearLayout galeriaVazia;
 
     GaleriaImagensAdapter galeriaImagemAdapter;
 
@@ -67,7 +71,9 @@ public class GaleriaImagemViagem extends AppCompatActivity implements LoaderMana
             solicitaPermissaoLeitura();
         }
 
-        galeriaImagemToolbar = (Toolbar) findViewById(R.id.toolbar_galeria_imagem);
+        galeriaVazia = findViewById(R.id.linear_layout_galeria_vazia);
+
+        galeriaImagemToolbar = findViewById(R.id.toolbar_galeria_imagem);
         setSupportActionBar(galeriaImagemToolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -84,7 +90,7 @@ public class GaleriaImagemViagem extends AppCompatActivity implements LoaderMana
             }
         });
 
-        galeriaImagemAdapter = new GaleriaImagensAdapter(new GaleriaImagensAdapter.ItemClickListenerAdapter() {
+        galeriaImagemAdapter = new GaleriaImagensAdapter(new ItemClickListenerAdapter() {
             @Override
             public void itemFoiClicado(Cursor cursor) {
                 int id = cursor.getInt(cursor.getColumnIndex(ImagemGaleriaEntry._ID));
@@ -100,6 +106,10 @@ public class GaleriaImagemViagem extends AppCompatActivity implements LoaderMana
         recyclerView = findViewById(R.id.recycler_view_galeria);
         galeriaImagemAdapter.notifyDataSetChanged();
         recyclerView.setLayoutManager(gridLayoutManager);
+        if (galeriaImagemAdapter == null){
+
+
+        }
         recyclerView.setAdapter(galeriaImagemAdapter);
 
         getLoaderManager().initLoader(0, null, this);
@@ -182,7 +192,14 @@ public class GaleriaImagemViagem extends AppCompatActivity implements LoaderMana
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        galeriaImagemAdapter.setCursor(cursor);
+        if (cursor == null || cursor.getCount()==0){
+            recyclerView.setVisibility(View.GONE);
+            galeriaVazia.setVisibility(View.VISIBLE);
+        }else{
+            galeriaVazia.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            galeriaImagemAdapter.setPrivateCursor(cursor);
+        }
 
     }
 
@@ -218,7 +235,7 @@ public class GaleriaImagemViagem extends AppCompatActivity implements LoaderMana
             public void onClick(DialogInterface dialog, int id) {
 
                 final int x = 1;
-                Cursor cursor = galeriaImagemAdapter.getCursor();
+                Cursor cursor = galeriaImagemAdapter.getPrivateCursor();
                 cursor.moveToPosition(x);
                 getContentResolver().delete(
                         Uri.withAppendedPath(ImagemGaleriaEntry.CONTENT_URI, String.valueOf(position)),
