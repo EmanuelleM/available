@@ -76,12 +76,14 @@ public class Provider extends ContentProvider {
                         null,
                         sortOrder);
                 break;
+
             case VIAGEM_ID:
                 selection = ViagemEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 cursor = database.query(ViagemEntry.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
                 break;
+
             case GASTO:
                 cursor = database.query(
                         GastoEntry.TABLE_NAME,
@@ -92,6 +94,7 @@ public class Provider extends ContentProvider {
                         null,
                         sortOrder);
                 break;
+
             case GASTO_ID:
                 selection = GastoEntry.COLUMN_VIAGEM_ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};

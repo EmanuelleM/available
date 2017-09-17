@@ -9,7 +9,7 @@
         android:id="@+id/image_orimeira_viagem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_add_black_48dp"
+        android:src="@drawable/ic_add_black"
         android:contentDescription="@string/description_primeira_viagem"/>
 
     <TextView

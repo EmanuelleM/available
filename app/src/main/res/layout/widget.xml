@@ -99,7 +99,7 @@
             android:layout_weight="1"
             android:background="@color/colorAccent"
             android:contentDescription="@string/proxima_viagem"
-            android:src="@drawable/ic_chevron_right_black_24dp"/>
+            android:src="@drawable/ic_chevron_right"/>
 
     </LinearLayout>
 

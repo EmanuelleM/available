@@ -129,8 +129,7 @@ public class ListaGastoActivity extends AppCompatActivity implements
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setMessage(R.string.confirmar_exclusao)
-                .setTitle(R.string.excluir_gasto);
+        builder.setTitle(R.string.confirmar_exclusao_gasto);
 
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
