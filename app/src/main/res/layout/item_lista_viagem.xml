@@ -56,7 +56,7 @@
                 android:layout_marginEnd="@dimen/geral_8dp"
                 android:layout_marginTop="@dimen/geral_8dp"
                 android:contentDescription="@string/content_decriotion_arrow_item"
-                android:src="@drawable/ic_chevron_right_black_24dp"
+                android:src="@drawable/ic_chevron_right"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

@@ -17,7 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +29,7 @@ import com.aprendizagem.manu.boaviagemapp.database.Contract.ViagemEntry;
 import com.aprendizagem.manu.boaviagemapp.gasto.ListaGastoActivity;
 import com.aprendizagem.manu.boaviagemapp.gasto.NovoGastoActivity;
 import com.aprendizagem.manu.boaviagemapp.login.LoginActivity;
-import com.facebook.stetho.Stetho;
+//import com.facebook.stetho.Stetho;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -42,7 +41,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
 
     private static final int VIAGEM_LOADER = 0;
 
-    ViagemAdapter mCursorAdapter;
+    ViagemAdapter viagemAdapter;
     Toolbar listaGastoToolbar;
 
     RecyclerView recyclerViewViagem;
@@ -56,7 +55,9 @@ public class ListaViagemActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Stetho.initializeWithDefaults(this);
+//        if (BuildConfig.DEBUG){
+//
+//        Stetho.initializeWithDefaults(this);}
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
@@ -94,7 +95,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
         recyclerViewViagem = (RecyclerView) findViewById(R.id.recycler_view_viagem);
         recyclerViewViagem.setHasFixedSize(true);
 
-        mCursorAdapter = new ViagemAdapter(new ViagemAdapter.ItemClickListenerAdapter() {
+        viagemAdapter = new ViagemAdapter(new ViagemAdapter.ItemClickListenerAdapter() {
             @Override
             public void itemFoiClicado(Cursor cursor) {
                 opcoesParaCliqueDaViagem(cursor.getInt(cursor.getColumnIndex(ViagemEntry._ID)));
@@ -106,10 +107,10 @@ public class ListaViagemActivity extends AppCompatActivity implements
         mLayoutManager.setReverseLayout(true);
         mLayoutManager.setStackFromEnd(true);
 
-        mCursorAdapter.notifyDataSetChanged();
+        viagemAdapter.notifyDataSetChanged();
         recyclerViewViagem.setLayoutManager(mLayoutManager);
-        mCursorAdapter.setHasStableIds(true);
-        recyclerViewViagem.setAdapter(mCursorAdapter);
+        viagemAdapter.setHasStableIds(true);
+        recyclerViewViagem.setAdapter(viagemAdapter);
     }
 
     private void exibeFloatActionButton() {
@@ -235,8 +236,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
                         deletarViagem(idViagem);
                         break;
                     case 4:
-                        intent = new Intent(ListaViagemActivity.this, DetalhesViagem.class);
-//                        intent.setData(currentUri);
+                        intent = new Intent(ListaViagemActivity.this, GaleriaImagemViagem.class);
                         Constantes.setIdViagemSelecionada(idViagem);
                         startActivity(intent);
                         break;
@@ -250,12 +250,12 @@ public class ListaViagemActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mCursorAdapter.setCursor(data);
+        viagemAdapter.setCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mCursorAdapter.setCursor(null);
+        viagemAdapter.setCursor(null);
     }
 
     @Override
@@ -269,14 +269,13 @@ public class ListaViagemActivity extends AppCompatActivity implements
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setMessage(R.string.confirmar_exclusao)
-                .setTitle(R.string.excluir_viagem);
+        builder.setTitle(R.string.confirmar_exclusao_viagem);
 
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
                 final int x = 1;
-                Cursor cursor = mCursorAdapter.getCursor();
+                Cursor cursor = viagemAdapter.getCursor();
                 cursor.moveToPosition(x);
                 getContentResolver().delete(
                         Uri.withAppendedPath(ViagemEntry.CONTENT_URI, String.valueOf(position)),

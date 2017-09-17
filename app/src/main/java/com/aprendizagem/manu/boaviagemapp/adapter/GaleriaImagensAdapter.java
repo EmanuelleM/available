@@ -9,8 +9,9 @@ import android.view.ViewGroup;
 
 import com.aprendizagem.manu.boaviagemapp.R;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.ImagemGaleriaEntry;
+import com.squareup.picasso.Picasso;
 
-public class GaleriaImagensAdapter extends  RecyclerView.Adapter<ViewHolderImagem> {
+public class GaleriaImagensAdapter extends RecyclerView.Adapter<ViewHolderImagem> {
     private Context mContext;
     private Cursor cursor;
     private GaleriaImagensAdapter.ItemClickListenerAdapter mListener;
@@ -23,7 +24,7 @@ public class GaleriaImagensAdapter extends  RecyclerView.Adapter<ViewHolderImage
     @Override
     public ViewHolderImagem onCreateViewHolder(ViewGroup parent, final int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_imagem_provisorio, parent, false);
+                .inflate(R.layout.item_imagem_galeria, parent, false);
 
         final ViewHolderImagem vh = new ViewHolderImagem(v);
 
@@ -43,14 +44,14 @@ public class GaleriaImagensAdapter extends  RecyclerView.Adapter<ViewHolderImage
     public void onBindViewHolder(final ViewHolderImagem holder, final int position) {
         cursor.moveToPosition(position);
 
-        int idImagem = cursor.getColumnIndex(ImagemGaleriaEntry._ID);
         int caminhoImagem = cursor.getColumnIndex(ImagemGaleriaEntry.COLUMN_CAMINHO_IMAGEM);
 
-        final String stringIdImagem = cursor.getString(idImagem);
         String stringCaminhoImagem = cursor.getString(caminhoImagem);
 
-        holder.textViewIdImagem.setText(stringIdImagem);
-        holder.textViewCaminhoImagem.setText(stringCaminhoImagem);
+        Picasso.with(mContext).
+                load(stringCaminhoImagem)
+                .into(holder.imageViewImagem);
+
     }
 
     @Override
@@ -77,8 +78,8 @@ public class GaleriaImagensAdapter extends  RecyclerView.Adapter<ViewHolderImage
     }
 
     public void setCursor(Cursor newCursor) {
-        cursor = newCursor;
         notifyDataSetChanged();
+        cursor = newCursor;
     }
 
     public interface ItemClickListenerAdapter {

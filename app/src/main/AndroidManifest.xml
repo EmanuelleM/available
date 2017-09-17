@@ -4,9 +4,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 
     <application
@@ -50,7 +50,10 @@
                 android:value="com.aprendizagem.manu.boaviagemapp.viagem.ListaViagemActivity" />
         </activity>
 
-        <activity android:name=".viagem.DetalhesViagem"/>
+        <activity
+            android:name=".viagem.GaleriaImagemViagem"
+            android:parentActivityName="com.aprendizagem.manu.boaviagemapp.viagem.ListaViagemActivity"
+            android:theme="@style/AppThemeBacon" />
 
         <provider
             android:name="com.aprendizagem.manu.boaviagemapp.provider.Provider"
@@ -74,6 +77,6 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCnoTeQob34MuFh8xD6m6KDgLMfo1Aly4Y"/>
+            android:value="AIzaSyCnoTeQob34MuFh8xD6m6KDgLMfo1Aly4Y" />
     </application>
 </manifest>

@@ -1,4 +1,23 @@
 <resources>
+
+    //geral
+    <string name="bem_vindo">Bem vindo</string>
+    <string name="falha_update">Falha update</string>
+    <string name="update_sucesso">Update com sucesso</string>
+    <string name="falha_insercao">Falha insercao</string>
+    <string name="sair">Sair</string>
+    <string name="salvar">Salvar</string>
+
+    //login
+    <string name="entre_com">Entre com</string>
+    <string name="falha_login">Falha no login</string>
+    <string name="falha_de_conexao">Falha de conexão</string>
+    <string name="login_com_google">Login com Google</string>
+    <string name="nao_ha_gastos">Não há gastos nessa viagem</string>
+    <string name="nao_ha_conexao_de_rede">Não há conexão de rede</string>
+    <string name="falha_tentativa_login">Houve alguma falha, tente novamente</string>
+
+    //viagem
     <string name="app_name">Boa Viagem</string>
     <string name="destino">Destino</string>
     <string name="razao_viagem">Razão viagem</string>
@@ -8,9 +27,27 @@
     <string name="button_salvar_viagem">Salvar viagem</string>
     <string name="nova_viagem">Nova viagem</string>
     <string name="editando_viagem">Editando viagem</string>
-    <string name="falha_update">falha update</string>
-    <string name="update_sucesso">update com sucesso</string>
-    <string name="falha_insercao">falha insercao</string>
+    <string name="adicionar_viagem">Adicionar viagem</string>
+    <string name="description_primeira_viagem">Clique aqui para adicionar sua primeira viagem</string>
+    <string name="razao_lazer">- Lazer</string>
+    <string name="razao_negocios">- Negócios</string>
+    <string name="content_decriotion_arrow_item">Clique aqui para escolher uma ação</string>
+    <string name="gasto_total_cifrao">Gasto total R$</string>
+    <string name="viagem_salva">Viagem salva com suceso</string>
+    <string name="erro_salvar_viagem">Erro ao salvar viagem</string>
+    <string name="data_da_chegada">Data chegada</string>
+    <string name="data_da_partida">Data saida</string>
+    <string name="exibe_lista_de_gastos">Lista de gastos</string>
+    <string name="duracao_da_viagem">Duração da viagem</string>
+    <string name="editar">Editar</string>
+    <string name="exibe_galeria_imagens">Galeria de Imagens</string>
+    <string name="excluir_viagem">Excluir viagem</string>
+    <string name="informe_o_destino">É preciso informar o destino da viagem.</string>
+    <string name="pega_localizacao">botão para pegar a localização</string>
+    <string name="confirmar_exclusao_viagem">Você deseja excluir essa viagem?</string>
+
+
+    // gasto
     <string name="novo_gasto">Novo gasto</string>
     <string name="editando_gasto">Editando gasto</string>
     <string name="descricao_gasto">Descrição do gasto</string>
@@ -18,64 +55,22 @@
     <string name="forma_de_pagamento">Forma de pagamento</string>
     <string name="data_do_gasto">Data do gasto</string>
     <string name="salvar_gasto">Salvar gasto</string>
-    <string name="adicionar_viagem">adicionar viagem</string>
-    <string name="sem_viagens_na_lista">Você não tem nenhuma viagem salva</string>
-    <string name="sem_gasto_na_lista">Nenhum salvo gasto ainda.</string>
-    <string name="description_primeira_viagem">clique aqui para adicionar sua primeira viagem</string>
-    <string name="description_primeiro_gasto">clique aqui para adicionar seu primeiro gasto</string>
-    <string name="razao_lazer">- Lazer</string>
-    <string name="razao_negocios">- Negócios</string>
-    <string name="content_decriotion_arrow_item">Clique aqui para escolher uma ação</string>
-    <string name="gasto_total_cifrao">Gasto total R$</string>
-    <string name="bem_vindo">Bem vindo</string>
-    <string name="sair">Sair</string>
-    <string name="seu_email">seu_email</string>
-    <string name="seu_e_mail">Seu e-mail</string>
-    <string name="sua_senha">Senha</string>
-    <string name="entrar">Entrar</string>
-    <string name="entre_com">Entre com</string>
-    <string name="esqueceu_sua_senha">Esqueceu sua senha?</string>
-    <string name="viagem_salva">Viagem salva com suceso</string>
-    <string name="erro_salvar_viagem">Erro ao salvar viagem</string>
+    <string name="description_primeiro_gasto">Clique aqui para adicionar seu primeiro gasto</string>
     <string name="gasto_salvo">Gasto salvo com sucesso</string>
     <string name="erro_salvar_gasto">Erro ao salvar gasto</string>
     <string name="_00_00">00,00</string>
     <string name="mock_data">27/10/2017</string>
-    <string name="selecione">selecione</string>
-    <string name="data_da_chegada">Data chegada</string>
-    <string name="data_da_partida">Data saida</string>
-    <string name="exibe_lista_de_gastos">Lista de gastos</string>
-    <string name="adicionar_viagem_ao_calendario">Adicionar viagem ao calendário</string>
-    <string name="falha_login">Falha no login</string>
-    <string name="email_obrigatorio">Email obrigatório</string>
-    <string name="senha_obrigatoria">Senha obrigatória</string>
-    <string name="registrando_nova_conta">Criando sua conta</string>
-    <string name="conta_criada_sucesso">Conta criada com sucesso</string>
-    <string name="falha_criacao_conta">Falha ao criar conta, talvez a conta já esteja registrada</string>
-    <string name="criar_conta">Criar conta</string>
-    <string name="seu_nome_de_usuario">Seu nome</string>
-    <string name="duracao_da_viagem">Duração da viagem</string>
-    <string name="falha_de_conexao">Falha de conexão</string>
-    <string name="editar">Editar</string>
-    <string name="salvar">Salvar</string>
-    <string name="preencha_os_campos">Preencha os campos correspondentes ao gasto.</string>
-    <string name="excluir_viagem">Excluir viagem</string>
-    <string name="confirmar_exclusao">Você deseja excluir essa viagem?</string>
+    <string name="sem_gasto_na_lista">Nenhum salvo gasto ainda.</string>
     <string name="excluir_gasto">Excluir gasto</string>
-    <string name="proxima_viagem">Próxima viagem</string>
-    <string name="informacoes_usuario">Perfil usuário</string>
-    <string name="exibe_detalhes_viagem">Detalhes da viagem</string>
-    <string name="string_adicione_uma_imagem">Adicione uma imagem</string>
-    <string name="voce_esta_viajando_para">Você está viajando para </string>
-    <string name="voce_esta_hospedado">Você está hospedado em </string>
-    <string name="sua_viagem_comecou">Sua viagem começou dia </string>
-    <string name="sua_viagem_termina">Sua viagem terminará, se já não terminou, dia </string>
-    <string name="gasto_atual_da_viagem">O gasto atual da sua viagem é de </string>
-    <string name="login_com_google">Login com Google</string>
+    <string name="confirmar_exclusao_gasto">Você deseja excluir esse gasto?</string>
+
+    //galeria
+    <string name="confirmar_exclusao_imagem">Você deseja excluir essa imagem?</string>
     <string name="adicionar_imagem_viagem">Adicionar uma imagem</string>
-    <string name="nao_ha_gastos">Não há gastos nessa viagem</string>
-    <string name="nao_ha_conexao_de_rede">Não há conexão de rede</string>
-    <string name="falha_tentativa_login">Houve alguma falha, tente novamente</string>
-    <string name="informe_o_destino">É preciso informar o destino da viagem.</string>
-    <string name="pega_localizacao">botão para pegar a localização</string>
+    <string name="tela_galeria">Galeria</string>
+
+    //widget
+    <string name="sem_viagens_na_lista">Você não tem nenhuma viagem salva</string>
+    <string name="proxima_viagem">Próxima viagem</string>
+
 </resources>
