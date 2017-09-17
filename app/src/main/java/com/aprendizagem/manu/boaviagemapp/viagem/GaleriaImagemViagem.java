@@ -29,7 +29,6 @@ import com.aprendizagem.manu.boaviagemapp.R;
 import com.aprendizagem.manu.boaviagemapp.adapter.GaleriaImagensAdapter;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.ImagemGaleriaEntry;
 import com.aprendizagem.manu.boaviagemapp.database.DatabaseHelper;
-import com.aprendizagem.manu.boaviagemapp.gasto.ListaGastoActivity;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.PicassoEngine;
@@ -88,7 +87,7 @@ public class GaleriaImagemViagem extends AppCompatActivity implements LoaderMana
         galeriaImagemAdapter = new GaleriaImagensAdapter(new GaleriaImagensAdapter.ItemClickListenerAdapter() {
             @Override
             public void itemFoiClicado(Cursor cursor) {
-               int id = cursor.getInt(cursor.getColumnIndex(ImagemGaleriaEntry._ID));
+                int id = cursor.getInt(cursor.getColumnIndex(ImagemGaleriaEntry._ID));
                 opcoesParaCliqueDaImagem(id);
 
             }
@@ -158,7 +157,7 @@ public class GaleriaImagemViagem extends AppCompatActivity implements LoaderMana
         }
     }
 
-        @Override
+    @Override
     public void onClick(View v) {
     }
 
