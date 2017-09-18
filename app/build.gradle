@@ -29,9 +29,9 @@ android {
     }
 }
 
-final support = '26.0.0'
+final support = '26.0.1'
 final services = '11.0.4'
-final annotations = '26.0.0'
+final annotations = '26.0.1'
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
