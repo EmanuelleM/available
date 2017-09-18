@@ -65,7 +65,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
         if (mFirebaseUser != null) {
 
             setContentView(R.layout.lista_viagem);
-            listaViagemVazia = findViewById(R.id.linear_layout_lista_viagem_vazia);
+            listaViagemVazia = (LinearLayout) findViewById(R.id.linear_layout_lista_viagem_vazia);
 
             listaGastoToolbar = (Toolbar) findViewById(R.id.toolbar_lista_viagem);
             setSupportActionBar(listaGastoToolbar);

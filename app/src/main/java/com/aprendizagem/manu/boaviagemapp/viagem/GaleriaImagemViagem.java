@@ -71,18 +71,18 @@ public class GaleriaImagemViagem extends AppCompatActivity implements LoaderMana
             solicitaPermissaoLeitura();
         }
 
-        galeriaVazia = findViewById(R.id.linear_layout_galeria_vazia);
+        galeriaVazia = (LinearLayout) findViewById(R.id.linear_layout_galeria_vazia);
 
-        galeriaImagemToolbar = findViewById(R.id.toolbar_galeria_imagem);
+        galeriaImagemToolbar = (Toolbar) findViewById(R.id.toolbar_galeria_imagem);
         setSupportActionBar(galeriaImagemToolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        tituloPaginaToolbar = findViewById(R.id.titulo_pagina);
+        tituloPaginaToolbar = (TextView) findViewById(R.id.titulo_pagina);
         tituloPaginaToolbar.setText(getString(R.string.tela_galeria));
 
-        adiconarImagem = findViewById(R.id.image_button_adiciona_viagem);
+        adiconarImagem = (ImageButton) findViewById(R.id.image_button_adiciona_viagem);
         adiconarImagem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -103,7 +103,7 @@ public class GaleriaImagemViagem extends AppCompatActivity implements LoaderMana
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
 
-        recyclerView = findViewById(R.id.recycler_view_galeria);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_galeria);
         galeriaImagemAdapter.notifyDataSetChanged();
         recyclerView.setLayoutManager(gridLayoutManager);
         if (galeriaImagemAdapter == null){

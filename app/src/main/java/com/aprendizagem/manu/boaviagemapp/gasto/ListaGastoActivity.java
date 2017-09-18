@@ -50,7 +50,7 @@ public class ListaGastoActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lista_gasto);
 
-        listaGastoVazia = findViewById(R.id.linear_layout_lista_gasto_vazia);
+        listaGastoVazia = (LinearLayout) findViewById(R.id.linear_layout_lista_gasto_vazia);
 
         listaGastoToolbar = (Toolbar) findViewById(R.id.toolbar_lista_gasto);
         setSupportActionBar(listaGastoToolbar);
