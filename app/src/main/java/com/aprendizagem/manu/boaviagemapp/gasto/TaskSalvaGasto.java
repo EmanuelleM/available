@@ -13,7 +13,7 @@ import com.aprendizagem.manu.boaviagemapp.viagem.ListaViagemActivity;
 
 class TaskSalvaGasto extends AsyncTask<Void, Void, Uri> {
 
-    private Context mContext;
+    private final Context mContext;
     private final String mDescricaoGasto;
     private final String mValorGasto;
     private final String mMetodoPagamento;

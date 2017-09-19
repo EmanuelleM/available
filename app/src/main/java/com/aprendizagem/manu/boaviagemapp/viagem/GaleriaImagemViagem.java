@@ -42,7 +42,7 @@ public class GaleriaImagemViagem extends AppCompatActivity implements LoaderMana
     private GaleriaImagensAdapter mGaleriaImagemAdapter;
     private String getIdViagem;
 
-    public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 102;
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 102;
 
     private static final int REQUEST_CODE_CHOOSE = 23;
 
@@ -92,7 +92,7 @@ public class GaleriaImagemViagem extends AppCompatActivity implements LoaderMana
         getLoaderManager().initLoader(0, null, this);
     }
 
-    public boolean verificaPermissaoLeitura() {
+    private boolean verificaPermissaoLeitura() {
 
         boolean acessoConcedido = false;
 
@@ -110,7 +110,7 @@ public class GaleriaImagemViagem extends AppCompatActivity implements LoaderMana
         return acessoConcedido;
     }
 
-    public void solicitaPermissaoLeitura() {
+    private void solicitaPermissaoLeitura() {
 
         ActivityCompat.requestPermissions(GaleriaImagemViagem.this,
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
@@ -118,7 +118,7 @@ public class GaleriaImagemViagem extends AppCompatActivity implements LoaderMana
 
     }
 
-    public void adicionaImagem() {
+    private void adicionaImagem() {
 
         Matisse.from(GaleriaImagemViagem.this)
                 .choose(MimeType.allOf())

@@ -12,9 +12,9 @@ import com.squareup.picasso.Picasso;
 
 public class GaleriaImagensAdapter extends RecyclerView.Adapter<ViewHolderImagem> {
 
-    private Context mContext;
+    private final Context mContext;
     private Cursor mCursor;
-    private ItemClickListenerAdapter mListener;
+    private final ItemClickListenerAdapter mListener;
 
     public GaleriaImagensAdapter(ItemClickListenerAdapter aoClicarNoItem, Context applicationContext) {
         mListener = aoClicarNoItem;

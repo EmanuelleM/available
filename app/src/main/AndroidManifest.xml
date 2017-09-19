@@ -9,11 +9,12 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:supportsRtl="true"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:fullBackupContent="true"
+        android:supportsRtl="true"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher"
         android:theme="@style/AppTheme">
         <activity
             android:name="com.aprendizagem.manu.boaviagemapp.viagem.ListaViagemActivity"
@@ -62,7 +63,7 @@
 
         <receiver
             android:name="com.aprendizagem.manu.boaviagemapp.widget.WidgetAplicativo"
-            android:icon="@drawable/ic_launcher"
+            android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

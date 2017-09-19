@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget"
     android:layout_width="match_parent"
@@ -14,14 +15,14 @@
         android:layout_margin="@dimen/geral_8dp"
         android:text="@string/app_name"
         android:textColor="@color/primaryTextColor"
-        android:textSize="@dimen/text_size_24sp" />
+        android:textSize="@dimen/text_size_24sp"/>
 
     <LinearLayout
-        android:layout_marginTop="@dimen/geral_16dp"
-        android:layout_marginStart="@dimen/geral_8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="start|bottom">
+        android:layout_gravity="start|bottom"
+        android:layout_marginStart="@dimen/geral_8dp"
+        android:layout_marginTop="@dimen/geral_16dp">
 
         <TextView
             android:id="@+id/text_view_texto_valor_gasto"
@@ -30,7 +31,7 @@
             android:layout_margin="@dimen/geral_8dp"
             android:text="@string/valor_gasto"
             android:textColor="@color/primaryTextColor"
-            android:textSize="@dimen/text_size_20sp" />
+            android:textSize="@dimen/text_size_20sp"/>
 
         <TextView
             android:id="@+id/text_view_gasto_viagem"
@@ -40,15 +41,15 @@
             android:gravity="center"
             android:text="@string/_00_00"
             android:textColor="@color/primaryTextColor"
-            android:textSize="@dimen/text_size_20sp" />
+            android:textSize="@dimen/text_size_20sp"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start|center"
-        android:layout_marginTop="@dimen/geral_16dp"
         android:layout_marginStart="@dimen/geral_8dp"
+        android:layout_marginTop="@dimen/geral_16dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -67,9 +68,9 @@
                 android:textSize="@dimen/text_size_20sp"/>
 
             <LinearLayout
-                android:layout_marginTop="@dimen/geral_8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/geral_8dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -97,7 +98,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@color/colorAccent"
+            android:background="@android:color/transparent"
             android:contentDescription="@string/proxima_viagem"
             android:src="@drawable/ic_chevron_right"/>
 

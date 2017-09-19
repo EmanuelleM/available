@@ -12,7 +12,7 @@ import com.aprendizagem.manu.boaviagemapp.database.Contract;
 
 class TaskSalvaViagem extends AsyncTask<Void, Void, Uri> {
 
-    private Context privateContext;
+    private final Context privateContext;
     private final String destino;
     private final String localHospedagem;
     private final int razaoViagem;

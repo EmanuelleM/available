@@ -33,15 +33,15 @@ public class NovoGastoActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
 
     private DatabaseHelper mHelper;
-    private String idViagem = String.valueOf(Constantes.getIdViagemSelecionada());
-    private String idUsuario = String.valueOf(Constantes.getIdDoUsuario());
+    private final String idViagem = String.valueOf(Constantes.getIdViagemSelecionada());
+    private final String idUsuario = String.valueOf(Constantes.getIdDoUsuario());
     private Uri mCurrentGastoUri;
     private EditText mEditTextDescricaoGasto;
     private EditText mEditTextValorGasto;
     private EditText mEditTextMetodoPagamento;
     private Button mButtonDataChegada;
     private String mDataGasto;
-    private Calendar mCalendar = Calendar.getInstance();
+    private final Calendar mCalendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

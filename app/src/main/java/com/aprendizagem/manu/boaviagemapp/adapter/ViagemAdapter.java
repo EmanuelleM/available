@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aprendizagem.manu.boaviagemapp.R;
-import com.aprendizagem.manu.boaviagemapp.database.Contract;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.ViagemEntry;
 
 import java.util.Locale;
@@ -16,7 +15,7 @@ public class ViagemAdapter extends
         RecyclerView.Adapter<ViewHolderViagem> {
 
     private Cursor mCursor;
-    private ItemClickListenerAdapter mListener;
+    private final ItemClickListenerAdapter mListener;
 
     public ViagemAdapter(ItemClickListenerAdapter aoClicarNoItem) {
         mListener = aoClicarNoItem;

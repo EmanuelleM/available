@@ -51,10 +51,10 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
     private String mDataPartida;
     private String mDestino;
     private String mLocalHospedagem;
-    private Calendar mCalendar = Calendar.getInstance();
     private GoogleApiClient mClient;
     private int mRazao = ViagemEntry.RAZAO_DESCONHECIDA;
     private static final int PLACE_PICKER_REQUEST = 1000;
+    private final Calendar mCalendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

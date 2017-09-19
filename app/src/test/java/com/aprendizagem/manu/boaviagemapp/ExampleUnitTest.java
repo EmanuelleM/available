@@ -1,7 +1,5 @@
 package com.aprendizagem.manu.boaviagemapp;
 
-import org.testng.annotations.Test;
-
 import static junit.framework.Assert.assertEquals;
 
 /**

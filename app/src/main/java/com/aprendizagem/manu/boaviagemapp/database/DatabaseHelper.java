@@ -4,10 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.aprendizagem.manu.boaviagemapp.database.Contract.GastoEntry;
-import com.aprendizagem.manu.boaviagemapp.database.Contract.ViagemEntry;
-
-import static com.aprendizagem.manu.boaviagemapp.database.Contract.*;
+import com.aprendizagem.manu.boaviagemapp.database.Contract.*;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 

@@ -7,7 +7,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -119,7 +118,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         Toast.makeText(this, R.string.erro_google_play_services, Toast.LENGTH_SHORT).show();
     }
 
-    public static boolean getNetworkStatus(Context context) {
+    private static boolean getNetworkStatus(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();

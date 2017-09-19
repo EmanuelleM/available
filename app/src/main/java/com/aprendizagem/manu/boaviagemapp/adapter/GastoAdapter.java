@@ -7,14 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aprendizagem.manu.boaviagemapp.R;
-import com.aprendizagem.manu.boaviagemapp.database.Contract;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.GastoEntry;
 
 public class GastoAdapter extends
         RecyclerView.Adapter<ViewHolderGasto> {
 
     private Cursor mCursor;
-    private ItemClickListenerAdapter mListener;
+    private final ItemClickListenerAdapter mListener;
 
     public GastoAdapter(ItemClickListenerAdapter aoClicarNoItem) {
         mListener = aoClicarNoItem;

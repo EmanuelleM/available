@@ -18,7 +18,7 @@ import com.aprendizagem.manu.boaviagemapp.database.DatabaseHelper;
 
 public class Provider extends ContentProvider {
 
-    public static final String LOG_TAG = Provider.class.getSimpleName();
+    private static final String LOG_TAG = Provider.class.getSimpleName();
 
     private static final int VIAGEM = 100;
     private static final int VIAGEM_ID = 101;
@@ -30,8 +30,8 @@ public class Provider extends ContentProvider {
     private static final int IMAGEM = 105;
     private static final int IMAGEM_ID = 106;
 
-    String textoFalhaInsercao = "Falha ao inserir linha";
-    String textoUriDesconhecida = "URI desconhecida ";
+    private String mFalhaInsercao = "Falha ao inserir linha";
+    private String mUriDesconhecida = "URI desconhecida ";
 
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -132,7 +132,7 @@ public class Provider extends ContentProvider {
                 break;
 
             default:
-                throw new IllegalArgumentException(textoUriDesconhecida + uri);
+                throw new IllegalArgumentException(mUriDesconhecida + uri);
         }
 
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
@@ -171,7 +171,7 @@ public class Provider extends ContentProvider {
 
         long id = database.insert(ImagemGaleriaEntry.TABLE_NAME, null, values);
         if (id == -1) {
-            Log.e(LOG_TAG, textoFalhaInsercao + uri);
+            Log.e(LOG_TAG, mFalhaInsercao + uri);
             return null;
         }
         getContext().getContentResolver().notifyChange(uri, null);
@@ -188,7 +188,7 @@ public class Provider extends ContentProvider {
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
         long id = database.insert(GastoEntry.TABLE_NAME, null, values);
         if (id == -1) {
-            Log.e(LOG_TAG, textoFalhaInsercao + uri);
+            Log.e(LOG_TAG, mFalhaInsercao + uri);
             return null;
         }
         getContext().getContentResolver().notifyChange(uri, null);
@@ -208,7 +208,7 @@ public class Provider extends ContentProvider {
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
         long id = database.insert(ViagemEntry.TABLE_NAME, null, values);
         if (id == -1) {
-            Log.e(LOG_TAG, textoFalhaInsercao + uri);
+            Log.e(LOG_TAG, mFalhaInsercao + uri);
             return null;
         }
         getContext().getContentResolver().notifyChange(uri, null);
@@ -341,7 +341,7 @@ public class Provider extends ContentProvider {
                 stringMatcher = ImagemGaleriaEntry.CONTENT_ITEM_TYPE;
                 break;
             default:
-                throw new IllegalStateException(textoUriDesconhecida + uri + " para o item " +
+                throw new IllegalStateException(mUriDesconhecida + uri + " para o item " +
                         match);
         }
         return stringMatcher;

@@ -8,17 +8,15 @@ import com.aprendizagem.manu.boaviagemapp.R;
 
 class ViewHolderGasto extends RecyclerView.ViewHolder {
 
-    TextView txtDescricaoGasto;
-    TextView txtValorGasto;
-    TextView txtDataGasto;
-    TextView metodoPagamentoGasto;
+    final TextView txtDescricaoGasto;
+    final TextView txtValorGasto;
+    final TextView txtDataGasto;
 
     ViewHolderGasto(View itemView) {
         super(itemView);
         txtDescricaoGasto = itemView.findViewById(R.id.text_view_descricao_gasto);
         txtValorGasto = itemView.findViewById(R.id.text_view_valor_gasto);
         txtDataGasto = itemView.findViewById(R.id.text_view_data_gasto);
-        metodoPagamentoGasto = itemView.findViewById(R.id.edit_text_metodo_pagamento);
 
     }
 }

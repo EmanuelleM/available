@@ -17,7 +17,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.aprendizagem.manu.boaviagemapp.Constantes;
@@ -27,8 +26,6 @@ import com.aprendizagem.manu.boaviagemapp.adapter.ItemClickListenerAdapter;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.GastoEntry;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.ViagemEntry;
 import com.aprendizagem.manu.boaviagemapp.database.DatabaseHelper;
-import com.aprendizagem.manu.boaviagemapp.viagem.ListaViagemActivity;
-import com.aprendizagem.manu.boaviagemapp.viagem.NovaViagemActivity;
 
 public class ListaGastoActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
