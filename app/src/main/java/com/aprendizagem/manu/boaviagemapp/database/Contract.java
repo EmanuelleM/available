@@ -11,7 +11,7 @@ public final class Contract {
 
     public static final String CONTENT_AUTHORITY = "com.aprendizagem.manu.boaviagemapp";
 
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     public static final String PATH_VIAGENS = "viagens";
     public static final String PATH_GASTOS = "gastos";
@@ -21,13 +21,11 @@ public final class Contract {
 
         public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_VIAGENS);
 
-
         public static final String CONTENT_LIST_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_VIAGENS;
 
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_VIAGENS;
-
 
         public final static String TABLE_NAME = "viagens";
 
@@ -41,14 +39,11 @@ public final class Contract {
         public final static String COLUMN_ID_USUARIO = "id_usuario";
 
         public static final int RAZAO_DESCONHECIDA= 0;
-        public static final int RAZAO_LAZER = 1;
-        public static final int RAZAO_TRABALHO = 2;
+        private static final int RAZAO_LAZER = 1;
+        private static final int RAZAO_TRABALHO = 2;
 
         public static boolean getRazaoDaViagem(int razao) {
-            if (razao == RAZAO_DESCONHECIDA ||razao == RAZAO_TRABALHO || razao == RAZAO_LAZER) {
-                return true;
-            }
-            return false;
+            return razao == RAZAO_DESCONHECIDA || razao == RAZAO_TRABALHO || razao == RAZAO_LAZER;
         }
     }
 
@@ -76,9 +71,6 @@ public final class Contract {
     public static final class ImagemGaleriaEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_IMAGENS);
-
-        public static final String CONTENT_LIST_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_IMAGENS;
 
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_IMAGENS;

@@ -132,7 +132,7 @@ public class Provider extends ContentProvider {
                 break;
 
             default:
-                throw new IllegalArgumentException( textoUriDesconhecida + uri);
+                throw new IllegalArgumentException(textoUriDesconhecida + uri);
         }
 
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
@@ -157,7 +157,7 @@ public class Provider extends ContentProvider {
 
     private Uri insertImagem(Uri uri, ContentValues values) {
         int idViagem = values.getAsInteger(ImagemGaleriaEntry.COLUMN_VIAGEM_ID);
-        if (idViagem == 0){
+        if (idViagem == 0) {
             throw new IllegalArgumentException("Necessário informar o id da viagem");
 
         }
@@ -220,17 +220,18 @@ public class Provider extends ContentProvider {
     public int update(Uri uri, ContentValues contentValues, String selection,
                       String[] selectionArgs) {
         final int match = sUriMatcher.match(uri);
-        switch (match) {
-            case VIAGEM:
-                return updateViagem(uri, contentValues, selection, selectionArgs);
-            case VIAGEM_ID:
-                selection = ViagemEntry._ID + "=?";
-                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                return updateViagem(uri, contentValues, selection, selectionArgs);
-            default:
-                throw new IllegalArgumentException("Atualização não é permitida para o item " +
-                        uri);
+
+        if (match == VIAGEM_ID) {
+            selection = ViagemEntry._ID + "=?";
+            selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+        } else if (match != VIAGEM) {
+
+            throw new IllegalArgumentException("Atualização não é permitida para o item " +
+                    uri);
         }
+        return updateViagem(uri, contentValues, selection, selectionArgs);
+
+
     }
 
     private int updateViagem(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
@@ -316,31 +317,33 @@ public class Provider extends ContentProvider {
     @Override
     public String getType(Uri uri) {
         final int match = sUriMatcher.match(uri);
+        String stringMatcher;
         switch (match) {
             case VIAGEM:
-                return ViagemEntry.CONTENT_LIST_TYPE;
-
+                stringMatcher = ViagemEntry.CONTENT_LIST_TYPE;
+                break;
             case VIAGEM_ID:
-                return ViagemEntry.CONTENT_ITEM_TYPE;
-
+                stringMatcher = ViagemEntry.CONTENT_ITEM_TYPE;
+                break;
             case GASTO:
-                return GastoEntry.CONTENT_LIST_TYPE;
-
+                stringMatcher = GastoEntry.CONTENT_LIST_TYPE;
+                break;
             case GASTO_ID:
-                return GastoEntry.CONTENT_ITEM_TYPE;
-
+                stringMatcher = GastoEntry.CONTENT_ITEM_TYPE;
+                break;
             case GASTOS_VIAGEM_ID:
-                return GastoEntry.CONTENT_ITEM_TYPE;
-
+                stringMatcher = GastoEntry.CONTENT_ITEM_TYPE;
+                break;
             case IMAGEM:
-                return ImagemGaleriaEntry.CONTENT_ITEM_TYPE;
-
+                stringMatcher = ImagemGaleriaEntry.CONTENT_ITEM_TYPE;
+                break;
             case IMAGEM_ID:
-                return ImagemGaleriaEntry.CONTENT_ITEM_TYPE;
-
+                stringMatcher = ImagemGaleriaEntry.CONTENT_ITEM_TYPE;
+                break;
             default:
                 throw new IllegalStateException(textoUriDesconhecida + uri + " para o item " +
                         match);
         }
+        return stringMatcher;
     }
 }

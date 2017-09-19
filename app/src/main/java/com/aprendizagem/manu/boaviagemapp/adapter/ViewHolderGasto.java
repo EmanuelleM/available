@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.aprendizagem.manu.boaviagemapp.R;
 
 class ViewHolderGasto extends RecyclerView.ViewHolder {
+
     TextView txtDescricaoGasto;
     TextView txtValorGasto;
     TextView txtDataGasto;

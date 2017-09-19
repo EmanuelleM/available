@@ -1,6 +1,5 @@
 package com.aprendizagem.manu.boaviagemapp.adapter;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,18 +7,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aprendizagem.manu.boaviagemapp.R;
+import com.aprendizagem.manu.boaviagemapp.database.Contract;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.GastoEntry;
 
 public class GastoAdapter extends
         RecyclerView.Adapter<ViewHolderGasto> {
 
-    private Context privateContext;
-    private Cursor privateCursor;
-    private ItemClickListenerAdapter privateListener;
+    private Cursor mCursor;
+    private ItemClickListenerAdapter mListener;
 
-    public GastoAdapter(ItemClickListenerAdapter aoClicarNoItem, Context applicationContext) {
-        privateListener = aoClicarNoItem;
-        privateContext = applicationContext;
+    public GastoAdapter(ItemClickListenerAdapter aoClicarNoItem) {
+        mListener = aoClicarNoItem;
     }
 
     @Override
@@ -33,8 +31,8 @@ public class GastoAdapter extends
             @Override
             public void onClick(View v) {
                 int position = vh.getAdapterPosition();
-                privateCursor.moveToPosition(position);
-                if (privateListener != null) privateListener.itemFoiClicado(privateCursor);
+                mCursor.moveToPosition(position);
+                if (mListener != null) mListener.itemFoiClicado(mCursor);
             }
         });
 
@@ -43,15 +41,15 @@ public class GastoAdapter extends
 
     @Override
     public void onBindViewHolder(final ViewHolderGasto holder, final int position) {
-        privateCursor.moveToPosition(position);
+        mCursor.moveToPosition(position);
 
-        int descricaoGastoColumnIndex = privateCursor.getColumnIndex(GastoEntry.COLUMN_DESCRICAO_GASTO);
-        int valorGastoColumnIndex = privateCursor.getColumnIndex(GastoEntry.COLUMN_VALOR_GASTO);
-        int dataGastoColumnIndex = privateCursor.getColumnIndex(GastoEntry.COLUMN_DATA_GASTO);
+        int descricaoGastoColumnIndex = mCursor.getColumnIndex(GastoEntry.COLUMN_DESCRICAO_GASTO);
+        int valorGastoColumnIndex = mCursor.getColumnIndex(GastoEntry.COLUMN_VALOR_GASTO);
+        int dataGastoColumnIndex = mCursor.getColumnIndex(GastoEntry.COLUMN_DATA_GASTO);
 
-        final String descricaoGasto = privateCursor.getString(descricaoGastoColumnIndex);
-        String valorGasto = privateCursor.getString(valorGastoColumnIndex);
-        String dataGasto = privateCursor.getString(dataGastoColumnIndex);
+        final String descricaoGasto = mCursor.getString(descricaoGastoColumnIndex);
+        String valorGasto = mCursor.getString(valorGastoColumnIndex);
+        String dataGasto = mCursor.getString(dataGastoColumnIndex);
 
         holder.txtDescricaoGasto.setText(descricaoGasto);
         holder.txtValorGasto.setText(valorGasto);
@@ -60,29 +58,25 @@ public class GastoAdapter extends
 
     @Override
     public int getItemCount() {
-        return (privateCursor != null) ? privateCursor.getCount() : 0;
+        return (mCursor != null) ? mCursor.getCount() : 0;
     }
 
     @Override
     public long getItemId(int position) {
-        if (privateCursor != null) {
-            if (privateCursor.moveToPosition(position)) {
-                int idx_id = privateCursor.getColumnIndex(GastoEntry._ID);
-                return privateCursor.getLong(idx_id);
-            } else {
-                return 0;
-            }
-        } else {
-            return 0;
+        long valueReturn = 0;
+        if (mCursor != null && mCursor.moveToPosition(position)) {
+            int idx_id = mCursor.getColumnIndex(GastoEntry._ID);
+            valueReturn = mCursor.getLong(idx_id);
         }
+        return valueReturn;
     }
 
-    public Cursor getPrivateCursor() {
-        return privateCursor;
+    public Cursor getmCursor() {
+        return mCursor;
     }
 
-    public void setPrivateCursor(Cursor newCursor) {
-        privateCursor = newCursor;
+    public void setmCursor(Cursor newCursor) {
+        mCursor = newCursor;
         notifyDataSetChanged();
     }
 }

@@ -5,7 +5,7 @@ public class Viagem{
     private String id;
     private String localHospedagem;
     private String destino;
-    private String razaoViagem;
+    private int razaoViagem;
     private String dataChegada;
     private String dataSaida;
     private String valorTotal;
@@ -36,11 +36,11 @@ public class Viagem{
         this.destino = destino;
     }
 
-    public String getRazaoViagem() {
+    public int getRazaoViagem() {
         return razaoViagem;
     }
 
-    public void setRazaoViagem(String razaoViagem) {
+    public void setRazaoViagem(int razaoViagem) {
         this.razaoViagem = razaoViagem;
     }
 
@@ -56,7 +56,7 @@ public class Viagem{
         return dataSaida;
     }
 
-    public void setDataSaida(String dataSaida) {
+    public void setDataPartida(String dataSaida) {
         this.dataSaida = dataSaida;
     }
 
@@ -75,4 +75,40 @@ public class Viagem{
     public void setIdDoUsuario(String idDoUsuario) {
         this.idDoUsuario = idDoUsuario;
     }
+
+    public static void salvaViagem() {
+
+    }
+
+//        mDestino = mEditTextDestino.getText().toString().trim();
+//        localHospedagem = mEditLocalHospedagem.getText().toString().trim();
+//        String idDousuario = Constantes.getIdDoUsuario();
+//        int razaoViagem = mRazao;
+//
+//        if (mCurrentViagemUri == null) {
+//
+//            new TaskSalvaViagem(this, mDestino, localHospedagem,
+//                    razaoViagem,
+//                    mDataChegada, mDataPartida,
+//                    idDousuario).execute();
+//        } else {
+//
+//            ContentValues values = new ContentValues();
+//            values.put(Contract.ViagemEntry.COLUMN_DESTINO, mDestino);
+//            values.put(Contract.ViagemEntry.COLUMN_LOCAL_ACOMODACAO, localHospedagem);
+//            values.put(Contract.ViagemEntry.COLUMN_RAZAO, razaoViagem);
+//            values.put(Contract.ViagemEntry.COLUMN_DATA_CHEGADA, mDataChegada);
+//            values.put(Contract.ViagemEntry.COLUMN_DATA_PARTIDA, mDataPartida);
+//            values.put(Contract.ViagemEntry.COLUMN_ID_USUARIO, idDousuario);
+//
+//            String selection =
+//                    Contract.ViagemEntry.COLUMN_ID_USUARIO + "= '" + idDousuario + "'";
+//
+//            getContentResolver().update(mCurrentViagemUri, values, selection, null);
+//
+//            startActivity(new Intent(this, ListaViagemActivity.class));
+//            finish();
+//
+//        }
+//    }
 }

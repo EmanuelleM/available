@@ -4,11 +4,13 @@ import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,44 +27,46 @@ import com.aprendizagem.manu.boaviagemapp.adapter.ItemClickListenerAdapter;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.GastoEntry;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.ViagemEntry;
 import com.aprendizagem.manu.boaviagemapp.database.DatabaseHelper;
+import com.aprendizagem.manu.boaviagemapp.viagem.ListaViagemActivity;
+import com.aprendizagem.manu.boaviagemapp.viagem.NovaViagemActivity;
 
 public class ListaGastoActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int GASTO_LOADER = 0;
 
-    GastoAdapter mCursorAdapter;
+    private GastoAdapter mCursorAdapter;
 
-    RecyclerView recyclerViewGasto;
-    LinearLayout listaGastoVazia;
+    private RecyclerView mRecyclerViewGasto;
+    private TextView mListaGastoVazia;
 
-    DatabaseHelper helper = new DatabaseHelper(this);
-    SQLiteDatabase db;
+    private DatabaseHelper mHelper;
+    private SQLiteDatabase mDb;
 
-    String getIdViagem = String.valueOf(Constantes.getIdViagemSelecionada());
-    String getIdUsuario = String.valueOf(Constantes.getIdDoUsuario());
-
-    Toolbar listaGastoToolbar;
-    TextView tituloPaginaToolbar;
+    private String getIdViagem;
+    private String getIdUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lista_gasto);
 
-        listaGastoVazia = (LinearLayout) findViewById(R.id.linear_layout_lista_gasto_vazia);
+        getIdViagem = String.valueOf(Constantes.getIdViagemSelecionada());
+        getIdUsuario = String.valueOf(Constantes.getIdDoUsuario());
+        mHelper = new DatabaseHelper(this);
+        mListaGastoVazia = findViewById(R.id.text_view_lista_gasto_vazia);
 
-        listaGastoToolbar = (Toolbar) findViewById(R.id.toolbar_lista_gasto);
+        Toolbar listaGastoToolbar = findViewById(R.id.toolbar_lista_gasto);
         setSupportActionBar(listaGastoToolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        tituloPaginaToolbar = (TextView) findViewById(R.id.titulo_pagina);
+        TextView tituloPaginaToolbar = findViewById(R.id.titulo_pagina);
         tituloPaginaToolbar.setText(Constantes.getNomeDestinoViagem());
 
-        recyclerViewGasto = (RecyclerView) findViewById(R.id.recycler_view_gasto);
-        recyclerViewGasto.setHasFixedSize(true);
+        mRecyclerViewGasto = findViewById(R.id.recycler_view_gasto);
+        mRecyclerViewGasto.setHasFixedSize(true);
 
         mCursorAdapter = new GastoAdapter(new ItemClickListenerAdapter() {
             @Override
@@ -70,17 +74,31 @@ public class ListaGastoActivity extends AppCompatActivity implements
                 int id = cursor.getInt(cursor.getColumnIndex(GastoEntry._ID));
                 opcoesParaCliqueDoItemGasto(id);
             }
-        }, this);
+        });
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setReverseLayout(true);
         mLayoutManager.setStackFromEnd(true);
 
-        recyclerViewGasto.setLayoutManager(mLayoutManager);
+        mRecyclerViewGasto.setLayoutManager(mLayoutManager);
         mCursorAdapter.setHasStableIds(true);
-        recyclerViewGasto.setAdapter(mCursorAdapter);
+        mRecyclerViewGasto.setAdapter(mCursorAdapter);
+
+        exibeFloatActionButton();
 
         getLoaderManager().initLoader(GASTO_LOADER, null, this);
+    }
+
+    private void exibeFloatActionButton() {
+        FloatingActionButton fab = findViewById(R.id.fab_novo_gasto);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ListaGastoActivity.this, NovoGastoActivity.class);
+                Constantes.setIdDoUsuario(getIdUsuario);
+                startActivity(intent);
+            }
+        });
     }
 
     private void opcoesParaCliqueDoItemGasto(final int position) {
@@ -129,12 +147,12 @@ public class ListaGastoActivity extends AppCompatActivity implements
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
         if (cursor == null || cursor.getCount()==0){
-            recyclerViewGasto.setVisibility(View.GONE);
-            listaGastoVazia.setVisibility(View.VISIBLE);
+            mRecyclerViewGasto.setVisibility(View.GONE);
+            mListaGastoVazia.setVisibility(View.VISIBLE);
         }else{
-            listaGastoVazia.setVisibility(View.GONE);
-            recyclerViewGasto.setVisibility(View.VISIBLE);
-            mCursorAdapter.setPrivateCursor(cursor);
+            mListaGastoVazia.setVisibility(View.GONE);
+            mRecyclerViewGasto.setVisibility(View.VISIBLE);
+            mCursorAdapter.setmCursor(cursor);
         }
     }
 
@@ -155,7 +173,7 @@ public class ListaGastoActivity extends AppCompatActivity implements
                 novoGastoTotal();
 
                 final int x = 1;
-                Cursor cursor = mCursorAdapter.getPrivateCursor();
+                Cursor cursor = mCursorAdapter.getmCursor();
                 cursor.moveToPosition(x);
                 getContentResolver().delete(
                         Uri.withAppendedPath(GastoEntry.CONTENT_URI, String.valueOf(position)),
@@ -175,7 +193,7 @@ public class ListaGastoActivity extends AppCompatActivity implements
 
     private double getGastoTotal() {
 
-        db = helper.getReadableDatabase();
+        mDb = mHelper.getReadableDatabase();
 
         String[] projection = {
                 ViagemEntry.COLUMN_GASTO_TOTAL
@@ -184,7 +202,7 @@ public class ListaGastoActivity extends AppCompatActivity implements
         String selection = ViagemEntry._ID + " = '" + getIdViagem + "' AND " +
                 ViagemEntry.COLUMN_ID_USUARIO + "= '" + getIdUsuario + "'";
 
-        Cursor cursor = db.query(
+        Cursor cursor = mDb.query(
                 ViagemEntry.TABLE_NAME,
                 projection,
                 selection,
@@ -203,7 +221,7 @@ public class ListaGastoActivity extends AppCompatActivity implements
     }
 
     private void novoGastoTotal() {
-        Cursor cursor = mCursorAdapter.getPrivateCursor();
+        Cursor cursor = mCursorAdapter.getmCursor();
 
         String value = cursor.getString(cursor.getColumnIndex(GastoEntry.COLUMN_VALOR_GASTO)).replace(",", ".");
 
@@ -215,7 +233,7 @@ public class ListaGastoActivity extends AppCompatActivity implements
 
         double novoValorGastoTotal = antigoGastoTotal - valorConvertido;
 
-        db = helper.getReadableDatabase();
+        mDb = mHelper.getReadableDatabase();
 
         ContentValues values = new ContentValues();
 
@@ -223,12 +241,12 @@ public class ListaGastoActivity extends AppCompatActivity implements
 
         String selection = ViagemEntry._ID + " = '" + getIdViagem + "'";
 
-        db.update(
+        mDb.update(
                 ViagemEntry.TABLE_NAME,
                 values,
                 selection, null);
 
-        db.close();
+        mDb.close();
 
     }
 }

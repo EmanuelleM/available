@@ -16,6 +16,8 @@
     <string name="nao_ha_gastos">Não há gastos nessa viagem</string>
     <string name="nao_ha_conexao_de_rede">Não há conexão de rede</string>
     <string name="falha_tentativa_login">Houve alguma falha, tente novamente</string>
+    <string name="falha_autenticacao">Falha de autenticação.</string>
+    <string name="erro_google_play_services">Erro Google Play Services.</string>
 
     //viagem
     <string name="app_name">Boa Viagem</string>
@@ -74,5 +76,6 @@
     //widget
     <string name="sem_viagens_na_lista">Você não tem nenhuma viagem salva</string>
     <string name="proxima_viagem">Próxima viagem</string>
+    <string name="imagem_da_galeria">imagem da galeria</string>
 
 </resources>

@@ -9,9 +9,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.icu.util.Calendar;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -28,28 +26,22 @@ import com.aprendizagem.manu.boaviagemapp.R;
 import com.aprendizagem.manu.boaviagemapp.database.Contract;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.GastoEntry;
 import com.aprendizagem.manu.boaviagemapp.database.DatabaseHelper;
-import com.aprendizagem.manu.boaviagemapp.viagem.ListaViagemActivity;
+
+import java.util.Calendar;
 
 public class NovoGastoActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
 
-    DatabaseHelper helper = new DatabaseHelper(this);
-    String idViagem = String.valueOf(Constantes.getIdViagemSelecionada());
-    String idUsuario = String.valueOf(Constantes.getIdDoUsuario());
-
+    private DatabaseHelper mHelper;
+    private String idViagem = String.valueOf(Constantes.getIdViagemSelecionada());
+    private String idUsuario = String.valueOf(Constantes.getIdDoUsuario());
     private Uri mCurrentGastoUri;
-
-    private EditText editTextDescricaoGasto;
-    private EditText editTextValorGasto;
-    private EditText editTextMetodoPagamento;
-
-    private Button buttonDataChegada;
-
-    private String dataGasto;
-
-    private Calendar calendar = Calendar.getInstance();
-
-    Menu menu;
+    private EditText mEditTextDescricaoGasto;
+    private EditText mEditTextValorGasto;
+    private EditText mEditTextMetodoPagamento;
+    private Button mButtonDataChegada;
+    private String mDataGasto;
+    private Calendar mCalendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,18 +53,19 @@ public class NovoGastoActivity extends AppCompatActivity implements
         setTitle(getString(R.string.novo_gasto));
         invalidateOptionsMenu();
 
-        editTextDescricaoGasto = (EditText) findViewById(R.id.edit_text_descricao_gasto);
-        editTextValorGasto = (EditText) findViewById(R.id.edit_text_valor_gasto);
-        editTextMetodoPagamento = (EditText) findViewById(R.id.edit_text_metodo_pagamento);
+        mHelper = new DatabaseHelper(this);
 
-        buttonDataChegada = (Button) findViewById(R.id.button_pega_data_gasto);
-        buttonDataChegada.setOnClickListener(this);
+        mEditTextDescricaoGasto = findViewById(R.id.edit_text_descricao_gasto);
+        mEditTextValorGasto = findViewById(R.id.edit_text_valor_gasto);
+        mEditTextMetodoPagamento = findViewById(R.id.edit_text_metodo_pagamento);
+
+        mButtonDataChegada = findViewById(R.id.button_pega_data_gasto);
+        mButtonDataChegada.setOnClickListener(this);
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.menu = menu;
         getMenuInflater().inflate(R.menu.menu_salvar_geral, menu);
         return true;
     }
@@ -81,8 +74,8 @@ public class NovoGastoActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.salvar:
-                if (editTextDescricaoGasto.getText().toString().trim().isEmpty() ||
-                        editTextValorGasto.getText().toString().trim().isEmpty()) {
+                if (mEditTextDescricaoGasto.getText().toString().isEmpty() ||
+                        mEditTextValorGasto.getText().toString().isEmpty()) {
                     Toast.makeText(this, "É necessário informar a descrição e o valor do gasto",
                             Toast
                                     .LENGTH_SHORT)
@@ -99,7 +92,7 @@ public class NovoGastoActivity extends AppCompatActivity implements
 
     private double getGastoTotal(String idUsuario) {
 
-        SQLiteDatabase db = helper.getReadableDatabase();
+        SQLiteDatabase db = mHelper.getReadableDatabase();
 
         String[] projection = {
                 Contract.ViagemEntry.COLUMN_GASTO_TOTAL
@@ -130,7 +123,7 @@ public class NovoGastoActivity extends AppCompatActivity implements
 
         double antigoGastoTotal = getGastoTotal(idUsuario);
         double valorAdicionadoUsuario = 0;
-        String value = editTextValorGasto.getText().toString().trim().replace(",", ".");
+        String value = mEditTextValorGasto.getText().toString().replace(",", ".");
 
         if (!value.isEmpty())
             try {
@@ -141,7 +134,7 @@ public class NovoGastoActivity extends AppCompatActivity implements
 
         double novoValorGastoTotal = valorAdicionadoUsuario + antigoGastoTotal;
 
-        SQLiteDatabase db = helper.getReadableDatabase();
+        SQLiteDatabase db = mHelper.getReadableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(Contract.ViagemEntry.COLUMN_GASTO_TOTAL, novoValorGastoTotal);
@@ -201,83 +194,32 @@ public class NovoGastoActivity extends AppCompatActivity implements
     private void salvarGasto() {
         novoGastoTotal();
 
-        final String descricaoGasto = editTextDescricaoGasto.getText().toString().trim();
-        final String valorGasto = editTextValorGasto.getText().toString().trim();
-        final String metodoPagamento = editTextMetodoPagamento.getText().toString().trim();
+        final String descricaoGasto = mEditTextDescricaoGasto.getText().toString();
+        final String valorGasto = mEditTextValorGasto.getText().toString();
+        final String metodoPagamento = mEditTextMetodoPagamento.getText().toString();
 
         if (mCurrentGastoUri == null && TextUtils.isEmpty(descricaoGasto) && TextUtils.isEmpty(valorGasto)) {
             return;
         }
 
-        new TaskSalvaGastos(descricaoGasto, valorGasto, metodoPagamento).execute();
+        new TaskSalvaGasto(this, idViagem, descricaoGasto, valorGasto, mDataGasto, metodoPagamento,
+                idUsuario)
+                .execute();
     }
-
 
     private Dialog pegaDataGasto() {
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year,
                                   int monthOfYear, int dayOfMonth) {
-                dataGasto = dayOfMonth + "/" + monthOfYear + "/" + year;
-                buttonDataChegada.setText(dataGasto);
+                mDataGasto = dayOfMonth + "/" + monthOfYear + "/" + year;
+                mButtonDataChegada.setText(mDataGasto);
             }
         };
         return new DatePickerDialog(this,
                 dateSetListener,
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)) {
+                mCalendar.get(Calendar.YEAR),
+                mCalendar.get(Calendar.MONTH),
+                mCalendar.get(Calendar.DAY_OF_MONTH)) {
         };
-    }
-
-    private class TaskSalvaGastos extends AsyncTask<Void, Void, Uri> {
-
-        private final String descricaoGasto;
-        private final String valorGasto;
-        private final String metodoPagamento;
-
-        TaskSalvaGastos(String descricaoGasto, String valorGasto, String metodoPagamento) {
-            this.descricaoGasto = descricaoGasto;
-            this.valorGasto = valorGasto;
-            this.metodoPagamento = metodoPagamento;
-        }
-
-        @Override
-        protected Uri doInBackground(Void... params) {
-
-            ContentValues values = new ContentValues();
-
-            values.put(GastoEntry.COLUMN_VIAGEM_ID, idViagem);
-            values.put(GastoEntry.COLUMN_DESCRICAO_GASTO, descricaoGasto);
-            values.put(GastoEntry.COLUMN_VALOR_GASTO, valorGasto);
-            values.put(GastoEntry.COLUMN_DATA_GASTO, dataGasto);
-            values.put(GastoEntry.COLUMN_METODO_PAGAMENTO, metodoPagamento);
-            values.put(GastoEntry.COLUMN_ID_USUARIO, idUsuario);
-
-            return getContentResolver().insert(GastoEntry.CONTENT_URI, values);
-
-        }
-
-        @Override
-        protected void onPostExecute(Uri uri) {
-            super.onPostExecute(uri);
-
-            if (uri != null) {
-
-                Toast.makeText(NovoGastoActivity.this, getString(R.string
-                                .gasto_salvo),
-                        Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(NovoGastoActivity.this, ListaViagemActivity
-                        .class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-
-            } else {
-                Toast.makeText(NovoGastoActivity.this, getString(R.string
-                                .erro_salvar_gasto),
-                        Toast.LENGTH_SHORT).show();
-
-            }
-        }
     }
 }

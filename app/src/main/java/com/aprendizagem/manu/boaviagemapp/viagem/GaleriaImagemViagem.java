@@ -17,12 +17,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.aprendizagem.manu.boaviagemapp.Constantes;
@@ -30,7 +28,6 @@ import com.aprendizagem.manu.boaviagemapp.R;
 import com.aprendizagem.manu.boaviagemapp.adapter.GaleriaImagensAdapter;
 import com.aprendizagem.manu.boaviagemapp.adapter.ItemClickListenerAdapter;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.ImagemGaleriaEntry;
-import com.aprendizagem.manu.boaviagemapp.database.DatabaseHelper;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.PicassoEngine;
@@ -40,23 +37,10 @@ import java.util.List;
 public class GaleriaImagemViagem extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
         View.OnClickListener {
 
-    TextView tituloPaginaToolbar;
-
-    Toolbar galeriaImagemToolbar;
-
-    ImageButton adiconarImagem;
-
-    RecyclerView recyclerView;
-
-    LinearLayout galeriaVazia;
-
-    GaleriaImagensAdapter galeriaImagemAdapter;
-
-    DatabaseHelper helper = new DatabaseHelper(this);
-
-    List<Uri> caminhoDaImagem;
-
-    String getIdViagem = String.valueOf(Constantes.getIdViagemSelecionada());
+    private RecyclerView mRecyclerView;
+    private TextView mGaleriaVazia;
+    private GaleriaImagensAdapter mGaleriaImagemAdapter;
+    private String getIdViagem;
 
     public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 102;
 
@@ -66,23 +50,23 @@ public class GaleriaImagemViagem extends AppCompatActivity implements LoaderMana
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detalhes_viagem_linear);
-
+        getIdViagem = String.valueOf(Constantes.getIdViagemSelecionada());
         if (!verificaPermissaoLeitura()) {
             solicitaPermissaoLeitura();
         }
 
-        galeriaVazia = (LinearLayout) findViewById(R.id.linear_layout_galeria_vazia);
+        mGaleriaVazia = findViewById(R.id.text_view_galeria_vazia);
 
-        galeriaImagemToolbar = (Toolbar) findViewById(R.id.toolbar_galeria_imagem);
+        Toolbar galeriaImagemToolbar = findViewById(R.id.toolbar_galeria_imagem);
         setSupportActionBar(galeriaImagemToolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        tituloPaginaToolbar = (TextView) findViewById(R.id.titulo_pagina);
+        TextView tituloPaginaToolbar = findViewById(R.id.titulo_pagina);
         tituloPaginaToolbar.setText(getString(R.string.tela_galeria));
 
-        adiconarImagem = (ImageButton) findViewById(R.id.image_button_adiciona_viagem);
+        ImageButton adiconarImagem = findViewById(R.id.image_button_adiciona_viagem);
         adiconarImagem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,27 +74,20 @@ public class GaleriaImagemViagem extends AppCompatActivity implements LoaderMana
             }
         });
 
-        galeriaImagemAdapter = new GaleriaImagensAdapter(new ItemClickListenerAdapter() {
+        mGaleriaImagemAdapter = new GaleriaImagensAdapter(new ItemClickListenerAdapter() {
             @Override
             public void itemFoiClicado(Cursor cursor) {
                 int id = cursor.getInt(cursor.getColumnIndex(ImagemGaleriaEntry._ID));
                 opcoesParaCliqueDaImagem(id);
-
             }
         }, this);
 
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_galeria);
-        galeriaImagemAdapter.notifyDataSetChanged();
-        recyclerView.setLayoutManager(gridLayoutManager);
-        if (galeriaImagemAdapter == null){
-
-
-        }
-        recyclerView.setAdapter(galeriaImagemAdapter);
+        mRecyclerView = findViewById(R.id.recycler_view_galeria);
+        mGaleriaImagemAdapter.notifyDataSetChanged();
+        mRecyclerView.setLayoutManager(gridLayoutManager);
+        mRecyclerView.setAdapter(mGaleriaImagemAdapter);
 
         getLoaderManager().initLoader(0, null, this);
     }
@@ -156,7 +133,7 @@ public class GaleriaImagemViagem extends AppCompatActivity implements LoaderMana
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
-            caminhoDaImagem = Matisse.obtainResult(data);
+            List<Uri> caminhoDaImagem = Matisse.obtainResult(data);
 
             ContentValues values = new ContentValues();
             values.put(ImagemGaleriaEntry.COLUMN_VIAGEM_ID, Constantes.getIdViagemSelecionada());
@@ -192,13 +169,13 @@ public class GaleriaImagemViagem extends AppCompatActivity implements LoaderMana
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if (cursor == null || cursor.getCount()==0){
-            recyclerView.setVisibility(View.GONE);
-            galeriaVazia.setVisibility(View.VISIBLE);
-        }else{
-            galeriaVazia.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-            galeriaImagemAdapter.setPrivateCursor(cursor);
+        if (cursor == null || cursor.getCount() == 0) {
+            mRecyclerView.setVisibility(View.GONE);
+            mGaleriaVazia.setVisibility(View.VISIBLE);
+        } else {
+            mGaleriaVazia.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mGaleriaImagemAdapter.setmCursor(cursor);
         }
 
     }
@@ -235,7 +212,7 @@ public class GaleriaImagemViagem extends AppCompatActivity implements LoaderMana
             public void onClick(DialogInterface dialog, int id) {
 
                 final int x = 1;
-                Cursor cursor = galeriaImagemAdapter.getPrivateCursor();
+                Cursor cursor = mGaleriaImagemAdapter.getmCursor();
                 cursor.moveToPosition(x);
                 getContentResolver().delete(
                         Uri.withAppendedPath(ImagemGaleriaEntry.CONTENT_URI, String.valueOf(position)),

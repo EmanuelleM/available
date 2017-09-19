@@ -12,13 +12,13 @@ import com.squareup.picasso.Picasso;
 
 public class GaleriaImagensAdapter extends RecyclerView.Adapter<ViewHolderImagem> {
 
-    private Context privateContext;
-    private Cursor privateCursor;
-    private ItemClickListenerAdapter privateListener;
+    private Context mContext;
+    private Cursor mCursor;
+    private ItemClickListenerAdapter mListener;
 
     public GaleriaImagensAdapter(ItemClickListenerAdapter aoClicarNoItem, Context applicationContext) {
-        privateListener = aoClicarNoItem;
-        privateContext = applicationContext;
+        mListener = aoClicarNoItem;
+        mContext = applicationContext;
     }
 
     @Override
@@ -32,8 +32,8 @@ public class GaleriaImagensAdapter extends RecyclerView.Adapter<ViewHolderImagem
             @Override
             public void onClick(View v) {
                 int position = vh.getAdapterPosition();
-                privateCursor.moveToPosition(position);
-                if (privateListener != null) privateListener.itemFoiClicado(privateCursor);
+                mCursor.moveToPosition(position);
+                if (mListener != null) mListener.itemFoiClicado(mCursor);
             }
         });
 
@@ -42,13 +42,13 @@ public class GaleriaImagensAdapter extends RecyclerView.Adapter<ViewHolderImagem
 
     @Override
     public void onBindViewHolder(final ViewHolderImagem holder, final int position) {
-        privateCursor.moveToPosition(position);
+        mCursor.moveToPosition(position);
 
-        int caminhoImagem = privateCursor.getColumnIndex(ImagemGaleriaEntry.COLUMN_CAMINHO_IMAGEM);
+        int caminhoImagem = mCursor.getColumnIndex(ImagemGaleriaEntry.COLUMN_CAMINHO_IMAGEM);
 
-        String stringCaminhoImagem = privateCursor.getString(caminhoImagem);
+        String stringCaminhoImagem = mCursor.getString(caminhoImagem);
 
-        Picasso.with(privateContext).
+        Picasso.with(mContext).
                 load(stringCaminhoImagem)
                 .into(holder.imageViewImagem);
 
@@ -56,29 +56,25 @@ public class GaleriaImagensAdapter extends RecyclerView.Adapter<ViewHolderImagem
 
     @Override
     public int getItemCount() {
-        return (privateCursor != null) ? privateCursor.getCount() : 0;
+        return (mCursor != null) ? mCursor.getCount() : 0;
     }
 
     @Override
     public long getItemId(int position) {
-        if (privateCursor != null) {
-            if (privateCursor.moveToPosition(position)) {
-                int idx_id = privateCursor.getColumnIndex(ImagemGaleriaEntry._ID);
-                return privateCursor.getLong(idx_id);
-            } else {
-                return 0;
+        long valueReturn = 0;
+        if (mCursor != null && mCursor.moveToPosition(position)) {
+                int idx_id = mCursor.getColumnIndex(ImagemGaleriaEntry._ID);
+                valueReturn = mCursor.getLong(idx_id);
             }
-        } else {
-            return 0;
-        }
+            return valueReturn;
     }
 
-    public Cursor getPrivateCursor() {
-        return privateCursor;
+    public Cursor getmCursor() {
+        return mCursor;
     }
 
-    public void setPrivateCursor(Cursor newCursor) {
+    public void setmCursor(Cursor newCursor) {
         notifyDataSetChanged();
-        privateCursor = newCursor;
+        mCursor = newCursor;
     }
 }

@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.aprendizagem.manu.boaviagemapp.R;
 
 class ViewHolderViagem extends RecyclerView.ViewHolder {
+
     TextView campoDestinoViagem;
     TextView campoValorTotalGastoViagem;
     TextView campoRazaoViagem;

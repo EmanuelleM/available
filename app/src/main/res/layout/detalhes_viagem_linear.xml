@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_galeria_imagem"
@@ -25,7 +25,7 @@
             android:gravity="bottom"
             android:text="@string/app_name"
             android:textSize="24sp"
-            app:layout_collapseMode="parallax" />
+            app:layout_collapseMode="parallax"/>
     </android.support.v7.widget.Toolbar>
 
 
@@ -39,7 +39,7 @@
         android:text="@string/adicionar_imagem_viagem"
         app:layout_constraintEnd_toStartOf="@+id/image_button_adiciona_viagem"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_valor_gasto" />
+        app:layout_constraintTop_toBottomOf="@+id/text_view_valor_gasto"/>
 
     <ImageButton
         android:id="@+id/image_button_adiciona_viagem"
@@ -47,30 +47,18 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/geral_8dp"
         android:contentDescription="@string/adicionar_imagem_viagem"
-        android:src="@drawable/ic_add" />
+        android:src="@drawable/ic_add"/>
 
-        <LinearLayout
-            android:id="@+id/linear_layout_galeria_vazia"
-            android:visibility="gone"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                style="@style/text_view_style"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/galeria_vazia"
-                android:layout_gravity="center"/>
-
-            <ImageView
-                android:src="@drawable/ic_sentiment_dissatisfied"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
+    <TextView
+        android:id="@+id/text_view_galeria_vazia"
+        style="@style/text_view_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:contentDescription="@string/lista_viagem_vazia"
+        android:drawableBottom="@drawable/ic_sentiment_dissatisfied"
+        android:text="@string/galeria_vazia"
+        android:textStyle="bold"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_galeria"
@@ -81,6 +69,6 @@
         android:layout_marginStart="@dimen/geral_8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
 </LinearLayout>

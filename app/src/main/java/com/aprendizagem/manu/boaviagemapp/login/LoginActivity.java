@@ -31,7 +31,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
 
-    private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN = 9001;
 
     private GoogleApiClient mGoogleApiClient;
@@ -44,8 +43,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
-        Button buttonSignIn = (Button) findViewById(R.id.button_google_sign_in);
-        mProgressLogin = (ProgressBar) findViewById(R.id.progress_bar_login);
+        Button buttonSignIn = findViewById(R.id.button_google_sign_in);
+        mProgressLogin = findViewById(R.id.progress_bar_login);
 
         buttonSignIn.setOnClickListener(this);
 
@@ -91,7 +90,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 mProgressLogin.setVisibility(View.VISIBLE);
                 firebaseAuthWithGoogle(account);
             } else {
-                Log.e(TAG, "Google Sign In failed.");
                 mProgressLogin.setVisibility(View.GONE);
                 Toast.makeText(this, R.string.falha_tentativa_login, Toast.LENGTH_SHORT).show();
             }
@@ -99,20 +97,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mFirebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+                        mProgressLogin.setVisibility(View.GONE);
                         if (!task.isSuccessful()) {
-                            Log.w(TAG, "signInWithCredential", task.getException());
-                            mProgressLogin.setVisibility(View.GONE);
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Toast.makeText(LoginActivity.this, R.string.falha_autenticacao,
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            mProgressLogin.setVisibility(View.GONE);
                             startActivity(new Intent(LoginActivity.this, ListaViagemActivity.class));
                             finish();
                         }
@@ -122,8 +116,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "onConnectionFailed:" + connectionResult);
-        Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.erro_google_play_services, Toast.LENGTH_SHORT).show();
     }
 
     public static boolean getNetworkStatus(Context context) {
@@ -131,9 +124,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-        if (networkInfo != null && networkInfo.isConnected()) {
-            return true;
-        }
-        return false;
+        return networkInfo != null && networkInfo.isConnected();
     }
 }

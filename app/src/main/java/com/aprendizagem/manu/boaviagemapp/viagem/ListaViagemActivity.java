@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aprendizagem.manu.boaviagemapp.Constantes;
@@ -31,6 +30,7 @@ import com.aprendizagem.manu.boaviagemapp.database.Contract.ViagemEntry;
 import com.aprendizagem.manu.boaviagemapp.gasto.ListaGastoActivity;
 import com.aprendizagem.manu.boaviagemapp.gasto.NovoGastoActivity;
 import com.aprendizagem.manu.boaviagemapp.login.LoginActivity;
+import com.facebook.stetho.Stetho;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -41,16 +41,10 @@ public class ListaViagemActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int VIAGEM_LOADER = 0;
-
-    ViagemAdapter viagemAdapter;
-
-    LinearLayout listaViagemVazia;
-
-    Toolbar listaGastoToolbar;
-
-    RecyclerView recyclerViewViagem;
-    String idUsuarioVindoDoFirebase;
-    private Menu menu;
+    private ViagemAdapter mViagemAdapter;
+    private TextView mListaViagemVazia;
+    private RecyclerView mRecyclerViewViagem;
+    private String mIdUsuarioVindoDoFirebase;
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
@@ -58,6 +52,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Stetho.initializeWithDefaults(this);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
@@ -65,18 +60,15 @@ public class ListaViagemActivity extends AppCompatActivity implements
         if (mFirebaseUser != null) {
 
             setContentView(R.layout.lista_viagem);
-            listaViagemVazia = (LinearLayout) findViewById(R.id.linear_layout_lista_viagem_vazia);
+            mListaViagemVazia = findViewById(R.id.text_view_lista_viagem_vazia);
 
-            listaGastoToolbar = (Toolbar) findViewById(R.id.toolbar_lista_viagem);
+            Toolbar listaGastoToolbar = findViewById(R.id.toolbar_lista_viagem);
             setSupportActionBar(listaGastoToolbar);
 
-            listaGastoToolbar.collapseActionView();
+            mIdUsuarioVindoDoFirebase = mFirebaseUser.getUid();
 
-            idUsuarioVindoDoFirebase = mFirebaseUser.getUid();
-
-            exibeFloatActionButton();
-            exibeMenu();
             exibeListaDeViagens();
+            exibeFloatActionButton();
 
             getLoaderManager().initLoader(VIAGEM_LOADER, null, this);
 
@@ -93,78 +85,43 @@ public class ListaViagemActivity extends AppCompatActivity implements
     }
 
     private void exibeListaDeViagens() {
-        recyclerViewViagem = (RecyclerView) findViewById(R.id.recycler_view_viagem);
-        recyclerViewViagem.setHasFixedSize(true);
+        mRecyclerViewViagem = findViewById(R.id.recycler_view_viagem);
+        mRecyclerViewViagem.setHasFixedSize(true);
 
-        viagemAdapter = new ViagemAdapter(new ItemClickListenerAdapter() {
+        mViagemAdapter = new ViagemAdapter(new ItemClickListenerAdapter() {
             @Override
             public void itemFoiClicado(Cursor cursor) {
                 opcoesParaCliqueDaViagem(cursor.getInt(cursor.getColumnIndex(ViagemEntry._ID)));
                 Constantes.setNomeDestinoViagem(cursor.getString(cursor.getColumnIndex(ViagemEntry.COLUMN_DESTINO)));
             }
-        }, this);
+        });
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setReverseLayout(true);
         mLayoutManager.setStackFromEnd(true);
 
-        viagemAdapter.notifyDataSetChanged();
-        recyclerViewViagem.setLayoutManager(mLayoutManager);
-        viagemAdapter.setHasStableIds(true);
-        recyclerViewViagem.setAdapter(viagemAdapter);
+        mViagemAdapter.notifyDataSetChanged();
+        mRecyclerViewViagem.setLayoutManager(mLayoutManager);
+        mViagemAdapter.setHasStableIds(true);
+        mRecyclerViewViagem.setAdapter(mViagemAdapter);
     }
 
     private void exibeFloatActionButton() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_nova_viagem);
+        FloatingActionButton fab = findViewById(R.id.fab_nova_viagem);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ListaViagemActivity.this, NovaViagemActivity.class);
-                Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
+                Constantes.setIdDoUsuario(mIdUsuarioVindoDoFirebase);
                 startActivity(intent);
-            }
-        });
-    }
-
-    private void exibeMenu() {
-        AppBarLayout mAppBarLayout = (AppBarLayout) findViewById(R.id.app_bar_lista_viagem);
-        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            boolean isShow = false;
-            int scrollRange = -1;
-
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (scrollRange == -1) {
-                    scrollRange = appBarLayout.getTotalScrollRange();
-                }
-                if (scrollRange + verticalOffset == 0) {
-                    isShow = true;
-                    showOption(R.id.sair);
-                } else if (isShow) {
-                    isShow = false;
-                    hideOption(R.id.sair);
-                    exibeFloatActionButton();
-                }
             }
         });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.menu = menu;
         getMenuInflater().inflate(R.menu.lista_viagem_menu, menu);
-        hideOption(R.id.sair);
         return true;
-    }
-
-    private void hideOption(int id) {
-        MenuItem item = menu.findItem(id);
-        item.setVisible(false);
-    }
-
-    private void showOption(int id) {
-        MenuItem item = menu.findItem(id);
-        item.setVisible(true);
     }
 
     @Override
@@ -197,7 +154,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
         };
 
         String selection = ViagemEntry.COLUMN_ID_USUARIO +
-                " = '" + idUsuarioVindoDoFirebase + "'";
+                " = '" + mIdUsuarioVindoDoFirebase + "'";
 
         return new CursorLoader(this,
                 ViagemEntry.CONTENT_URI,
@@ -218,19 +175,19 @@ public class ListaViagemActivity extends AppCompatActivity implements
                     case 0:
                         intent = new Intent(ListaViagemActivity.this, ListaGastoActivity.class);
                         Constantes.setIdViagemSelecionada(idViagem);
-                        Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
+                        Constantes.setIdDoUsuario(mIdUsuarioVindoDoFirebase);
                         startActivity(intent);
                         break;
                     case 1:
                         intent = new Intent(ListaViagemActivity.this, NovoGastoActivity.class);
                         Constantes.setIdViagemSelecionada(idViagem);
-                        Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
+                        Constantes.setIdDoUsuario(mIdUsuarioVindoDoFirebase);
                         startActivity(intent);
                         break;
                     case 2:
                         intent = new Intent(ListaViagemActivity.this, NovaViagemActivity.class);
                         intent.setData(currentUri);
-                        Constantes.setIdDoUsuario(idUsuarioVindoDoFirebase);
+                        Constantes.setIdDoUsuario(mIdUsuarioVindoDoFirebase);
                         startActivity(intent);
                         break;
                     case 3:
@@ -253,18 +210,18 @@ public class ListaViagemActivity extends AppCompatActivity implements
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
         if (cursor == null || cursor.getCount() == 0) {
-            recyclerViewViagem.setVisibility(View.GONE);
-            listaViagemVazia.setVisibility(View.VISIBLE);
+            mRecyclerViewViagem.setVisibility(View.GONE);
+            mListaViagemVazia.setVisibility(View.VISIBLE);
         } else {
-            listaViagemVazia.setVisibility(View.GONE);
-            recyclerViewViagem.setVisibility(View.VISIBLE);
-            viagemAdapter.setPrivateCursor(cursor);
+            mListaViagemVazia.setVisibility(View.GONE);
+            mRecyclerViewViagem.setVisibility(View.VISIBLE);
+            mViagemAdapter.setmCursor(cursor);
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        viagemAdapter.setPrivateCursor(null);
+        mViagemAdapter.setmCursor(null);
     }
 
     @Override
@@ -284,7 +241,7 @@ public class ListaViagemActivity extends AppCompatActivity implements
             public void onClick(DialogInterface dialog, int id) {
 
                 final int x = 1;
-                Cursor cursor = viagemAdapter.getPrivateCursor();
+                Cursor cursor = mViagemAdapter.getmCursor();
                 cursor.moveToPosition(x);
                 getContentResolver().delete(
                         Uri.withAppendedPath(ViagemEntry.CONTENT_URI, String.valueOf(position)),

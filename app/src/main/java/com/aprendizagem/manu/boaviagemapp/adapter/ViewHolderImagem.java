@@ -9,8 +9,8 @@ import android.widget.TextView;
 import com.aprendizagem.manu.boaviagemapp.R;
 
 class ViewHolderImagem extends RecyclerView.ViewHolder {
-    ImageView imageViewImagem;
 
+    ImageView imageViewImagem;
 
     ViewHolderImagem(View itemView) {
         super(itemView);
