@@ -25,7 +25,6 @@ import com.aprendizagem.manu.boaviagemapp.Constantes;
 import com.aprendizagem.manu.boaviagemapp.R;
 import com.aprendizagem.manu.boaviagemapp.database.Contract;
 import com.aprendizagem.manu.boaviagemapp.database.Contract.ViagemEntry;
-import com.aprendizagem.manu.boaviagemapp.modelo.Viagem;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -219,17 +218,6 @@ public class NovaViagemActivity extends AppCompatActivity implements LoaderManag
         mLocalHospedagem = mEditLocalHospedagem.getText().toString().trim();
         String idDousuario = Constantes.getIdDoUsuario();
         int razaoViagem = mRazao;
-
-        Viagem viagem = new Viagem();
-
-        viagem.setDestino(mDestino);
-        viagem.setLocalHospedagem(mLocalHospedagem);
-        viagem.setRazaoViagem(mRazao);
-        viagem.setDataChegada(mDataChegada);
-        viagem.setDataPartida(mDataPartida);
-        viagem.setIdDoUsuario(Constantes.getIdDoUsuario());
-
-
 
         if (mCurrentViagemUri == null) {
 
